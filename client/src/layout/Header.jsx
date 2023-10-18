@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 function Header() {
   const user = useSelector((state) => state.user?.user);
   return (
-    <div className="flex w-full bg-orange-400 h-20 items-center relative">
+    <div className="flex w-full bg-orange-400 h-[10%] items-center relative">
       <div className="mx-10 uppercase text-white w-full">meet lecturer</div>
       {user && (
         <div className="absolute bottom-0 right-0 text-white flex items-baseline space-x-2">

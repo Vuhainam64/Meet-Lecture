@@ -1,11 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Home, Login } from "./pages";
+import { Student, Login } from "./pages";
 
 function App() {
   return (
-    <div className="bg-white">
+    <div className="bg-white h-full">
       <Routes>
-        <Route path="/home/*" element={<Home />} />
+        <Route path="/Student/*" element={<Student />} />
         <Route path="/login/*" element={<Login />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
