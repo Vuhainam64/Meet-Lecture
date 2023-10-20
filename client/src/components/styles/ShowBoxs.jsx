@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { LuPencilLine, LuTrash2, LuPlusCircle } from "react-icons/lu";
 
-export default function ShowBoxs({ childArray, lectureName }) {
+export default function ShowBoxs({ childArray, lectureName, role }) {
   const [showInformations, setShowInformations] = useState(childArray);
   console.log(showInformations);
 
@@ -36,7 +37,20 @@ export default function ShowBoxs({ childArray, lectureName }) {
               <></>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
-              {infor.Finish?(<div className="absolute -left-4 bg-green-400 py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white">Finished</div>):(<></>)}
+              {infor.Finish ? (
+                <div className="absolute -left-4 bg-green-400 py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white">
+                  Finished
+                </div>
+              ) : (
+                <></>
+              )}
+              {role && role === "Lecturer" ? (
+                <button className="text-3xl">
+                  <LuPencilLine />
+                </button>
+              ) : (
+                <></>
+              )}
               <button
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
@@ -48,14 +62,32 @@ export default function ShowBoxs({ childArray, lectureName }) {
                 ? "bg-blue-500"
                 : infor.Status === "Feedback"
                 ? "bg-blue-700"
+                : infor.Status === "Private"
+                ? "bg-red-500"
+                : infor.Status === "Public"
+                ? "bg-blue-400"
                 : "bg-black"
             }`}
               >
                 {infor.Status}
               </button>
+              {role && role === "Lecturer" ? (
+                <button className="text-3xl">
+                  <LuTrash2 />
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         ))
+      ) : (
+        <></>
+      )}
+      {role && role === "Lecturer" ? (
+        <button className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400">
+          <LuPlusCircle />
+        </button>
       ) : (
         <></>
       )}
