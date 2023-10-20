@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <div className="flex items-center justify-center bg-orange-300 p-2">
+    <div className="flex items-center justify-center bg-orange-300 h-[10%]">
       © Powered by{" "}
       <Link to={"/fpt"} className="underline">
         FPT University
