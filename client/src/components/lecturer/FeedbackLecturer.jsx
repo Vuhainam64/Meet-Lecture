@@ -50,7 +50,7 @@ export default function FeedbackLecturer({ lectureName }) {
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
         <div>
-          <span className="font-bold text-3xl underline pl-20">Request</span>
+          <span className="font-bold text-3xl underline pl-20">FEEDBACK</span>
         </div>
         <div className="w-full flex flex-col gap-10">
           {requestedList &&
