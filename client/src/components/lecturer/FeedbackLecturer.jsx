@@ -1,5 +1,7 @@
+import { useState } from "react";
+
 export default function FeedbackLecturer({ lectureName }) {
-  const requestedList = [
+  const list = [
     {
       ID: "SE171817",
       Name: "Phan Van Khai",
@@ -46,6 +48,7 @@ export default function FeedbackLecturer({ lectureName }) {
       Date: "06/10/2023",
     },
   ];
+  const [requestedList,setRequestedList]=useState(list)
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">

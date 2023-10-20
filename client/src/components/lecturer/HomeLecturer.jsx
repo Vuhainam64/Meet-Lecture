@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { ShowBoxs } from "../styles";
+import { useState } from "react";
 
 export default function HomeLecturer({ lectureName }) {
-  const bookingRooms = [
+  const list = [
     {
       Location: "P.102",
       Time: "12:30 - 14:45",
@@ -40,6 +41,7 @@ export default function HomeLecturer({ lectureName }) {
       Status: "Public",
     },
   ];
+  const [bookingRooms,setBookingRooms]=useState(list)
   const lecturer=true;
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">

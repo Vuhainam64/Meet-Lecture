@@ -1,5 +1,7 @@
+import { useState } from "react";
+
 export default function ScheduleLecturer({ lectureName }) {
-  const scheduleInfors = [
+  const list = [
     {
       Number: "4/6",
       Location: "P.203",
@@ -43,6 +45,7 @@ export default function ScheduleLecturer({ lectureName }) {
       Time: "07:30-09:15",
     },
   ];
+  const [scheduleInfors,setScheduleInfors]=useState(list)
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">

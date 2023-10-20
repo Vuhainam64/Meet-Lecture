@@ -1,15 +1,17 @@
+import { useState } from "react";
 import {TiTick,TiTimes} from "react-icons/ti"
 
 
 
 export default function PendingLecturer({ lectureName }) {
-  const bookedList = [
+  const list = [
     { ID: "SE171817", Name: "Phan Van Khai", Course: "SWP391", Location: "P.102", Time: "12:30-14:45", Date: "11/10/2023" },
     { ID: "SE172327", Name: "Tran Vinh Hoang", Course: "SWP391", Location: "P.203", Time: "15:00-17:15", Date: "09/10/2023" },
     { ID: "SE154887", Name: "Phan Van Khai", Course: "SWP391", Location: "P.105", Time: "09:30-11:45", Date: "07/10/2023" },
     { ID: "SE163254", Name: "Phan Van Khai", Course: "SWP391", Location: "P.309", Time: "09:30-11:45", Date: "06/10/2023" },
     { ID: "SE13521", Name: "Phan Van Khai", Course: "SWP391", Location: "P.309", Time: "09:30-11:45", Date: "06/10/2023" },
   ];
+  const [bookedList,setBookedList]=useState(list)
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">

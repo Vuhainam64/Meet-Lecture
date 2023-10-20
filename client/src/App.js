@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Student, Login,Admin,Lecturer } from "./pages";
+import { CreateSlotLecturer } from "./components/lecturer";
 
 function App() {
   return (

@@ -1,10 +1,19 @@
 import { useState } from "react";
 import { LuPencilLine, LuTrash2, LuPlusCircle } from "react-icons/lu";
+import { Link,useNavigate   } from "react-router-dom";
+
 
 export default function ShowBoxs({ childArray, lectureName, role }) {
   const [showInformations, setShowInformations] = useState(childArray);
   console.log(showInformations);
-
+  const navigate = useNavigate();
+function handleClick(e){
+  const key=e.target.value;
+  console.log(key);
+  if(key==="Feedback"){
+    navigate('/student/Feedback');
+  }
+}
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full">
       {showInformations ? (
@@ -68,6 +77,8 @@ export default function ShowBoxs({ childArray, lectureName, role }) {
                 ? "bg-blue-400"
                 : "bg-black"
             }`}
+            value={infor.Status}
+            onClick={handleClick}
               >
                 {infor.Status}
               </button>
@@ -85,9 +96,11 @@ export default function ShowBoxs({ childArray, lectureName, role }) {
         <></>
       )}
       {role && role === "Lecturer" ? (
-        <button className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400">
+        <Link to="/Lecturer/Create" className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400">
+        <button >
           <LuPlusCircle />
         </button>
+        </Link>
       ) : (
         <></>
       )}
