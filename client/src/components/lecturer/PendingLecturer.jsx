@@ -3,7 +3,7 @@ import {TiTick,TiTimes} from "react-icons/ti"
 
 
 
-export default function PendingLecturer({ lectureName }) {
+export default function PendingLecturer() {
   const list = [
     { ID: "SE171817", Name: "Phan Van Khai", Course: "SWP391", Location: "P.102", Time: "12:30-14:45", Date: "11/10/2023" },
     { ID: "SE172327", Name: "Tran Vinh Hoang", Course: "SWP391", Location: "P.203", Time: "15:00-17:15", Date: "09/10/2023" },

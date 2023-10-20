@@ -1,4 +1,4 @@
-export default function Schedule({ lectureName }) {
+export default function Schedule() {
   const scheduleInfors = [
     {
       Lecturer: "Nguyen Trong Tai",

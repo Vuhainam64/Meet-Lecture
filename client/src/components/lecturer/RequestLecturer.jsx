@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function RequestLecturer({ lectureName }) {
+export default function RequestLecturer() {
   const list = [
     {
       ID: "SE171817",

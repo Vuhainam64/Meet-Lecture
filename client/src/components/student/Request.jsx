@@ -1,4 +1,4 @@
-export default function Request({ lectureName }) {
+export default function Request() {
     return (
       <div className="w-full h-full flex flex-col justify-center items-center  pb-10">
            <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">

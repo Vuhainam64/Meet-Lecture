@@ -3,7 +3,7 @@ import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { ShowBoxs } from "../styles";
 import { useState } from "react";
 
-export default function HomeLecturer({ lectureName }) {
+export default function HomeLecturer() {
   const list = [
     {
       Location: "P.102",

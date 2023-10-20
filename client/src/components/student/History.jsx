@@ -1,6 +1,6 @@
 import { ShowBoxs } from "../styles";
 
-export default function History({ lectureName }) {
+export default function History() {
   const bookingRooms = [
     {
       Location: "P.102",

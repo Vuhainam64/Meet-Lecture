@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function FeedbackLecturer({ lectureName }) {
+export default function FeedbackLecturer() {
   const list = [
     {
       ID: "SE171817",

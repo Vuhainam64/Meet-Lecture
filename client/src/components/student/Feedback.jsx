@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
-export default function Feedback({ lectureName }) {
+export default function Feedback() {
   return (
     <div className="w-full  flex flex-col justify-center items-start gap-5 min-h-[90%] bg-white">
       <NavLink className="h-[10%]  font-bold flex flex-row gap-5 items-center" to="/student/History">

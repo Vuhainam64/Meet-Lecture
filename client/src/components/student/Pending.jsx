@@ -1,6 +1,6 @@
 import { ShowBoxs } from "../styles";
 
-export default function Pending({ value }) {
+export default function Pending() {
         const bookingRooms = [
             {
             Location: "P.102",

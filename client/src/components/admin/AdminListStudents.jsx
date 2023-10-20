@@ -1,4 +1,4 @@
-export default function AdminListStudents({ lectureName }) {
+export default function AdminListStudents() {
   const studentList = [
     {
       Name: "Nguyen Trong Tai",
