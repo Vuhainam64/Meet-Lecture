@@ -1,6 +1,30 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
+import { useEffect, useState } from "react";
+import moment from "moment";
 export default function Feedback() {
+  const  data  = useParams();
+  console.log(data);
+  const [inforDetail, setInforDetail] = useState({});
+  const [lecturer, setLecturer] = useState("");
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [course, setCourse] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      const inforDetail = JSON.parse(decodeURIComponent(data.infor));
+      console.log('infor');
+      console.log(inforDetail);
+      setInforDetail(inforDetail);
+      setDate(moment(inforDetail.Date).format('yyyy-MM-dd'));
+      setStartTime(inforDetail.Time);
+      setEndTime(inforDetail.Time);
+      setCourse(inforDetail.Course);
+    }
+  }, [data]);
+
   return (
     <div className="w-full  flex flex-col justify-center items-start gap-5 min-h-[90%] bg-white">
       <NavLink className="h-[10%]  font-bold flex flex-row gap-5 items-center" to="/student/History">
@@ -25,6 +49,8 @@ export default function Feedback() {
               <input
                 className=" border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]"
                 type="text"
+                value={course}
+                onChange={(e)=>setCourse(e.target.value)}
               ></input>
             </div>
             <div className="flex flex-row w-full items-center">
@@ -40,6 +66,8 @@ export default function Feedback() {
                 className=" border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]"
                 type="text"
                 placeholder="00:00-00:00"
+                value={startTime}
+                onChange={(e)=>setStartTime(e.target.value)}
               ></input>
             </div>
             <div className="flex flex-row w-full items-start">

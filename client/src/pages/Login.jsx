@@ -10,8 +10,7 @@ function Home() {
   function loginSubmit() {}
   return (
     <div className="bg-white h-full relative box-border">
-      <Header />
-      <div className="flex h-[80%] items-center justify-center ">
+      <div className="flex h-[90%] items-center justify-center ">
         <div className="flex items-center justify-center border-orange-400 border-4 rounded-md">
           <div className="m-8 flex flex-row gap-20">
             <div className="left">

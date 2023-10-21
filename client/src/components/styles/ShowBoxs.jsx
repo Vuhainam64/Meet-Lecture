@@ -3,15 +3,15 @@ import { LuPencilLine, LuTrash2, LuPlusCircle } from "react-icons/lu";
 import { Link,useNavigate   } from "react-router-dom";
 
 
-export default function ShowBoxs({ childArray, lectureName, role }) {
+export default function ShowBoxs({ childArray, lectureName, role ,Clicked}) {
   const [showInformations, setShowInformations] = useState(childArray);
   console.log(showInformations);
   const navigate = useNavigate();
-function handleClick(e){
+function handleClick(e,infor){
   const key=e.target.value;
   console.log(key);
   if(key==="Feedback"){
-    navigate('/student/Feedback');
+    navigate('/student/Feedback/'+encodeURIComponent(JSON.stringify(infor)));
   }
 }
   return (
@@ -54,9 +54,11 @@ function handleClick(e){
                 <></>
               )}
               {role && role === "Lecturer" ? (
+                <Link to={`/Lecturer/Create/${encodeURIComponent(JSON.stringify(infor))}`}>
                 <button className="text-3xl">
                   <LuPencilLine />
                 </button>
+                </Link>
               ) : (
                 <></>
               )}
@@ -78,7 +80,7 @@ function handleClick(e){
                 : "bg-black"
             }`}
             value={infor.Status}
-            onClick={handleClick}
+            onClick={(e)=>handleClick(e,infor)}
               >
                 {infor.Status}
               </button>
