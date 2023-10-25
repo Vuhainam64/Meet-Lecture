@@ -1,11 +1,9 @@
 import { useState } from "react";
 import {
-    CreateSlotLecturer,
     FeedbackLecturer,
     HomeLecturer,
     PendingLecturer,
     RequestLecturer,
-    ScheduleLecturer,
   } from "./index";
   import { Link, Route, Routes } from "react-router-dom";
 export default function Body() {

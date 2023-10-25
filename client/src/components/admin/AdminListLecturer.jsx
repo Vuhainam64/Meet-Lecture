@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
 export default function AdminListLecturer({lecturers}) {
-  const [lecturerList, getLecturerList] = useState(lecturers);
+  const [lecturerList, getLecturerList] = useState([]);
+  useEffect(()=>{
+    getLecturerList(lecturers)
+    console.log(lecturerList);
+  },[lecturers])
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">

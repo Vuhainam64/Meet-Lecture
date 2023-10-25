@@ -12,8 +12,8 @@ function Admin() {
   const [lecturerList, getLecturerList] = useState([]);
   const [users, getUsers] = useState([]);
   const [page, chosePage] = useState("Create");
-  const fetchData = () => {
-    getAllUser()
+ async function fetchData () {
+    const response=await getAllUser()
       .then((result) => getUsers(result))
       .catch((error) => console.log(error));
     console.log(users);

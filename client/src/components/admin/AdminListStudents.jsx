@@ -51,7 +51,11 @@ export default function AdminListStudents({students}) {
   //     Email: "SangNM5@fpt.edu.vn",
   //   },
   // ];
-  const [studentList, getStudentList] = useState(students);
+  const [studentList, getStudentList] = useState([]);
+  useEffect(()=>{
+    getStudentList(students)
+    console.log(studentList);
+  },[students])
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
