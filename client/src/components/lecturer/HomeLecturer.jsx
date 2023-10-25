@@ -56,15 +56,11 @@ export default function HomeLecturer({ id }) {
     console.log("booking room");
     console.log(bookingRooms);
   }, [id]);
-
-
-  const lecturer = true;
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">
         <ShowBoxs
           childArray={bookingRooms}
-          lectureName="Chua co"
           role="Lecturer"
         ></ShowBoxs>
       </div>
