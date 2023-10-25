@@ -30,7 +30,7 @@ function Admin() {
     fetchData();
     filterStudent();
     filterLecturer();
-  }, []);
+  }, [users.length===0]);
   return (
     <div className="bg-white h-full">
       <Header />

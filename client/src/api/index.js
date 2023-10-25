@@ -41,3 +41,11 @@ export const getAllRequestByLecturerORStudentID = async (id) => {
         return null;
     }
 };
+export const searchTeacherById = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Account/${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
