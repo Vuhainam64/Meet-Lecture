@@ -65,7 +65,7 @@ export default function ShowBoxs({ childArray, role }) {
                 ? "bg-blue-400"
                 : "bg-black"
             }`}
-                value={infor.mod}
+                value={infor.mode}
                 onClick={handleClick}
               >
                 {infor.mode}

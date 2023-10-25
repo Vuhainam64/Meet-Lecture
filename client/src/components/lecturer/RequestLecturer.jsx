@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllRequestByLecturerORStudentID } from "../../api";
+import moment from "moment";
 
-export default function RequestLecturer() {
+export default function RequestLecturer({ id }) {
   const list = [
     {
       ID: "SE171817",
@@ -48,7 +50,19 @@ export default function RequestLecturer() {
       Date: "06/10/2023",
     },
   ];
-  const [requestedList,setRequestedList]=useState(list)
+  const [requestedList, setRequestedList] = useState([]);
+
+  async function fetchData() {
+    const response = await getAllRequestByLecturerORStudentID(parseInt(id))
+      .then((data) => setRequestedList(data))
+      .catch((error) => console.log(error));
+  }
+  useEffect(() => {
+    if (id) fetchData();
+    console.log("request list");
+    console.log(requestedList);
+  }, [id]);
+
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -64,11 +78,13 @@ export default function RequestLecturer() {
                     <div className="text-lg">{infor.Name}</div>
                     <div className="text-lg">{infor.ID}</div>
                     <div className="text-lg">Course: {infor.Course}</div>
-                    <div className="text-lg">Date: {infor.Date}</div>
-                    <div className="text-lg">Time: {infor.Time}</div>
+                    <div className="text-lg">Date: {moment(infor.createdAt).format("DD/MM/YY")}</div>
+                    <div className="text-lg">Time:  {moment(infor.createdAt).format("HH:mm")}</div>
                   </div>
                   <div className="w-full">
-                    <div className="text-lg">Description: {infor.Description}</div>
+                    <div className="text-lg">
+                      Description: {infor.description}
+                    </div>
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">

@@ -33,3 +33,11 @@ export const getAllSlotByLecturerID = async (id) => {
         return null;
     }
 };
+export const getAllRequestByLecturerORStudentID = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Request/GetAllById//${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
