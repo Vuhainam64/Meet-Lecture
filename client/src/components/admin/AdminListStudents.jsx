@@ -1,59 +1,62 @@
-export default function AdminListStudents() {
-  const studentList = [
-    {
-      Name: "Nguyen Trong Tai",
-      ID: "SE173001",
-      DateOfBirth: "12/10/1985",
-      Username: "TaiNt5",
-      Password: "0123456789",
-      Email: "TaiNt5@fpt.edu.vn",
-    },
-    {
-      Name: "Lai Duc Hung",
-      ID: "SE173002",
-      DateOfBirth: "25/09/1988",
-      Username: "HungLd",
-      Password: "hung7984651",
-      Email: "HungLd@fpt.edu.vn",
-    },
-    {
-      Name: "Kieu Trong Khanh",
-      ID: "SE173003",
-      DateOfBirth: "15/06/1979",
-      Username: "KhanhKt",
-      Password: "abcKhanh789",
-      Email: "KhanhKt@fpt.edu.vn",
-    },
-    {
-      Name: "Vo Thi Thanh Van",
-      ID: "SE173004",
-      DateOfBirth: "10/05/1989",
-      Username: "VanVTT",
-      Password: "vanvothithanh123",
-      Email: "VanVTT@fpt.edu.vn",
-    },
-    {
-      Name: "Nguyen The Hoang",
-      ID: "SE173005",
-      DateOfBirth: "07/12/1984",
-      Username: "HoangNT",
-      Password: "hoangnguyenthe",
-      Email: "HoangNT@fpt.edu.vn",
-    },
-    {
-      Name: "Nguyen Minh Sang",
-      ID: "SE173006",
-      DateOfBirth: "19/11/1991",
-      Username: "Sangnm5",
-      Password: "sang321654",
-      Email: "SangNM5@fpt.edu.vn",
-    },
-  ];
+import { useEffect, useState } from "react";
+import moment from "moment";
+export default function AdminListStudents({students}) {
+  // const studentList = [
+  //   {
+  //     Name: "Nguyen Trong Tai",
+  //     ID: "SE173001",
+  //     DateOfBirth: "12/10/1985",
+  //     Username: "TaiNt5",
+  //     Password: "0123456789",
+  //     Email: "TaiNt5@fpt.edu.vn",
+  //   },
+  //   {
+  //     Name: "Lai Duc Hung",
+  //     ID: "SE173002",
+  //     DateOfBirth: "25/09/1988",
+  //     Username: "HungLd",
+  //     Password: "hung7984651",
+  //     Email: "HungLd@fpt.edu.vn",
+  //   },
+  //   {
+  //     Name: "Kieu Trong Khanh",
+  //     ID: "SE173003",
+  //     DateOfBirth: "15/06/1979",
+  //     Username: "KhanhKt",
+  //     Password: "abcKhanh789",
+  //     Email: "KhanhKt@fpt.edu.vn",
+  //   },
+  //   {
+  //     Name: "Vo Thi Thanh Van",
+  //     ID: "SE173004",
+  //     DateOfBirth: "10/05/1989",
+  //     Username: "VanVTT",
+  //     Password: "vanvothithanh123",
+  //     Email: "VanVTT@fpt.edu.vn",
+  //   },
+  //   {
+  //     Name: "Nguyen The Hoang",
+  //     ID: "SE173005",
+  //     DateOfBirth: "07/12/1984",
+  //     Username: "HoangNT",
+  //     Password: "hoangnguyenthe",
+  //     Email: "HoangNT@fpt.edu.vn",
+  //   },
+  //   {
+  //     Name: "Nguyen Minh Sang",
+  //     ID: "SE173006",
+  //     DateOfBirth: "19/11/1991",
+  //     Username: "Sangnm5",
+  //     Password: "sang321654",
+  //     Email: "SangNM5@fpt.edu.vn",
+  //   },
+  // ];
+  const [studentList, getStudentList] = useState(students);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
         <div>
-          <span className="font-bold text-3xl underline">List of Students</span>
+          <span className="font-bold text-3xl underline">List of Students: {studentList&&studentList.length}</span>
         </div>
         <div className="">
           <form className="flex flex-row gap-10 px-10">
@@ -111,29 +114,29 @@ export default function AdminListStudents() {
             </tr>
           </thead>
           <tbody>
-            {studentList ? (
+            {studentList &&
               studentList.map((info, index) => (
-                <tr className="bg-gray-200">
+                <tr className="bg-gray-200" key={info.id}>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     {index + 1}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.Name}
+                    {info.fullname}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.ID}
+                    {info.id}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.DateOfBirth}
+                    {moment(info.dob).format("DD/MM/YY")}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.Username}
+                    {info.username}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.Password}
+                    {info.password}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.Email}
+                    {info.email}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     <button className="  text-gray-500">Update</button>
@@ -142,10 +145,7 @@ export default function AdminListStudents() {
                     <button className="  text-red-500">Delete</button>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <></>
-            )}
+              ))}
           </tbody>
         </table>
       </div>

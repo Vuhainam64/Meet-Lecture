@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const baseURL =
-    "http://127.0.0.1:5001/get-feedback-a0119/us-central1/app";
+    "https://meetmylecturer1.azurewebsites.net/api";
 
 export const validateUserJWTToken = async (token) => {
     try {
@@ -18,7 +18,7 @@ export const validateUserJWTToken = async (token) => {
 
 export const getAllUser = async () => {
     try {
-        const res = await axios.get(`${baseURL}/api/users/all`);
+        const res = await axios.get(`${baseURL}/Account`);
         return res.data.data;
     } catch (err) {
         return null;
