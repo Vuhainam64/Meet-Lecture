@@ -24,3 +24,12 @@ export const getAllUser = async () => {
         return null;
     }
 };
+
+export const getAllSlotByLecturerID = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Slot/GetAllById/${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};

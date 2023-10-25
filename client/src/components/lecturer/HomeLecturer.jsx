@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { ShowBoxs } from "../styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllSlotByLecturerID } from "../../api";
 
-export default function HomeLecturer() {
+export default function HomeLecturer({ id }) {
   const list = [
     {
       Location: "P.102",
@@ -41,12 +42,31 @@ export default function HomeLecturer() {
       Status: "Public",
     },
   ];
-  const [bookingRooms,setBookingRooms]=useState(list)
-  const lecturer=true;
+  const [datas, getDatas] = useState([]);
+  const [bookingRooms, setBookingRooms] = useState([]);
+  async function fetchData() {
+    const response = await getAllSlotByLecturerID(parseInt(id))
+      .then((data) => setBookingRooms(data))
+      .catch((error) => console.log(error));
+    console.log(datas);
+  }
+  useEffect(() => {
+    if(id)
+    fetchData();
+    console.log("booking room");
+    console.log(bookingRooms);
+  }, [id]);
+
+
+  const lecturer = true;
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">
-        <ShowBoxs childArray={bookingRooms} lectureName="Chua co" role="Lecturer"></ShowBoxs>
+        <ShowBoxs
+          childArray={bookingRooms}
+          lectureName="Chua co"
+          role="Lecturer"
+        ></ShowBoxs>
       </div>
     </div>
   );
