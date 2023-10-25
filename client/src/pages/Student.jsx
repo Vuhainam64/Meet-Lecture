@@ -10,7 +10,7 @@ function Student() {
       <Header />
       <Routes>
         <Route path="*" element={<Body />} />
-        <Route path="Feedback" element={<Feedback/>}/>
+        <Route path="Feedback/:infor" element={<Feedback/>}/>
       </Routes>
     </div>
   );
