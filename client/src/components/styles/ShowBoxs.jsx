@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { LuPencilLine, LuTrash2, LuPlusCircle } from "react-icons/lu";
+
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 export default function ShowBoxs({ childArray, role }) {
+
   const [showInformations, setShowInformations] = useState(childArray);
   useEffect(() => {
     setShowInformations(childArray);
   }, [childArray]);
   console.log(showInformations);
   const navigate = useNavigate();
-  function handleClick(e) {
-    const key = e.target.value;
-    console.log(key);
-    if (key === "Feedback") {
-      navigate("/student/Feedback");
-    }
+
+function handleClick(e,infor){
+  const key=e.target.value;
+  console.log(key);
+  if(key==="Feedback"){
+    navigate('/student/Feedback/'+encodeURIComponent(JSON.stringify(infor)));
+
   }
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full">
@@ -42,9 +45,11 @@ export default function ShowBoxs({ childArray, role }) {
                 <></>
               )}
               {role && role === "Lecturer" ? (
+                <Link to={`/Lecturer/Create/${encodeURIComponent(JSON.stringify(infor))}`}>
                 <button className="text-3xl">
                   <LuPencilLine />
                 </button>
+                </Link>
               ) : (
                 <></>
               )}
@@ -65,8 +70,9 @@ export default function ShowBoxs({ childArray, role }) {
                 ? "bg-blue-400"
                 : "bg-black"
             }`}
-                value={infor.mod}
-                onClick={handleClick}
+
+            value={infor.mode}
+            onClick={(e)=>handleClick(e,infor)}
               >
                 {infor.mode}
               </button>
