@@ -1,49 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LuPencilLine, LuTrash2, LuPlusCircle } from "react-icons/lu";
-import { Link,useNavigate   } from "react-router-dom";
 
-
-export default function ShowBoxs({ childArray, lectureName, role ,Clicked}) {
+import { Link, useNavigate } from "react-router-dom";
+import moment from "moment";
+export default function ShowBoxs({ childArray, role }) {
   const [showInformations, setShowInformations] = useState(childArray);
+  useEffect(() => {
+    setShowInformations(childArray);
+  }, [childArray]);
   console.log(showInformations);
   const navigate = useNavigate();
-function handleClick(e,infor){
-  const key=e.target.value;
-  console.log(key);
-  if(key==="Feedback"){
-    navigate('/student/Feedback/'+encodeURIComponent(JSON.stringify(infor)));
+
+  function handleClick(e, infor) {
+    const key = e.target.value;
+    console.log(key);
+    if (key === "Feedback") {
+      navigate(
+        "/student/Feedback/" + encodeURIComponent(JSON.stringify(infor))
+      );
+    }
   }
-}
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full">
-      {showInformations ? (
+      {showInformations &&
         showInformations.map((infor) => (
           <div className="w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-center px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
-            <span className="font-bold text-xl">{lectureName}</span>
-            {infor.Course ? (
+            {infor.title &&(<span className="font-bold text-xl">{infor.title}</span>)}
+            {infor.Course && (
               <span className="text-xl">Course: {infor.Course}</span>
-            ) : (
-              <></>
             )}
-            {infor.Location ? (
-              <span className="text-xl">Location: {infor.Location}</span>
-            ) : (
-              <></>
+            {infor.location && (
+              <span className="text-xl">Location: {infor.location}</span>
             )}
-            {infor.Time ? (
-              <span className="text-xl">Time: {infor.Time}</span>
-            ) : (
-              <></>
+            {infor.startDatetime && infor.endDatetime && (
+              <span className="text-xl">
+                Time: {moment(infor.startDatetime).format("HH:mm")}-
+                {moment(infor.endDatetime).format("HH:mm")}
+              </span>
             )}
-            {infor.Date ? (
-              <span className="text-xl">Date: {infor.Date}</span>
-            ) : (
-              <></>
+            {infor.startDatetime && (
+              <span className="text-xl">
+                Date: {moment(infor.startDatetime).format("DD/MM/YY")}
+              </span>
             )}
-            {infor.Limit ? (
-              <span className="text-xl">Limit: {infor.Limit}</span>
-            ) : (
-              <></>
+            {infor.limitBooking && (
+              <span className="text-xl">Limit: {infor.limitBooking}/6</span>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {infor.Finish ? (
@@ -54,10 +55,14 @@ function handleClick(e,infor){
                 <></>
               )}
               {role && role === "Lecturer" ? (
-                <Link to={`/Lecturer/Create/${encodeURIComponent(JSON.stringify(infor))}`}>
-                <button className="text-3xl">
-                  <LuPencilLine />
-                </button>
+                <Link
+                  to={`/Lecturer/Create/${encodeURIComponent(
+                    JSON.stringify(infor)
+                  )}`}
+                >
+                  <button className="text-3xl">
+                    <LuPencilLine />
+                  </button>
                 </Link>
               ) : (
                 <></>
@@ -65,24 +70,24 @@ function handleClick(e,infor){
               <button
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
-              infor.Status === "Cancel"
+              infor.mode === "Cancel"
                 ? "bg-red-500"
-                : infor.Status === "Booked"
+                : infor.mode === "Booked"
                 ? "bg-green-500"
-                : infor.Status === "Book"
+                : infor.mode === "Book"
                 ? "bg-blue-500"
-                : infor.Status === "Feedback"
+                : infor.mode === "Feedback"
                 ? "bg-blue-700"
-                : infor.Status === "Private"
+                : infor.mode === "Private"
                 ? "bg-red-500"
-                : infor.Status === "Public"
+                : infor.mode === "Public"
                 ? "bg-blue-400"
                 : "bg-black"
             }`}
-            value={infor.Status}
-            onClick={(e)=>handleClick(e,infor)}
+                value={infor.mode}
+                onClick={(e) => handleClick(e, infor)}
               >
-                {infor.Status}
+                {infor.mode}
               </button>
               {role && role === "Lecturer" ? (
                 <button className="text-3xl">
@@ -93,15 +98,15 @@ function handleClick(e,infor){
               )}
             </div>
           </div>
-        ))
-      ) : (
-        <></>
-      )}
+        ))}
       {role && role === "Lecturer" ? (
-        <Link to="/Lecturer/Create" className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400">
-        <button >
-          <LuPlusCircle />
-        </button>
+        <Link
+          to="/Lecturer/Create"
+          className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
+        >
+          <button>
+            <LuPlusCircle />
+          </button>
         </Link>
       ) : (
         <></>
