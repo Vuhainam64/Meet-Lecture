@@ -49,6 +49,14 @@ export const getAllRequestByLecturerORStudentID = async (id) => {
         return null;
     }
 };
+export const getAllFeedBackByLecturer = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Feedback/GetAllById//${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
 export const searchTeacherById = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Account/${id}`);
@@ -78,6 +86,14 @@ export const searchSubjectById = async (id) => {
 export const searchSlotById = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Slot/${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
+export const searchBookingById = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Booking/${id}`);
         return res.data.data;
     } catch (err) {
         return null;
