@@ -33,14 +33,22 @@ export default function AdminListLecturer({ lecturers,setUsers }) {
     setOpen((open) => !open);
     setDeleteHolder(lecturerId);
   }
-  function handleDeleteYes() {
+  async function handleDeleteYes() {
     if (deleteHolder) {
-      console.log(deleteHolder);
-      deleteAccountById(parseInt(deleteHolder));
-      setDeleteHolder(0)
-      setOpen(false);
+      try {
+        console.log(deleteHolder);
+        await deleteAccountById(deleteHolder);
+        // If the deletion is successful, you can update the local state.
+        setDeleteHolder(0);
+        setOpen(false);
+      } catch (error) {
+        // Handle the error
+        console.error('Error deleting account:', error);
+      }
     }
   }
+  
+  
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">

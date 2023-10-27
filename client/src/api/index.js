@@ -100,11 +100,17 @@ export const searchBookingById = async (id) => {
     }
 };
 
-export const deleteAccountById=async (id)=>{
+export const deleteAccountById = async (id) => {
     try {
         const res = await axios.delete(`${baseURL}/Account/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Account deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
     } catch (err) {
-        console.log(err);
+        // Log the detailed error message
+        console.error('Error deleting account:', err);
     }
 }
-
