@@ -14,7 +14,7 @@ export default function PendingLecturer({ id }) {
 
   async function fetchData() {
     const response = await getAllBookingByLecturerID(parseInt(id))
-      .then((data) => setBookedList(data))
+      .then((data) => setBookedList(data.filter(data=>data.status==="Pending")))
       .catch((error) => console.log(error));
   }
   async function addObject() {

@@ -57,7 +57,7 @@ export default function Body() {
           <Route path="*" element={<HomeLecturer id='3'/>} />
           <Route path="Pending" element={<PendingLecturer  id='3'/>} />
           <Route path="Request" element={<RequestLecturer id='2' />} />
-          <Route path="History" element={<FeedbackLecturer />} />
+          <Route path="History" element={<FeedbackLecturer id='3' />} />
         </Routes>
         {/*,
 ScheduleLecturer, */}

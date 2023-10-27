@@ -15,7 +15,7 @@ export const validateUserJWTToken = async (token) => {
         return null;
     }
 };
-
+//get
 export const getAllUser = async () => {
     try {
         const res = await axios.get(`${baseURL}/Account`);
@@ -44,6 +44,22 @@ export const getAllSlotByLecturerID = async (id) => {
 export const getAllRequestByLecturerORStudentID = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Request/GetAllById//${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
+export const getAllFeedBackByLecturer = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Feedback/GetAllById//${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
+export const getAllSubject = async () => {
+    try {
+        const res = await axios.get(`${baseURL}/Subject`);
         return res.data.data;
     } catch (err) {
         return null;
@@ -83,4 +99,41 @@ export const searchSlotById = async (id) => {
         return null;
     }
 };
-
+export const searchBookingById = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Booking/${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
+//create
+export const createAccount= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Account`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Account create successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting account:', err);
+    }
+}
+//delete
+export const deleteAccountById = async (id) => {
+    try {
+        const res = await axios.delete(`${baseURL}/Account/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Account deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting account:', err);
+    }
+}

@@ -24,8 +24,8 @@ export default function ShowBoxs({ childArray, role }) {
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full">
       {showInformations &&
         showInformations.map((infor) => (
-          <div className="w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-center px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
-            {infor.title &&(<span className="font-bold text-xl">{infor.title}</span>)}
+          <div className="w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
+            {infor.title &&(<span className="font-bold text-xl w-full flex justify-center">{infor.title}</span>)}
             {infor.Course && (
               <span className="text-xl">Course: {infor.Course}</span>
             )}

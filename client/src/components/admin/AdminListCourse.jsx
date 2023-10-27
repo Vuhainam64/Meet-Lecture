@@ -1,37 +1,43 @@
 import { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
-import moment from "moment";
+import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
-import { getAllUser, deleteAccountById } from "../../api";
+import { deleteAccountById } from "../../api";
 
-export default function AdminListLecturer({ lecturers, setUsers }) {
-  const [lecturerList, setLecturerList] = useState([]);
+export default function AdminListCourse({ course }) {
+  const [courseList, setCourseList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
-  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openCreate, setOpenCreate] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState();
 
-  const closeModal = () => setOpen(false);
+  const closeModal = () => {
+    setOpenDelete(false);
+  };
 
   useEffect(() => {
-    setLecturerList(lecturers);
-    setShowList(lecturers);
-    console.log(lecturerList);
-  }, [lecturers]);
+    setCourseList(course);
+    setShowList(course);
+    console.log(courseList);
+  }, [course]);
 
   function searchHandleClick(e) {
     e.preventDefault();
     setShowList(
-      lecturerList.filter(
-        (obj) =>
-          obj.fullname.toLowerCase().includes(searchComponent.toLowerCase()) ||
-          obj.email.toLowerCase().includes(searchComponent.toLowerCase())
+      courseList.filter((obj) =>
+        obj.name.toLowerCase().includes(searchComponent.toLowerCase())
       )
     );
   }
   function handleDelete(lecturerId) {
-    setOpen((open) => !open);
+    setOpenDelete((open) => !open);
     setDeleteHolder(lecturerId);
+  }
+  function handleCreate(e) {
+    e.preventDefault();
+    setOpenCreate((open) => !open);
+  
   }
   async function handleDeleteYes() {
     if (deleteHolder) {
@@ -40,7 +46,7 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
         await deleteAccountById(deleteHolder);
         // If the deletion is successful, you can update the local state.
         setDeleteHolder(0);
-        setOpen(false);
+        setOpenDelete(false);
       } catch (error) {
         // Handle the error
         console.error("Error deleting account:", error);
@@ -53,11 +59,11 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
         <div>
           <span className="font-bold text-3xl underline">
-            List of Lecturers: {showList && showList.length}
+            List of Course: {showList && showList.length}
           </span>
         </div>
         <div className="">
-          <form className="flex flex-row gap-10 px-10">
+          <form className="flex flex-row gap-10 w-3/4">
             <input
               value={searchComponent}
               onChange={(e) => setSearchComponent(e.target.value)}
@@ -70,28 +76,24 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
             >
               Search
             </button>
+            <div className="w-[]  justify-center items-center flex text-5xl text-gray-400">
+              <button  onClick={(e)=>handleCreate(e)}>
+                <LuPlusCircle />
+              </button>
+            </div>
           </form>
         </div>
         <table className="w-full ">
           <thead>
             <tr>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-               ID
+                ID
               </th>
               <th className="text-xl p-3 font-semibold  bg-gray-300 border-black border-r-2">
                 Name
               </th>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-                Date of Birth
-              </th>
-              <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-                Username
-              </th>
-              <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-                Password
-              </th>
-              <th className="text-xl p-3 font-semibold bg-gray-300 border-black ">
-                Email
+                Subject
               </th>
               <th></th>
               <th></th>
@@ -105,19 +107,10 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
                     {info.id}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.fullname}
+                    {info.name}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {moment(info.dob).format("DD/MM/YY")}
-                  </td>
-                  <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.username}
-                  </td>
-                  <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.password}
-                  </td>
-                  <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.email}
+                    {info.subjectCode}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     <button className="  text-gray-500">Update</button>
@@ -129,8 +122,34 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
               ))}
           </tbody>
         </table>
-
-        <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+        {/* Delete Popup */}
+        <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
+            <div className="header font-bold text-xl">
+              {" "}
+              Are you sure want to delete this user!!!
+            </div>
+            <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+              <button
+                className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+                onClick={handleDeleteYes}
+              >
+                Yes, Im sure!!!
+              </button>
+              <button
+                className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+                onClick={closeModal}
+              >
+                No, Im not.
+              </button>
+            </div>
+          </div>
+        </Popup>
+        {/* Create Popup */}
+        <Popup open={openCreate} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
             <button className="close" onClick={closeModal}>
               &times;
