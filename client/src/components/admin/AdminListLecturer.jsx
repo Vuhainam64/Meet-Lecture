@@ -1,42 +1,46 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-export default function AdminListLecturer({lecturers}) {
+export default function AdminListLecturer({ lecturers }) {
   const [lecturerList, getLecturerList] = useState([]);
-  useEffect(()=>{
-    getLecturerList(lecturers)
+  const [showList, setShowList] = useState([]);
+  const [searchComponent, setSearchComponent] = useState();
+
+  useEffect(() => {
+    getLecturerList(lecturers);
+    setShowList(lecturers);
     console.log(lecturerList);
-  },[lecturers])
+  }, [lecturers]);
+
+  function searchHandleClick(e) {
+    e.preventDefault();
+    setShowList(
+      lecturerList.filter(
+        (obj) =>
+          obj.fullname.toLowerCase().includes(searchComponent.toLowerCase()) ||
+          obj.email.toLowerCase().includes(searchComponent.toLowerCase())
+      )
+    );
+  }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
         <div>
           <span className="font-bold text-3xl underline">
-            List of Lecturers: {lecturerList&&lecturerList.length}
+            List of Lecturers: {showList && showList.length}
           </span>
         </div>
         <div className="">
           <form className="flex flex-row gap-10 px-10">
             <input
-              placeholder="Name"
-              className="bg-gray-100 placeholder:text-gray-300 rounded-3xl placeholder:font-semibold w-[20%] text-center p-2"
+              value={searchComponent}
+              onChange={(e) => setSearchComponent(e.target.value)}
+              placeholder="Search by name or email"
+              className="bg-gray-100 placeholder:text-gray-400 rounded-3xl placeholder:font-semibold w-[40%] text-center p-2"
             ></input>
-            <input
-              placeholder="ID"
-              className="bg-gray-100 placeholder:text-gray-300 rounded-3xl placeholder:font-semibold w-[5%] text-center p-2"
-            ></input>
-            <input
-              placeholder="Username"
-              className="bg-gray-100 placeholder:text-gray-300 rounded-3xl placeholder:font-semibold w-[15%] text-center p-2"
-            ></input>
-            <input
-              placeholder="Password"
-              className="bg-gray-100 placeholder:text-gray-300 rounded-3xl placeholder:font-semibold w-[15%] text-center p-2"
-            ></input>
-            <input
-              placeholder="Email"
-              className="bg-gray-100 placeholder:text-gray-300 rounded-3xl placeholder:font-semibold w-[20%] text-center p-2"
-            ></input>
-            <button className="bg-orange-400 text-white rounded-3xl w-fit px-5">
+            <button
+              className="bg-orange-400 text-white rounded-3xl w-fit px-5"
+              onClick={e=>searchHandleClick(e)}
+            >
               Search
             </button>
           </form>
@@ -70,8 +74,8 @@ export default function AdminListLecturer({lecturers}) {
             </tr>
           </thead>
           <tbody>
-            {lecturerList &&
-              lecturerList.map((info, index) => (
+            {showList &&
+              showList.map((info, index) => (
                 <tr className="bg-gray-200" key={info.id}>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     {index + 1}
