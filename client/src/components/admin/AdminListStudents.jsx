@@ -4,7 +4,7 @@ import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser,deleteAccountById } from "../../api";
 
-export default function AdminListStudents({students}) {
+export default function AdminListStudents({students,setUser}) {
   
   const [studentList, getStudentList] = useState([]);
   const [showList, setShowList] = useState([]);
@@ -28,7 +28,7 @@ export default function AdminListStudents({students}) {
   }
   function handleDelete(lecturerId){
     setOpen((open) => !open)
-    
+    setUser([])
   }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">

@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import moment from "moment";
 import "../../cssstyles/popupStyles.css";
-import { getAllUser,deleteAccountById } from "../../api";
+import { getAllUser, deleteAccountById } from "../../api";
 
-
-export default function AdminListLecturer({ lecturers }) {
+export default function AdminListLecturer({ lecturers,setUsers }) {
   const [lecturerList, setLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
@@ -34,11 +33,12 @@ export default function AdminListLecturer({ lecturers }) {
     setOpen((open) => !open);
     setDeleteHolder(lecturerId);
   }
- function handleDeleteYes(){
-    if(deleteHolder){
+  function handleDeleteYes() {
+    if (deleteHolder) {
       console.log(deleteHolder);
-         deleteAccountById(deleteHolder);
-         setOpen(false);
+      deleteAccountById(parseInt(deleteHolder));
+      setDeleteHolder(0)
+      setOpen(false);
     }
   }
   return (
@@ -145,7 +145,7 @@ export default function AdminListLecturer({ lecturers }) {
             <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
               <button
                 className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
-               onClick={handleDeleteYes}
+                onClick={handleDeleteYes}
               >
                 Yes, Im sure!!!
               </button>

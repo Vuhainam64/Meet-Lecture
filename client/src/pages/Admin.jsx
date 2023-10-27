@@ -10,11 +10,11 @@ import { Route, Routes,Link } from "react-router-dom";
 function Admin() {
   const [studentList, getStudentList] = useState([]);
   const [lecturerList, getLecturerList] = useState([]);
-  const [users, getUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [page, chosePage] = useState("Create");
  async function fetchData () {
     const response=await getAllUser()
-      .then((result) => getUsers(result))
+      .then((result) => setUsers(result))
       .catch((error) => console.log(error));
     console.log(users);
   };
@@ -71,8 +71,8 @@ function Admin() {
         <div className="h-[90%]">
           <Routes>
             <Route path="*" element={<AdminCreate />} />
-            <Route path="Lecturer" element={<AdminListLecturer lecturers={lecturerList} />} />
-            <Route path="Student" element={<AdminListStudents students={studentList}/>} />
+            <Route path="Lecturer" element={<AdminListLecturer lecturers={lecturerList}  setUsers={setUsers}/>} />
+            <Route path="Student" element={<AdminListStudents students={studentList} setUsers={setUsers}/>} />
           </Routes>
         </div>
       </div>
