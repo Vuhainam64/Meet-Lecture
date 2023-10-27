@@ -8,6 +8,7 @@ import {
 } from "../components/admin";
 import { Route, Routes,Link } from "react-router-dom";
 function Admin() {
+  const [isUserAdded, setUserAdded] = useState(false);  
   const [studentList, getStudentList] = useState([]);
   const [lecturerList, getLecturerList] = useState([]);
   const [users, setUsers] = useState([]);
@@ -27,11 +28,14 @@ function Admin() {
     console.log(lecturerList);
   }
   useEffect(() => {
+    if(users.length===0)
     fetchData();
     filterStudent();
     filterLecturer();
-  }, [users.length===0]);
-
+  
+    // Reset the flag after executing
+    setUserAdded(false);
+  },  [users,page]);
   return (
     <div className="bg-white h-full">
       <Header />
@@ -70,8 +74,8 @@ function Admin() {
         </div>
         <div className="h-[90%]">
           <Routes>
-            <Route path="*" element={<AdminCreate />} />
-            <Route path="Lecturer" element={<AdminListLecturer lecturers={lecturerList}  setUsers={setUsers}/>} />
+            <Route path="*" element={<AdminCreate setUsers={setUsers}/>} />
+            <Route path="Lecturer" element={<AdminListLecturer lecturers={lecturerList}  setUserAdded={setUserAdded}/>} />
             <Route path="Student" element={<AdminListStudents students={studentList} setUsers={setUsers}/>} />
           </Routes>
         </div>

@@ -109,7 +109,7 @@ export default function AdminListStudents({students,setUser}) {
                     <button className="  text-gray-500">Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-red-500" onClick={()=>handleDelete(info.id)}>Delete</button>
+                    <button className="  text-red-500" >Delete</button>
                   </td>
                 </tr>
               ))}

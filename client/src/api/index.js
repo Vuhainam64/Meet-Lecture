@@ -15,7 +15,7 @@ export const validateUserJWTToken = async (token) => {
         return null;
     }
 };
-
+//get
 export const getAllUser = async () => {
     try {
         const res = await axios.get(`${baseURL}/Account`);
@@ -99,7 +99,22 @@ export const searchBookingById = async (id) => {
         return null;
     }
 };
-
+//create
+export const createAccount= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Account`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Account create successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting account:', err);
+    }
+}
+//delete
 export const deleteAccountById = async (id) => {
     try {
         const res = await axios.delete(`${baseURL}/Account/${id}`);

@@ -4,7 +4,7 @@ import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser, deleteAccountById } from "../../api";
 
-export default function AdminListLecturer({ lecturers,setUsers }) {
+export default function AdminListLecturer({ lecturers, setUsers }) {
   const [lecturerList, setLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
@@ -43,14 +43,13 @@ export default function AdminListLecturer({ lecturers,setUsers }) {
         setOpen(false);
       } catch (error) {
         // Handle the error
-        console.error('Error deleting account:', error);
+        console.error("Error deleting account:", error);
       }
     }
   }
-  
-  
+
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
+    <div className="w-full max-w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
         <div>
           <span className="font-bold text-3xl underline">
@@ -73,13 +72,13 @@ export default function AdminListLecturer({ lecturers,setUsers }) {
             </button>
           </form>
         </div>
-        <table className="w-full">
+        <table className="w-full ">
           <thead>
             <tr>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
                 No.
               </th>
-              <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
+              <th className="text-xl p-3 font-semibold  bg-gray-300 border-black border-r-2">
                 Name
               </th>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
@@ -130,17 +129,13 @@ export default function AdminListLecturer({ lecturers,setUsers }) {
                     <button className="  text-gray-500">Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button
-                      className="  text-red-500"
-                      onClick={() => handleDelete(info.id)}
-                    >
-                      Delete
-                    </button>
+                    <button className="  text-red-500">Delete</button>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
+
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
             <button className="close" onClick={closeModal}>
