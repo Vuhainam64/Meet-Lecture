@@ -4,7 +4,7 @@ export default function AdminListStudents({students}) {
   
   const [studentList, getStudentList] = useState([]);
   const [showList, setShowList] = useState([]);
-  const [searchComponent, setSearchComponent] = useState();
+  const [searchComponent, setSearchComponent] = useState('');
   useEffect(()=>{
     getStudentList(students)
     setShowList(students);

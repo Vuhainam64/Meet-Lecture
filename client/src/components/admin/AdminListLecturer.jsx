@@ -3,7 +3,7 @@ import moment from "moment";
 export default function AdminListLecturer({ lecturers }) {
   const [lecturerList, getLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
-  const [searchComponent, setSearchComponent] = useState();
+  const [searchComponent, setSearchComponent] = useState('');
 
   useEffect(() => {
     getLecturerList(lecturers);
