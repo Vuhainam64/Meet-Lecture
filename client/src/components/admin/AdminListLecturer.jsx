@@ -1,15 +1,34 @@
 import { useEffect, useState } from "react";
+import Popup from "reactjs-popup";
 import moment from "moment";
-export default function AdminListLecturer({ lecturers }) {
-  const [lecturerList, getLecturerList] = useState([]);
-  const [showList, setShowList] = useState([]);
-  const [searchComponent, setSearchComponent] = useState('');
+import "../../cssstyles/popupStyles.css";
+import { getAllUser,deleteAccountById } from "../../api";
 
+
+export default function AdminListLecturer({downloadData}) {
+  const [fetchDataLecturer, setFetchDataLecturer] = useState([]);
+  const [lecturerList, setLecturerList] = useState([]);
+  const [showList, setShowList] = useState([]);
+  const [searchComponent, setSearchComponent] = useState("");
+  const [open, setOpen] = useState(false);
+  const [deleteHolder, setDeleteHolder] = useState();
+
+  const closeModal = () => setOpen(false);
+  async function fetchData() {
+    const response = await getAllUser()
+      .then((result) => setFetchDataLecturer(result))
+      .catch((error) => console.log(error));
+
+  }
+  const filterLecturer = () => {
+    setLecturerList(fetchDataLecturer.filter((ifo) => ifo.role === "Lecturer"));
+    console.log(fetchData);
+  };
   useEffect(() => {
-    getLecturerList(lecturers);
-    setShowList(lecturers);
-    console.log(lecturerList);
-  }, [lecturers]);
+    fetchData();
+    filterLecturer();
+    setShowList(lecturerList)
+  }, [downloadData]);
 
   function searchHandleClick(e) {
     e.preventDefault();
@@ -20,6 +39,17 @@ export default function AdminListLecturer({ lecturers }) {
           obj.email.toLowerCase().includes(searchComponent.toLowerCase())
       )
     );
+  }
+  function handleDelete(lecturerId) {
+    setOpen((open) => !open);
+    setDeleteHolder(lecturerId);
+  }
+ function handleDeleteYes(){
+    if(deleteHolder){
+      console.log(deleteHolder);
+         deleteAccountById(deleteHolder);
+         setOpen(false);
+    }
   }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
@@ -39,7 +69,7 @@ export default function AdminListLecturer({ lecturers }) {
             ></input>
             <button
               className="bg-orange-400 text-white rounded-3xl w-fit px-5"
-              onClick={e=>searchHandleClick(e)}
+              onClick={(e) => searchHandleClick(e)}
             >
               Search
             </button>
@@ -102,12 +132,42 @@ export default function AdminListLecturer({ lecturers }) {
                     <button className="  text-gray-500">Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-red-500">Delete</button>
+                    <button
+                      className="  text-red-500"
+                      onClick={() => handleDelete(info.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
+        <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
+            <div className="header font-bold text-xl">
+              {" "}
+              Are you sure want to delete this user!!!
+            </div>
+            <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+              <button
+                className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+               onClick={handleDeleteYes}
+              >
+                Yes, Im sure!!!
+              </button>
+              <button
+                className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+                onClick={closeModal}
+              >
+                No, Im not.
+              </button>
+            </div>
+          </div>
+        </Popup>
       </div>
     </div>
   );

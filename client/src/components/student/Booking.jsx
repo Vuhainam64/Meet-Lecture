@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { ShowBoxs } from "../styles";
 
-export default function Booking() {
+export default function Booking({teacherId}) {
   const bookingRooms = [
     {
       Location: "P.102",

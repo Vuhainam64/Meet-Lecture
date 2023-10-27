@@ -100,3 +100,11 @@ export const searchBookingById = async (id) => {
     }
 };
 
+export const deleteAccountById=async (id)=>{
+    try {
+        const res = await axios.delete(`${baseURL}/Account/${id}`);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
