@@ -1,41 +1,51 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Footer, Header } from "../layout";
-import { getAllUser } from "../api";
+import { getAllSubject, getAllUser, } from "../api";
 import {
   AdminCreate,
   AdminListLecturer,
   AdminListStudents,
+  AdminListCourse,
 } from "../components/admin";
-import { Route, Routes,Link } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 function Admin() {
-  const [isUserAdded, setUserAdded] = useState(false);  
-  const [studentList, getStudentList] = useState([]);
-  const [lecturerList, getLecturerList] = useState([]);
+  const [isUserAdded, setUserAdded] = useState(false);
+  const [studentList, setStudentList] = useState([]);
+  const [lecturerList, setLecturerList] = useState([]);
+  const [courseList, setCourseList] = useState([]);
   const [users, setUsers] = useState([]);
   const [page, chosePage] = useState("Create");
- async function fetchData () {
-    const response=await getAllUser()
+  async function fetchData() {
+    const response = await getAllUser()
       .then((result) => setUsers(result))
       .catch((error) => console.log(error));
     console.log(users);
-  };
-  const filterStudent=()=>{
-    getStudentList(users.filter((ifo) => ifo.role === "Student"));
+  }
+  async function fetchCourse() {
+    const response = await getAllSubject()
+      .then((result) => setCourseList(result))
+      .catch((error) => console.log(error));
+    console.log(users);
+  }
+  const filterStudent = () => {
+    setStudentList(users.filter((ifo) => ifo.role === "Student"));
     console.log(studentList);
-  }
-  const filterLecturer=()=>{
-    getLecturerList(users.filter((ifo) => ifo.role === "Lecturer"));
+  };
+  const filterLecturer = () => {
+    setLecturerList(users.filter((ifo) => ifo.role === "Lecturer"));
     console.log(lecturerList);
-  }
+  };
   useEffect(() => {
-    if(users.length===0)
-    fetchData();
-    filterStudent();
-    filterLecturer();
-  
-    // Reset the flag after executing
-    setUserAdded(false);
-  },  [users,page]);
+    if (users.length === 0 )
+      fetchData();
+     if(page!=='Course') {
+      filterStudent();
+      filterLecturer();
+      setUserAdded(false);
+    }else{
+      fetchCourse();
+    }
+  }, [users, page]);
   return (
     <div className="bg-white h-full">
       <Header />
@@ -71,12 +81,39 @@ function Admin() {
               Student
             </button>
           </Link>
+          <Link to="Course">
+            <button
+              className={` w-40 h-14 ${
+                page === "Course" ? "bg-orange-300" : "bg-gray-300"
+              }`}
+              onClick={() => chosePage("Course")}
+            >
+              Course
+            </button>
+          </Link>
         </div>
         <div className="h-[90%]">
           <Routes>
-            <Route path="*" element={<AdminCreate setUsers={setUsers}/>} />
-            <Route path="Lecturer" element={<AdminListLecturer lecturers={lecturerList}  setUserAdded={setUserAdded}/>} />
-            <Route path="Student" element={<AdminListStudents students={studentList} setUsers={setUsers}/>} />
+            <Route path="*" element={<AdminCreate setUsers={setUsers} />} />
+            <Route
+              path="Lecturer"
+              element={
+                <AdminListLecturer
+                  lecturers={lecturerList}
+                  setUserAdded={setUserAdded}
+                />
+              }
+            />
+            <Route
+              path="Student"
+              element={
+                <AdminListStudents students={studentList} setUsers={setUsers} />
+              }
+            />
+            <Route
+              path="Course"
+              element={<AdminListCourse course={courseList} />}
+            />
           </Routes>
         </div>
       </div>

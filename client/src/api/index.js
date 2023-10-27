@@ -57,6 +57,14 @@ export const getAllFeedBackByLecturer = async (id) => {
         return null;
     }
 };
+export const getAllSubject = async () => {
+    try {
+        const res = await axios.get(`${baseURL}/Subject`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
 export const searchTeacherById = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Account/${id}`);
