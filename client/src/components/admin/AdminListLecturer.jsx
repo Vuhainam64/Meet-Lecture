@@ -76,13 +76,10 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
           <thead>
             <tr>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-                No.
+               ID
               </th>
               <th className="text-xl p-3 font-semibold  bg-gray-300 border-black border-r-2">
                 Name
-              </th>
-              <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-                ID
               </th>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
                 Date of Birth
@@ -105,13 +102,10 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
               showList.map((info, index) => (
                 <tr className="bg-gray-200" key={info.id}>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {index + 1}
+                    {info.id}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     {info.fullname}
-                  </td>
-                  <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {info.id}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     {moment(info.dob).format("DD/MM/YY")}
