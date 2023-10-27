@@ -5,8 +5,7 @@ import "../../cssstyles/popupStyles.css";
 import { getAllUser,deleteAccountById } from "../../api";
 
 
-export default function AdminListLecturer({downloadData}) {
-  const [fetchDataLecturer, setFetchDataLecturer] = useState([]);
+export default function AdminListLecturer({ lecturers }) {
   const [lecturerList, setLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
@@ -14,21 +13,12 @@ export default function AdminListLecturer({downloadData}) {
   const [deleteHolder, setDeleteHolder] = useState();
 
   const closeModal = () => setOpen(false);
-  async function fetchData() {
-    const response = await getAllUser()
-      .then((result) => setFetchDataLecturer(result))
-      .catch((error) => console.log(error));
 
-  }
-  const filterLecturer = () => {
-    setLecturerList(fetchDataLecturer.filter((ifo) => ifo.role === "Lecturer"));
-    console.log(fetchData);
-  };
   useEffect(() => {
-    fetchData();
-    filterLecturer();
-    setShowList(lecturerList)
-  }, [downloadData]);
+    setLecturerList(lecturers);
+    setShowList(lecturers);
+    console.log(lecturerList);
+  }, [lecturers]);
 
   function searchHandleClick(e) {
     e.preventDefault();

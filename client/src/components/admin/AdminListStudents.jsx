@@ -4,27 +4,17 @@ import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser,deleteAccountById } from "../../api";
 
-export default function AdminListStudents({downloadData}) {
-  const [fetchDataLecturer, setFetchDataLecturer] = useState([]);
-  const [studentList, setStudentList] = useState([]);
+export default function AdminListStudents({students}) {
+  
+  const [studentList, getStudentList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState('');
   const [open, setOpen] = useState(false);
   const closeModal = () => setOpen(false);
-  async function fetchData() {
-    const response = await getAllUser()
-      .then((result) => setFetchDataLecturer(result))
-      .catch((error) => console.log(error));
-  }
-  const filterStudent = () => {
-    setStudentList(fetchDataLecturer.filter((ifo) => ifo.role === "Student"));
-    console.log(studentList);
-  };
-  useEffect(() => {
-    fetchData();
-    filterStudent();
-    setShowList(studentList);
-  }, [downloadData]);
+  useEffect(()=>{
+    getStudentList(students)
+    setShowList(students);
+  },[students])
 
   function searchHandleClick(e) {
     e.preventDefault();
@@ -38,7 +28,7 @@ export default function AdminListStudents({downloadData}) {
   }
   function handleDelete(lecturerId){
     setOpen((open) => !open)
-    console.log(lecturerId);
+    
   }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
@@ -133,7 +123,7 @@ export default function AdminListStudents({downloadData}) {
               </button>
               <div className="header font-bold text-xl"> Are you sure want to delete this user!!!</div>
               <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
-              <button className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500" onc>
+              <button className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500">
                 Yes, Im sure!!!
               </button>
               <button className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500">
