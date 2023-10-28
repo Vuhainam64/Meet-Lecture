@@ -120,7 +120,7 @@ export const createAccount= async (form) => {
         }
     } catch (err) {
         // Log the detailed error message
-        console.error('Error deleting account:', err);
+        console.error('Error create account:', err);
     }
 }
 export const createCourse= async (form) => {
@@ -134,9 +134,25 @@ export const createCourse= async (form) => {
         }
     } catch (err) {
         // Log the detailed error message
-        console.error('Error deleting account:', err);
+        console.error('Error create course:', err);
     }
 }
+export const createSlot= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Slot`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Slot create successfully.');
+        } else {
+            console.log(`Slot status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error create slot:', err);
+    }
+}
+
+
 //delete
 export const deleteAccountById = async (id) => {
     try {
