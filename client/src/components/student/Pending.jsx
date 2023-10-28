@@ -1,49 +1,56 @@
+import {
+  searchStudentById,
+  searchSubjectById,
+  searchSlotById,
+  getAllBookingByLecturerIDORStudentID,
+} from "../../api";
 import { ShowBoxs } from "../styles";
+import { useEffect, useState } from "react";
 
 export default function Pending() {
-        const bookingRooms = [
-            {
-            Location: "P.102",
-            Time: "12:30 - 14:45",
-            Date: "11/10/2023",
-            Limit: "1/6",
-            Status: "Cancel",
-            },
-            {
-            Location: "P.203",
-            Time: "15:00 - 17:15",
-            Date: "09/10/2023",
-            Limit: " 2/6",
-            Status: "Booked",
-            },
-            {
-            Location: " P.391",
-            Time: "7:30 - 9:15",
-            Date: "04/10/2023",
-            Limit: "4/6",
-            Status: "Book",
-            },
-            {
-            Location: "P.309",
-            Time: "9:30 - 11:45",
-            Date: "06/10/2023",
-            Limit: "5/6",
-            Status: "Book",
-            },
-            {
-            Location: "P.105",
-            Time: "9:30 - 11:45",
-            Date: "07/10/2023",
-            Limit: "6/6",
-            Status: "Full",
-            },
-        ];
-    return (
-<div className="w-full h-ull flex flex-col justify-center items-start gap-5">
-            <div className="w-[90%] mx-[5%]">
-            <ShowBoxs childArray={bookingRooms} lectureName="Chua co"></ShowBoxs>
-            </div>
-        </div>
-    );
+  const [bookedList, setBookedList] = useState([]);
+  const [showList, setShowList] = useState([]);
+  const id=2;
+  async function fetchData(studentId) {
+    const response = await getAllBookingByLecturerIDORStudentID(parseInt(studentId))
+      .then((data) =>
+        setBookedList(data.filter((data) => data.status === "Pending"))
+      )
+      .catch((error) => console.log(error));
   }
-  
+  async function addObject() {
+    const updatedRequestedList = await Promise.all(
+      bookedList.map(async (infor) => {
+        const studentInfor = await searchStudentById(infor.studentId);
+        const subjectInfor = await searchSubjectById(infor.subjectId);
+        const slotInfor = await searchSlotById(infor.slotId);
+        // Update the infor object with the response object in the studentId property
+        infor.studentId = studentInfor;
+        // Update the infor object with the response object in the subjectId property
+        infor.subjectId = subjectInfor;
+        // Update the infor object with the response object in the slotId property
+        infor.slotId = slotInfor;
+        return infor; // Return the updated infor object
+      })
+    );
+    // Updated array\
+    setShowList(updatedRequestedList);
+  }
+  useEffect(() => {
+    if (id) {
+      fetchData(id);
+      console.log(bookedList);
+    }
+  }, [id, bookedList <= 0]);
+  useEffect(() => {
+    addObject();
+    console.log(showList);
+  }, [bookedList <= 0]);
+  return (
+    <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
+      <div className="w-[90%] mx-[5%]">
+        <ShowBoxs childArray={bookedList} role='Student'></ShowBoxs>
+      </div>
+    </div>
+  );
+}

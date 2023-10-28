@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { TiTick, TiTimes } from "react-icons/ti";
 import {
-  getAllBookingByLecturerID,
   searchStudentById,
   searchSubjectById,
   searchSlotById,
+  getAllBookingByLecturerIDORStudentID,
 } from "../../api";
 import moment from "moment";
 
@@ -13,7 +13,7 @@ export default function PendingLecturer({ id }) {
   const [showList, setShowList] = useState([]);
 
   async function fetchData() {
-    const response = await getAllBookingByLecturerID(parseInt(id))
+    const response = await getAllBookingByLecturerIDORStudentID(parseInt(id))
       .then((data) => setBookedList(data.filter(data=>data.status==="Pending")))
       .catch((error) => console.log(error));
   }
