@@ -39,6 +39,16 @@ export default function CreateSlotLecturer() {
       title: inforDetail.title,
     });
   };
+  async function makePostRequest(form) {
+    try {
+      const response = await createAccount(form);
+    } catch (error) {}
+  }
+  async function makeUpdateRequest(form) {
+    try {
+      const response = await createAccount(form);
+    } catch (error) {}
+  }
 
   async function fetchData(slotId) {
     // Chuyển đổi id thành kiểu số
@@ -54,7 +64,6 @@ export default function CreateSlotLecturer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // Validate the form
     const errors = validateForm();
     setErrors(errors);
@@ -68,6 +77,22 @@ export default function CreateSlotLecturer() {
       setAdded(true);
     }
   };
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    // Validate the form
+    const errors = validateForm();
+    setErrors(errors);
+
+    // If there are errors, do not proceed with the submission
+    if (Object.keys(errors).length === 0) {
+      // No validation errors, proceed with the submission
+      console.log("Form submitted:", formData);
+      // makePostRequest(formData);
+      setFormData(zeroFormData);
+      setAdded(true);
+    }
+  };
+
 
   const cancelAll = () => {
     setFormData(zeroFormData);
@@ -147,7 +172,7 @@ export default function CreateSlotLecturer() {
         <div className="w-full flex justify-center items-center">
           <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%] ">
             <span className="font-semibold text-2xl mb-5">
-              {formData ? "Update Booking Slot" : "Create Booking Slot"}
+              {inforDetail ? "Update Booking Slot" : "Create Booking Slot"}
             </span>
             <form className="w-[80%] mx-auto flex flex-col gap-5">
               <div className="flex flex-row w-full items-center">
@@ -273,7 +298,7 @@ export default function CreateSlotLecturer() {
               </button>
               <button
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={handleSubmit}
+                onClick={inforDetail?handleUpdate:handleSubmit}
               >
                 Request
               </button>
