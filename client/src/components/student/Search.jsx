@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { PiArrowFatLineRightBold } from "react-icons/pi";
 import { getAllUser } from "../../api";
+import { Link } from "react-router-dom";
 export default function Search() {
   const [searchComponent, setSearchComponent] = useState("");
   const [lecturers, setLecturers] = useState([]);
   const [result, setResult] = useState([]);
+  const [empty, isEmpty] = useState(false);
   async function fetchData() {
     const response = await getAllUser()
       .then((data) =>
@@ -24,6 +26,11 @@ export default function Search() {
         acc.fullname.toLowerCase().includes(searchComponent.toLowerCase())
       )
     );
+    if (result.length === 0) {
+      isEmpty(true);
+    } else {
+      isEmpty(false);
+    }
   }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-10">
@@ -42,14 +49,21 @@ export default function Search() {
         </button>
       </form>
       <div className="w-1/3 h-fit flex flex-col  p-10 border-orange-400 border-4 rounded-md min-h-[25%]">
+        {empty === true && (
+          <div>
+            <span>There are no teacher has that name.</span>
+          </div>
+        )}
         {result &&
           result.map((account) => (
-            <div className="flex flex-row justify-between items-center w-full">
+            <Link to={`/Student/Booking/${account.id}`}>
+              <div className="flex flex-row justify-between items-center w-full">
                 <span className="text-xl">{account.fullname}</span>
-                <div className="text-4xl">
+                <button>
                   <PiArrowFatLineRightBold />
+                </button>
               </div>
-            </div>
+            </Link>
           ))}
       </div>
     </div>

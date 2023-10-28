@@ -22,6 +22,7 @@ export default function ShowBoxs({ childArray, role }) {
   }
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative">
+      {showInformations&&showInformations.length===0&&(<div className="w-full font-bold text-2xl">THERE ARE NO SLOT HERE!!!!</div>)}
       {showInformations &&
         showInformations.map((infor) => (
           <div className="relative w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">

@@ -5,13 +5,11 @@ import { useEffect, useState } from "react";
 import { getAllSlotByLecturerID } from "../../api";
 
 export default function HomeLecturer({ id }) {
-  const [datas, getDatas] = useState([]);
   const [bookingRooms, setBookingRooms] = useState([]);
   async function fetchData() {
     const response = await getAllSlotByLecturerID(parseInt(id))
       .then((data) => setBookingRooms(data))
       .catch((error) => console.log(error));
-    console.log(datas);
   }
   useEffect(() => {
     if(id)
