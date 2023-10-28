@@ -21,10 +21,10 @@ export default function FeedbackLecturer({ id }) {
       requestedList.map(async (infor) => {
         const bookingInfor = await searchBookingById(infor.bookingId);
         const slotInfor = await searchSlotById(bookingInfor?.slotId);
-        const subjectInfor =await searchSubjectById(bookingInfor?.subjectId);
+        const subjectInfor = await searchSubjectById(bookingInfor?.subjectId);
         infor.bookingId = bookingInfor;
-        infor.slot=slotInfor;
-        infor.subject=subjectInfor;
+        infor.slot = slotInfor;
+        infor.subject = subjectInfor;
         return infor; // Return the updated infor object
       })
     );
@@ -55,15 +55,22 @@ export default function FeedbackLecturer({ id }) {
               <div className="w-full h-fit flex flex-col   p-5 border-gray-400 border-2 rounded-md min-h-[25%] justify-between gap-3">
                 <div className="w-full flex flex-row gap-10">
                   <div className="text-lg">Title: {infor?.slot.title}</div>
-                  <div className="text-lg">Course: {infor?.subject.subjectCode}</div>
-                  <div className="text-lg">Location: {infor?.slot.location}</div>
-                  <div className="text-lg">Date:   {moment(infor.createdAt).format("DD/MM/YY")}</div>
-                  <div className="text-lg">Time: {moment(infor.createdAt).format("HH:mm")}</div>
+                  <div className="text-lg">
+                    Course: {infor?.subject.subjectCode}
+                  </div>
+                  <div className="text-lg">
+                    Location: {infor?.slot.location}
+                  </div>
+                  <div className="text-lg">
+                    Date: {moment(infor.createdAt).format("DD/MM/YY")}
+                  </div>
+                  <div className="text-lg">
+                    Time: {moment(infor.slotId?.startDatetime).format("HH:mm")}-
+                    {moment(infor.slotId?.endDatetime).format("HH:mm")}
+                  </div>
                 </div>
                 <div className="w-full">
-                  <div className="text-lg">
-                    Description: {infor.comment}
-                  </div>
+                  <div className="text-lg">Description: {infor.comment}</div>
                 </div>
               </div>
             ))}

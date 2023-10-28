@@ -96,7 +96,8 @@ export const searchSlotById = async (id) => {
         const res = await axios.get(`${baseURL}/Slot/${id}`);
         return res.data.data;
     } catch (err) {
-        return null;
+        console.error('Error in searchSlotById:', err);
+        return {};
     }
 };
 export const searchBookingById = async (id) => {

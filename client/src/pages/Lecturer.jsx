@@ -11,7 +11,7 @@ export default function Lecturer() {
       <Header />
       <Routes>
         <Route path="*" element={<Body />} />
-        <Route path="/Create/:infor" element={<CreateSlotLecturer />} />
+        <Route path="/create/:id" element={<CreateSlotLecturer />} />
       </Routes>
     </div>
   );
