@@ -168,3 +168,17 @@ export const deleteAccountById = async (id) => {
         console.error('Error deleting account:', err);
     }
 }
+export const deleteSubjectById = async (id) => {
+    try {
+        const res = await axios.delete(`${baseURL}/Subject/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('subject deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting subject:', err);
+    }
+}

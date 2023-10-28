@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
-import { createCourse } from "../../api";
+import { createCourse, deleteSubjectById } from "../../api";
 
 export default function AdminListCourse({ course }) {
   const zeroFormData = {
@@ -14,14 +14,25 @@ export default function AdminListCourse({ course }) {
   const [searchComponent, setSearchComponent] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState();
+
   const [formData, setFormData] = useState(zeroFormData);
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
   async function makePostRequest(form) {
     try {
       const response = await createCourse(form);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function makeDeleteRequest(subjectId) {
+    try {
+      const response = await deleteSubjectById(subjectId);
+    } catch (error) {
+      console.log(error);
+    }
   }
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,34 +95,35 @@ export default function AdminListCourse({ course }) {
   function searchHandleClick(e) {
     e.preventDefault();
     setShowList(
-      courseList.filter((obj) =>
-        obj.name.toLowerCase().includes(searchComponent.toLowerCase())||
-        obj.subjectCode.toLowerCase().includes(searchComponent.toLowerCase())
+      courseList.filter(
+        (obj) =>
+          obj.name.toLowerCase().includes(searchComponent.toLowerCase()) ||
+          obj.subjectCode.toLowerCase().includes(searchComponent.toLowerCase())
       )
     );
   }
-  // function handleDelete(lecturerId) {
-  //   setOpenDelete((open) => !open);
-  //   setDeleteHolder(lecturerId);
-  // }
+  function handleDelete(id) {
+    setOpenDelete((open) => !open);
+    setDeleteHolder(id);
+  }
   function handleCreate(e) {
     e.preventDefault();
     setOpenCreate((open) => !open);
   }
-  // async function handleDeleteYes() {
-  //   if (deleteHolder) {
-  //     try {
-  //       console.log(deleteHolder);
-  //       await deleteAccountById(deleteHolder);
-  //       // If the deletion is successful, you can update the local state.
-  //       setDeleteHolder(0);
-  //       setOpenDelete(false);
-  //     } catch (error) {
-  //       // Handle the error
-  //       console.error("Error deleting account:", error);
-  //     }
-  //   }
-  // }
+  function handleDeleteYes() {
+    if (deleteHolder !== 0) {
+      try {
+        console.log(deleteHolder);
+        makeDeleteRequest(deleteHolder);
+        // If the deletion is successful, you can update the local state.
+        setDeleteHolder(0);
+        setOpenDelete(false);
+      } catch (error) {
+        // Handle the error
+        console.error("Error deleting account:", error);
+      }
+    }
+  }
 
   return (
     <div className="w-full max-w-full h-full flex flex-col justify-center items-center gap-5 py-5">
@@ -175,7 +187,12 @@ export default function AdminListCourse({ course }) {
                     <button className="  text-gray-500">Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-red-500">Delete</button>
+                    <button
+                      className="  text-red-500"
+                      onClick={() => handleDelete(info.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -194,7 +211,7 @@ export default function AdminListCourse({ course }) {
             <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
               <button
                 className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
-                onClick={() => {}}
+                onClick={handleDeleteYes}
               >
                 Yes, Im sure!!!
               </button>
@@ -219,7 +236,9 @@ export default function AdminListCourse({ course }) {
                   </span>
                   <input
                     className={`border ${
-                      errors.name ? "border-red-500 border-2" : "border-gray-900"
+                      errors.name
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
                     }  rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                     onChange={handleInputChange}
                     type="text"
@@ -227,14 +246,18 @@ export default function AdminListCourse({ course }) {
                     name="name"
                   ></input>
                 </div>
-                {errors.name && <p className="text-red-500 text-xl ">{errors.name}</p>}
+                {errors.name && (
+                  <p className="text-red-500 text-xl ">{errors.name}</p>
+                )}
                 <div className="flex flex-row w-full items-center justify-center">
                   <span className="text-xl font-medium w-[30%]">
                     Course's Subject
                   </span>
                   <input
                     className={`border  ${
-                      errors.subjectCode ? "border-red-500 border-2" : "border-gray-900"
+                      errors.subjectCode
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
                     }  rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                     onChange={handleInputChange}
                     type="text"
@@ -242,7 +265,71 @@ export default function AdminListCourse({ course }) {
                     name="subjectCode"
                   ></input>
                 </div>
-                {errors.subjectCode && <p className="text-red-500 text-xl ">{errors.subjectCode}</p>}
+                {errors.subjectCode && (
+                  <p className="text-red-500 text-xl ">{errors.subjectCode}</p>
+                )}
+                <div className="flex flex-row gap-20 ">
+                  <button
+                    className="text-xl bg-green-500 p-1 border rounded-lg border-black"
+                    onClick={handleSubmit}
+                  >
+                    Create
+                  </button>
+                  <button
+                    className="text-xl bg-red-500 p-1 border rounded-lg border-black"
+                    onClick={cancelAll}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </Popup>
+        {/* Update Popup */}
+        <Popup open={openUpdate} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <div className="header font-bold text-3xl"> Create Course!!!</div>
+            <div className="content">
+              <form className="w-full flex justify-center flex-col gap-5 items-center min-h-[10rem]">
+                <div className="flex flex-row w-full items-center justify-center">
+                  <span className="text-xl font-medium w-[30%]">
+                    Course's Name:
+                  </span>
+                  <input
+                    className={`border ${
+                      errors.name
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    }  rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    onChange={handleInputChange}
+                    type="text"
+                    value={formData.name}
+                    name="name"
+                  ></input>
+                </div>
+                {errors.name && (
+                  <p className="text-red-500 text-xl ">{errors.name}</p>
+                )}
+                <div className="flex flex-row w-full items-center justify-center">
+                  <span className="text-xl font-medium w-[30%]">
+                    Course's Subject
+                  </span>
+                  <input
+                    className={`border  ${
+                      errors.subjectCode
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    }  rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    onChange={handleInputChange}
+                    type="text"
+                    value={formData.subjectCode}
+                    name="subjectCode"
+                  ></input>
+                </div>
+                {errors.subjectCode && (
+                  <p className="text-red-500 text-xl ">{errors.subjectCode}</p>
+                )}
                 <div className="flex flex-row gap-20 ">
                   <button
                     className="text-xl bg-green-500 p-1 border rounded-lg border-black"
