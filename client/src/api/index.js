@@ -123,6 +123,20 @@ export const createAccount= async (form) => {
         console.error('Error deleting account:', err);
     }
 }
+export const createCourse= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Subject`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Subject create successfully.');
+        } else {
+            console.log(`Subject status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting account:', err);
+    }
+}
 //delete
 export const deleteAccountById = async (id) => {
     try {

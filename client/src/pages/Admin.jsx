@@ -100,7 +100,7 @@ function Admin() {
               element={
                 <AdminListLecturer
                   lecturers={lecturerList}
-                  setUserAdded={setUserAdded}
+                  setUsers={setUsers}
                 />
               }
             />

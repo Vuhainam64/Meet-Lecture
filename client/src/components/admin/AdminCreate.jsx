@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createAccount } from "../../api";
-
-export default function AdminCreate({ setUserAdded }) {
+import Alert from '@mui/material/Alert';
+export default function AdminCreate({ setUsers }) {
   const zeroFormData = {
     username: "",
     password: "",
@@ -46,6 +46,7 @@ export default function AdminCreate({ setUserAdded }) {
       makePostRequest(formData);
       setFormData(zeroFormData);
       setAdded(true);
+      setUsers((prevUsers)=>[...prevUsers,formData]);
     }
   };
 
@@ -61,7 +62,6 @@ export default function AdminCreate({ setUserAdded }) {
     if (!formData.fullname) {
       newErrors.fullname = "Full name is required";
     } else if (/^\d/.test(formData.fullname)) {
-      // Check if the fullname starts with a number
       newErrors.fullname = "Full name cannot start with a number";
     }
     if (!formData.dob) {
@@ -73,17 +73,27 @@ export default function AdminCreate({ setUserAdded }) {
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
-
-    // Check if the email is a valid email address
-    if (!/^[A-Za-z0-9._%+-]+@fpt.edu.vn$/.test(formData.email)) {
-      newErrors.email =
-        "Invalid email format. It should be in the format 'xxxx@fpt.edu.vn'";
+  
+    // Check if the email is a valid email address based on the role
+    if (formData.role === "Student") {
+      // For students, validate the email as "xxxse123456@fpt.edu.vn"
+      if (!/^[A-Za-z0-9._%+-]+se\d{6}@fpt.edu.vn$/.test(formData.email)) {
+        newErrors.email =
+          "Invalid student email format. It should be in the format 'xxxse123456@fpt.edu.vn'";
+      }
+    } else {
+      // For other roles, validate the email as "xxxxx@fpt.edu.vn"
+      if (!/^[A-Za-z0-9._%+-]+@fpt.edu.vn$/.test(formData.email)) {
+        newErrors.email =
+          "Invalid email format. It should be in the format 'xxxxx@fpt.edu.vn'";
+      }
     }
-
+  
     // Add more validation rules for other fields as needed
-
+  
     return newErrors;
   };
+  
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center  pb-10">
