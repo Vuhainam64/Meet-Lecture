@@ -9,7 +9,7 @@ export default function Booking() {
   const [bookingRooms, setBookingRooms] = useState([]);
   async function fetchData(id) {
     const response = await getAllSlotByLecturerID(parseInt(id))
-      .then((data) => setBookingRooms(data))
+      .then((data) => setBookingRooms(data.filter(slot=>slot.mode!=="Private")))
       .catch((error) => console.log(error));
   }
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Booking() {
         <span className="text-2xl underline">Home</span>
       </Link>
       <div className="w-[90%] mx-[5%] h-full">
-        <ShowBoxs childArray={bookingRooms} lectureName="Chua co"></ShowBoxs>
+        <ShowBoxs childArray={bookingRooms} role="Student"></ShowBoxs>
       </div>
     </div>
   );

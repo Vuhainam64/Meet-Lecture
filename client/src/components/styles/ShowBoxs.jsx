@@ -78,24 +78,24 @@ export default function ShowBoxs({ childArray, role }) {
               <button
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
-              infor.mode === "Cancel"
+              (role==="Student"?infor.status:infor.mode) === "Cancel"
                 ? "bg-red-500"
-                : infor.mode === "Booked"
+                : (role==="Student"?infor.status:infor.mode) === "Booked"
                 ? "bg-green-500"
-                : infor.mode === "Book"
+                : (role==="Student"?infor.status:infor.mode) === "Not Book"
                 ? "bg-blue-500"
-                : infor.mode === "Feedback"
+                : (role==="Student"?infor.status:infor.mode) === "Feedback"
                 ? "bg-blue-700"
-                : infor.mode === "Private"
+                : (role==="Student"?infor.status:infor.mode) === "Private"
                 ? "bg-red-500"
-                : infor.mode === "Public"
+                : (role==="Student"?infor.status:infor.mode) === "Public"
                 ? "bg-blue-400"
                 : "bg-black"
             }`}
-                value={infor.mode}
+                value={role==="Student"?infor.status:infor.mode}
                 onClick={(e) => handleClick(e, infor)}
               >
-                {infor.mode}
+                {role==="Student"?(infor.status==='Not Book'?'Book':infor.status):infor.mode}
               </button>
               {role && role === "Lecturer" ? (
                 <button className="text-3xl">

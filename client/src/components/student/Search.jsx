@@ -6,7 +6,6 @@ export default function Search() {
   const [searchComponent, setSearchComponent] = useState("");
   const [lecturers, setLecturers] = useState([]);
   const [result, setResult] = useState([]);
-  const [empty, isEmpty] = useState(false);
   async function fetchData() {
     const response = await getAllUser()
       .then((data) =>
@@ -21,16 +20,12 @@ export default function Search() {
 
   function handleSearching(e) {
     e.preventDefault();
+
     setResult(
       lecturers.filter((acc) =>
         acc.fullname.toLowerCase().includes(searchComponent.toLowerCase())
       )
     );
-    if (result.length === 0) {
-      isEmpty(true);
-    } else {
-      isEmpty(false);
-    }
   }
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-10">
@@ -49,11 +44,6 @@ export default function Search() {
         </button>
       </form>
       <div className="w-1/3 h-fit flex flex-col  p-10 border-orange-400 border-4 rounded-md min-h-[25%]">
-        {empty === true && (
-          <div>
-            <span>There are no teacher has that name.</span>
-          </div>
-        )}
         {result &&
           result.map((account) => (
             <Link to={`/Student/Booking/${account.id}`}>
