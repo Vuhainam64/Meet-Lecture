@@ -141,7 +141,7 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
             >
               <option value="Student">Student</option>
               <option value="Lecturer">Lecturer</option>
-              <option value="Admin">Admin</option>
+   
             </select>
           </div>
           <div className="flex flex-row w-full items-center">
