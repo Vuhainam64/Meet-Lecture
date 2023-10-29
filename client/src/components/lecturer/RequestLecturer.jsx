@@ -47,20 +47,27 @@ export default function RequestLecturer({ id }) {
         </div>
         <div className="w-full flex flex-col gap-10">
           {showList &&
-            showList.map((infor,index) => (
-              <div key={index}className="w-full h-fit flex flex-row  p-5 border-gray-400 border-2 rounded-md min-h-[25%] justify-between gap-10">
+            showList.map((infor, index) => (
+              <div
+                key={index}
+                className="w-full h-fit flex flex-row  p-5 border-gray-400 border-2 rounded-md min-h-[25%] justify-between gap-10"
+              >
                 <div className="flex flex-col gap-5">
-                  <div className="w-full flex flex-row gap-10">
+                  <div className="w-full flex flex-row gap-5">
                     <div className="text-lg">
                       {infor.studentInfor?.fullname}
                     </div>
                     <div className="text-lg">{infor.studentInfor?.email}</div>
-                    <div className="text-lg">Course: {infor.subjectInfor?.subjectCode}</div>
+                    <div className="text-lg">
+                      Course: {infor.subjectInfor?.subjectCode}
+                    </div>
                     <div className="text-lg">
                       Date: {moment(infor.createdAt).format("DD/MM/YY")}
                     </div>
                     <div className="text-lg">
-                      Time: {moment(infor.createdAt).format("HH:mm")}
+                      Time:{" "}
+                      {moment(infor.slotId?.startDatetime).format("HH:mm")}-
+                      {moment(infor.slotId?.endDatetime).format("HH:mm")}
                     </div>
                   </div>
                   <div className="w-full">

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { TiTick, TiTimes } from "react-icons/ti";
 import {
-  getAllBookingByLecturerID,
   searchStudentById,
   searchSubjectById,
   searchSlotById,
+  getAllBookingByLecturerIDORStudentID,
 } from "../../api";
 import moment from "moment";
 
@@ -13,7 +13,7 @@ export default function PendingLecturer({ id }) {
   const [showList, setShowList] = useState([]);
 
   async function fetchData() {
-    const response = await getAllBookingByLecturerID(parseInt(id))
+    const response = await getAllBookingByLecturerIDORStudentID(parseInt(id))
       .then((data) => setBookedList(data.filter(data=>data.status==="Pending")))
       .catch((error) => console.log(error));
   }
@@ -55,10 +55,8 @@ export default function PendingLecturer({ id }) {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2  border-l-2">
-                ID
-              </th>
-              <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2 ">
+             
+              <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2 border-l-2">
                 Name
               </th>
               <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2">
@@ -73,6 +71,9 @@ export default function PendingLecturer({ id }) {
               <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2">
                 Date
               </th>
+              <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2  ">
+                Description
+              </th>
               <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2">
                 Accept
               </th>
@@ -85,10 +86,7 @@ export default function PendingLecturer({ id }) {
             {showList &&
               showList.map((info, index) => (
                 <tr className="bg-gray-100">
-                  <td className="text-center font-medium text-lg p-2 border-black border-l-2 border-b-2">
-                    {info.studentId?.id}
-                  </td>
-                  <td className="text-center font-medium text-lg p-2 border-black border-b-2">
+                  <td className="text-center font-medium text-lg p-2 border-black border-b-2 border-l-2 ">
                     {info.studentId?.fullname}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-b-2">
@@ -103,6 +101,9 @@ export default function PendingLecturer({ id }) {
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-b-2">
                     {moment(info.slotId?.startDatetime).format("DD/MM/YY")}
+                  </td>
+                  <td className="text-center font-medium text-lg p-2 border-black border-b-2 max-w-[15rem]  min-w-[15rem]">
+                    {info.description}
                   </td>
                   <td className="text-center font-medium text-4xl p-2 border-black border-b-2">
                     <button className=" text-white bg-green-400 rounded-full">
