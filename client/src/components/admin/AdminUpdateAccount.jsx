@@ -189,7 +189,7 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
               type="submit"
               className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
             >
-              Request
+              Update
             </button>
           </div>
         </form>

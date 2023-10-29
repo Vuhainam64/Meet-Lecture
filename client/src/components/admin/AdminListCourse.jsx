@@ -275,7 +275,7 @@ export default function AdminListCourse({ course, setRefresh }) {
             </button>
             <div className="header font-bold text-xl">
               {" "}
-              Are you sure want to delete this user!!!
+              Are you sure want to delete this course!!!
             </div>
             <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
               <button
