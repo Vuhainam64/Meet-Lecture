@@ -116,7 +116,7 @@ export default function AdminListStudents({students, setRefresh}) {
                     {info.fullname}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    {moment(info.dob).format("DD/MM/YY")}
+                    {moment(info.dob).format("DD/MM/YYYY")}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     {info.username}
