@@ -4,12 +4,13 @@ import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser,deleteAccountById } from "../../api";
 
-export default function AdminListStudents({students,setUser}) {
+export default function AdminListStudents({students, setRefresh}) {
   
   const [studentList, getStudentList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState('');
   const [open, setOpen] = useState(false);
+  const [deleteHolder, setDeleteHolder] = useState('');
   const closeModal = () => setOpen(false);
   useEffect(()=>{
     getStudentList(students)
@@ -26,10 +27,26 @@ export default function AdminListStudents({students,setUser}) {
       )
     );
   }
-  function handleDelete(lecturerId){
-    setOpen((open) => !open)
-    setUser([])
+  function handleDelete(studentId) {
+    setOpen((open) => !open);
+    setDeleteHolder(studentId);
   }
+  async function handleDeleteYes() {
+    if (deleteHolder) {
+      try {
+        console.log(deleteHolder);
+        await deleteAccountById(deleteHolder);
+        // If the deletion is successful, you can update the local state.
+        setDeleteHolder(0);
+        setOpen(false);
+        setRefresh(true);
+      } catch (error) {
+        // Handle the error
+        console.error("Error deleting account:", error);
+      }
+    }
+  }
+
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -103,7 +120,7 @@ export default function AdminListStudents({students,setUser}) {
                     <button className="  text-gray-500">Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-red-500" >Delete</button>
+                    <button className="  text-red-500" onClick={()=>handleDelete(info.id)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -117,7 +134,7 @@ export default function AdminListStudents({students,setUser}) {
               </button>
               <div className="header font-bold text-xl"> Are you sure want to delete this user!!!</div>
               <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
-              <button className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500">
+              <button onClick={handleDeleteYes} className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500">
                 Yes, Im sure!!!
               </button>
               <button className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createAccount } from "../../api";
-export default function AdminCreate({ setUsers }) {
+export default function AdminCreate({ setRefresh }) {
   const zeroFormData = {
     username: "",
     password: "",
@@ -31,8 +31,8 @@ export default function AdminCreate({ setUsers }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  async function handleSubmit(e) {
+    // e.preventDefault();
 
     // Validate the form
     const newErrors = validateForm();
@@ -42,12 +42,12 @@ export default function AdminCreate({ setUsers }) {
     if (Object.keys(newErrors).length === 0) {
       // No validation errors, proceed with the submission
       console.log("Form submitted:", formData);
-      makePostRequest(formData);
+      await makePostRequest(formData);
       setFormData(zeroFormData);
       setAdded(true);
-      setUsers((prevUsers)=>[...prevUsers,formData]);
+      setRefresh(true);
     }
-  };
+  }
 
   const cancelAll = () => {
     setFormData(zeroFormData);
@@ -72,13 +72,13 @@ export default function AdminCreate({ setUsers }) {
     if (!formData.password) {
       newErrors.password = "Password is required";
     }
-  
+
     // Check if the email is a valid email address based on the role
     if (formData.role === "Student") {
       // For students, validate the email as "xxxse123456@fpt.edu.vn"
-      if (!/^[A-Za-z0-9._%+-]+se\d{6}@fpt.edu.vn$/.test(formData.email)) {
+      if (!/^[A-Za-z0-9._%+-]+(se|sa|ss|SE|SA|SS)\d{6}@fpt.edu.vn$/.test(formData.email)) {
         newErrors.email =
-          "Invalid student email format. It should be in the format 'xxxse123456@fpt.edu.vn'";
+        newErrors.email = "Invalid email format. It should end with 'ss','se','sa','SS,' 'SE,' or 'SA' followed by 6 digits, e.g., 'exampleSS123456@fpt.edu.vn'";
       }
     } else {
       // For other roles, validate the email as "xxxxx@fpt.edu.vn"
@@ -87,18 +87,21 @@ export default function AdminCreate({ setUsers }) {
           "Invalid email format. It should be in the format 'xxxxx@fpt.edu.vn'";
       }
     }
-  
+
     // Add more validation rules for other fields as needed
-  
+
     return newErrors;
   };
-  
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center  pb-10">
       <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
         <span className="font-semibold text-2xl mb-5">Create Member</span>
-          {added && <p className="text-green-500 font-semibold text-lg mb-5">Adding succesully!!!</p>}
+        {added && (
+          <p className="text-green-500 font-semibold text-lg mb-5">
+            Adding succesully!!!
+          </p>
+        )}
         <form className="w-[80%] mx-auto flex flex-col gap-5">
           <div className="flex flex-row w-full items-center">
             <span className="text-xl font-medium w-[30%]">Full Name</span>

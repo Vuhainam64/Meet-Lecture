@@ -4,12 +4,12 @@ import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser, deleteAccountById } from "../../api";
 
-export default function AdminListLecturer({ lecturers, setUsers }) {
+export default function AdminListLecturer({ lecturers,  setRefresh }) {
   const [lecturerList, setLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
   const [open, setOpen] = useState(false);
-  const [deleteHolder, setDeleteHolder] = useState();
+  const [deleteHolder, setDeleteHolder] = useState('');
 
   const closeModal = () => setOpen(false);
 
@@ -41,6 +41,7 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
         // If the deletion is successful, you can update the local state.
         setDeleteHolder(0);
         setOpen(false);
+        setRefresh(true);
       } catch (error) {
         // Handle the error
         console.error("Error deleting account:", error);
@@ -123,7 +124,7 @@ export default function AdminListLecturer({ lecturers, setUsers }) {
                     <button className="  text-gray-500">Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-red-500">Delete</button>
+                    <button className="  text-red-500" onClick={()=>handleDelete(info.id)}>Delete</button>
                   </td>
                 </tr>
               ))}

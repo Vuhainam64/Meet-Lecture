@@ -4,7 +4,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
 import { createCourse, deleteSubjectById } from "../../api";
 
-export default function AdminListCourse({ course }) {
+export default function AdminListCourse({ course, setRefresh }) {
   const zeroFormData = {
     subjectCode: "",
     name: "",
@@ -53,6 +53,7 @@ export default function AdminListCourse({ course }) {
       makePostRequest(formData);
       setFormData(zeroFormData);
       setAdded(true);
+      setRefresh(true);
     }
   };
 
@@ -70,6 +71,8 @@ export default function AdminListCourse({ course }) {
       newErrors.subjectCode = "Course's code is required";
     } else if (/^\d/.test(formData.subjectCode)) {
       newErrors.subjectCode = "Course's code cannot start with a number";
+    } else if (formData.subjectCode !== formData.subjectCode.toUpperCase()) {
+      newErrors.subjectCode = "Course's code must be in uppercase";
     }
     if (!formData.name) {
       newErrors.name = "Course's name is required";
@@ -229,6 +232,11 @@ export default function AdminListCourse({ course }) {
           <div className="modal">
             <div className="header font-bold text-3xl"> Create Course!!!</div>
             <div className="content">
+              {added && (
+                <div className="w-full text-green-500 font-semibold text-xl">
+                  Adding successfully!!!
+                </div>
+              )}
               <form className="w-full flex justify-center flex-col gap-5 items-center min-h-[10rem]">
                 <div className="flex flex-row w-full items-center justify-center">
                   <span className="text-xl font-medium w-[30%]">
