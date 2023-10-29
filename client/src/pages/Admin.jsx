@@ -95,25 +95,26 @@ function Admin() {
         </div>
         <div className="h-[90%]">
           <Routes>
-            <Route path="*" element={<AdminCreate setUsers={setUsers} setRefresh={setRefresh}/>} />
+            <Route path="*" element={<AdminCreate setUsers={setUsers} setRefresh={setRefresh} chosePage={chosePage}/>} />
             <Route
               path="Lecturer"
               element={
                 <AdminListLecturer
                   lecturers={lecturerList}
                   setRefresh={setRefresh}
+                  chosePage={chosePage}
                 />
               }
             />
             <Route
               path="Student"
               element={
-                <AdminListStudents students={studentList}  setRefresh={setRefresh} />
+                <AdminListStudents students={studentList}  setRefresh={setRefresh} chosePage={chosePage}/>
               }
             />
             <Route
               path="Course"
-              element={<AdminListCourse course={courseList}  setRefresh={setRefresh}/>}
+              element={<AdminListCourse course={courseList}  setRefresh={setRefresh} chosePage={chosePage}/>}
             />
           </Routes>
         </div>

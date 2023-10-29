@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createAccount } from "../../api";
-export default function AdminCreate({ setRefresh }) {
+export default function AdminCreate({ setRefresh, chosePage }) {
   const zeroFormData = {
     username: "",
     password: "",
@@ -10,6 +10,7 @@ export default function AdminCreate({ setRefresh }) {
     role: "Student",
     subjectId: [0],
   };
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -76,9 +77,13 @@ export default function AdminCreate({ setRefresh }) {
     // Check if the email is a valid email address based on the role
     if (formData.role === "Student") {
       // For students, validate the email as "xxxse123456@fpt.edu.vn"
-      if (!/^[A-Za-z0-9._%+-]+(se|sa|ss|SE|SA|SS)\d{6}@fpt.edu.vn$/.test(formData.email)) {
-        newErrors.email =
-        newErrors.email = "Invalid email format. It should end with 'ss','se','sa','SS,' 'SE,' or 'SA' followed by 6 digits, e.g., 'exampleSS123456@fpt.edu.vn'";
+      if (
+        !/^[A-Za-z0-9._%+-]+(se|sa|ss|SE|SA|SS)\d{6}@fpt.edu.vn$/.test(
+          formData.email
+        )
+      ) {
+        newErrors.email = newErrors.email =
+          "Invalid email format. It should end with 'ss','se','sa','SS,' 'SE,' or 'SA' followed by 6 digits, e.g., 'exampleSS123456@fpt.edu.vn'";
       }
     } else {
       // For other roles, validate the email as "xxxxx@fpt.edu.vn"
@@ -92,6 +97,9 @@ export default function AdminCreate({ setRefresh }) {
 
     return newErrors;
   };
+  useEffect(() => {
+    chosePage("Create");
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center  pb-10">
@@ -140,7 +148,6 @@ export default function AdminCreate({ setRefresh }) {
             >
               <option value="Student">Student</option>
               <option value="Lecturer">Lecturer</option>
-              <option value="Admin">Admin</option>
             </select>
           </div>
           <div className="flex flex-row w-full items-center">

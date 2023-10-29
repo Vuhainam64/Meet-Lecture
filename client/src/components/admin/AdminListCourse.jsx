@@ -4,7 +4,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
 import { createCourse, deleteSubjectById, updateCourseById } from "../../api";
 
-export default function AdminListCourse({ course, setRefresh }) {
+export default function AdminListCourse({ course, setRefresh,chosePage }) {
   //form mẫu
   const zeroFormData = {
     subjectCode: "",
@@ -154,6 +154,7 @@ export default function AdminListCourse({ course, setRefresh }) {
   };
 
   useEffect(() => {
+    chosePage('Course')
     setCourseList(course);
     setShowList(course);
     console.log(courseList);
@@ -296,6 +297,9 @@ export default function AdminListCourse({ course, setRefresh }) {
         {/* Create Popup */}
         <Popup open={openCreate} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
             <div className="header font-bold text-3xl"> Create Course!!!</div>
             <div className="content">
               {added && (
@@ -363,6 +367,9 @@ export default function AdminListCourse({ course, setRefresh }) {
         {/* Update Popup */}
         <Popup open={openUpdate} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
             <div className="header font-bold text-3xl"> Update Course!!!</div>
             <div className="content">
               {updated && (
