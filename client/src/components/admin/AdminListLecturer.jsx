@@ -3,15 +3,21 @@ import Popup from "reactjs-popup";
 import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser, deleteAccountById } from "../../api";
+import AdminUpdateAccount from "./AdminUpdateAccount";
 
-export default function AdminListLecturer({ lecturers,  setRefresh }) {
+export default function AdminListLecturer({ lecturers, setRefresh }) {
   const [lecturerList, setLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
   const [open, setOpen] = useState(false);
-  const [deleteHolder, setDeleteHolder] = useState('');
+  const [deleteHolder, setDeleteHolder] = useState("");
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [updateObject, setUpdateObject] = useState();
 
-  const closeModal = () => setOpen(false);
+  const closeModal = () => {
+    setOpen(false);
+    setOpenUpdate(false);
+  };
 
   useEffect(() => {
     setLecturerList(lecturers);
@@ -32,6 +38,10 @@ export default function AdminListLecturer({ lecturers,  setRefresh }) {
   function handleDelete(lecturerId) {
     setOpen((open) => !open);
     setDeleteHolder(lecturerId);
+  }
+  function handleUpdate(lecturer) {
+    setOpenUpdate((open) => !open);
+    setUpdateObject(lecturer);
   }
   async function handleDeleteYes() {
     if (deleteHolder) {
@@ -77,7 +87,7 @@ export default function AdminListLecturer({ lecturers,  setRefresh }) {
           <thead>
             <tr>
               <th className="text-xl p-3 font-semibold bg-gray-300 border-black border-r-2">
-               ID
+                ID
               </th>
               <th className="text-xl p-3 font-semibold  bg-gray-300 border-black border-r-2">
                 Name
@@ -121,16 +131,21 @@ export default function AdminListLecturer({ lecturers,  setRefresh }) {
                     {info.email}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-gray-500">Update</button>
+                    <button className="  text-gray-500" onClick={() => handleUpdate(info)}>Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-red-500" onClick={()=>handleDelete(info.id)}>Delete</button>
+                    <button
+                      className="  text-red-500"
+                      onClick={() => handleDelete(info.id)}
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
-
+        {/* Delete popup */}
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
             <button className="close" onClick={closeModal}>
@@ -153,6 +168,17 @@ export default function AdminListLecturer({ lecturers,  setRefresh }) {
               >
                 No, Im not.
               </button>
+            </div>
+          </div>
+        </Popup>
+        {/* Update Popup */}
+        <Popup open={openUpdate} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
+            <div className="flex flex-col items-center h-auto w-auto">
+            <AdminUpdateAccount updateObject={updateObject} setRefresh={setRefresh}/>
             </div>
           </div>
         </Popup>

@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
-import { createCourse, deleteSubjectById,updateCourseById } from "../../api";
+import { createCourse, deleteSubjectById, updateCourseById } from "../../api";
 
 export default function AdminListCourse({ course, setRefresh }) {
+  //form mẫu
   const zeroFormData = {
     subjectCode: "",
     name: "",
@@ -17,11 +18,36 @@ export default function AdminListCourse({ course, setRefresh }) {
   const [openUpdate, setOpenUpdate] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState();
   const [updateHolder, setUpdateHolder] = useState();
-
   const [formData, setFormData] = useState(zeroFormData);
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
   const [updated, setUpdated] = useState(false);
+  //function xử lý khi input vào form.
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+  //function validate các input đã nhập trước khi gửi request đến API.
+  const validateForm = () => {
+    const newErrors = {};
+    // Check if the subjectCode is not empty and more child validation
+    if (!formData.subjectCode) {
+      newErrors.subjectCode = "Course's code is required";
+    } else if (/^\d/.test(formData.subjectCode)) {
+      newErrors.subjectCode = "Course's code cannot start with a number";
+    } else if (formData.subjectCode !== formData.subjectCode.toUpperCase()) {
+      newErrors.subjectCode = "Course's code must be in uppercase";
+    }
+    // Check if the subject name is not empty and more child validation
+    if (!formData.name) {
+      newErrors.name = "Course's name is required";
+    } else if (/^\d/.test(formData.name)) {
+      newErrors.name = "Course's name cannot start with a number";
+    }
+    // Add more validation rules for other fields as needed
+    return newErrors;
+  };
+  //function gửi yêu cầu create subject đến API.
   async function makePostRequest(form) {
     try {
       const response = await createCourse(form);
@@ -29,13 +55,15 @@ export default function AdminListCourse({ course, setRefresh }) {
       console.log(error);
     }
   }
-  async function makePutRequest(form,id) {
+  //function gửi yêu cầu update subject đến API.
+  async function makePutRequest(form, id) {
     try {
-      const response = await updateCourseById(form,id);
+      const response = await updateCourseById(form, id);
     } catch (error) {
       console.log(error);
     }
   }
+  //function gửi yêu cầu delete subject đến API.
   async function makeDeleteRequest(subjectId) {
     try {
       const response = await deleteSubjectById(subjectId);
@@ -43,12 +71,8 @@ export default function AdminListCourse({ course, setRefresh }) {
       console.log(error);
     }
   }
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  async function handleSubmitCreate  (e) {
+  //function xử lý khi bấm submit create.
+  async function handleSubmitCreate(e) {
     e.preventDefault();
 
     // Validate the form
@@ -64,8 +88,9 @@ export default function AdminListCourse({ course, setRefresh }) {
       setAdded(true);
       setRefresh(true);
     }
-  };
-  async function handleSubmitUpdate  (e) {
+  }
+  //function xử lý khi bấm submit update.
+  async function handleSubmitUpdate(e) {
     e.preventDefault();
 
     // Validate the form
@@ -76,20 +101,37 @@ export default function AdminListCourse({ course, setRefresh }) {
     if (Object.keys(newErrors).length === 0) {
       // No validation errors, proceed with the submission
       console.log("Form submitted:", formData);
-      await makePutRequest(formData,updateHolder.id);
-      setUpdateHolder({...formData,id:updateHolder.id})
+      await makePutRequest(formData, updateHolder.id);
+      setUpdateHolder({ ...formData, id: updateHolder.id });
       setFormData(formData);
       setUpdated(true);
       setRefresh(true);
     }
-  };
-
+  }
+  //function xử lý khi bấm agree delete.
+  function handleDeleteYes() {
+    if (deleteHolder !== 0) {
+      try {
+        console.log(deleteHolder);
+        makeDeleteRequest(deleteHolder);
+        // If the deletion is successful, you can update the local state.
+        setDeleteHolder(0);
+        setOpenDelete(false);
+        setRefresh(true);
+      } catch (error) {
+        // Handle the error
+        console.error("Error deleting account:", error);
+      }
+    }
+  }
+  //function xử lý khi bấm cancel create.
   const cancelAllCreate = (e) => {
     e.preventDefault();
     setFormData(zeroFormData);
     setErrors([]);
     setAdded(false);
   };
+  //function xử lý khi bấm cancel update.
   const cancelAllUpdate = (e) => {
     e.preventDefault();
     setFormData({
@@ -99,28 +141,7 @@ export default function AdminListCourse({ course, setRefresh }) {
     setErrors([]);
     setAdded(false);
   };
-
-  const validateForm = () => {
-    const newErrors = {};
-    // Check if the fullname is not empty
-    if (!formData.subjectCode) {
-      newErrors.subjectCode = "Course's code is required";
-    } else if (/^\d/.test(formData.subjectCode)) {
-      newErrors.subjectCode = "Course's code cannot start with a number";
-    } else if (formData.subjectCode !== formData.subjectCode.toUpperCase()) {
-      newErrors.subjectCode = "Course's code must be in uppercase";
-    }
-    if (!formData.name) {
-      newErrors.name = "Course's name is required";
-    } else if (/^\d/.test(formData.name)) {
-      newErrors.name = "Course's name cannot start with a number";
-    }
-
-    // Add more validation rules for other fields as needed
-
-    return newErrors;
-  };
-
+  //function xử lý khi bấm vào vùng ngoài popup.
   const closeModal = () => {
     setOpenDelete(false);
     setOpenCreate(false);
@@ -137,7 +158,7 @@ export default function AdminListCourse({ course, setRefresh }) {
     setShowList(course);
     console.log(courseList);
   }, [course]);
-
+  //function xử lý khi bấm search button.
   function searchHandleClick(e) {
     e.preventDefault();
     setShowList(
@@ -148,37 +169,24 @@ export default function AdminListCourse({ course, setRefresh }) {
       )
     );
   }
+  //function xử lý khi bấm delete 1 tài khoản.
   function handleDelete(id) {
     setOpenDelete((open) => !open);
     setDeleteHolder(id);
   }
+  //function xử lý khi bấm create button.
   function handleCreate(e) {
     e.preventDefault();
     setOpenCreate((open) => !open);
   }
-  function handleDeleteYes() {
-    if (deleteHolder !== 0) {
-      try {
-        console.log(deleteHolder);
-        makeDeleteRequest(deleteHolder);
-        // If the deletion is successful, you can update the local state.
-        setDeleteHolder(0);
-        setOpenDelete(false);
-        setRefresh(true);
-      } catch (error) {
-        // Handle the error
-        console.error("Error deleting account:", error);
-      }
-    }
-  }
-
-  function handleUpdate(subject,e){
+  //function xử lý khi bấm vào update button.
+  function handleUpdate(subject, e) {
     setOpenUpdate((open) => !open);
     setUpdateHolder(subject);
     setFormData({
       subjectCode: subject.subjectCode,
-      name:subject.name,
-    })
+      name: subject.name,
+    });
   }
 
   return (
@@ -240,7 +248,12 @@ export default function AdminListCourse({ course, setRefresh }) {
                     {info.subjectCode}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-gray-500" onClick={()=>handleUpdate(info)}>Update</button>
+                    <button
+                      className="  text-gray-500"
+                      onClick={() => handleUpdate(info)}
+                    >
+                      Update
+                    </button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     <button
@@ -352,7 +365,7 @@ export default function AdminListCourse({ course, setRefresh }) {
           <div className="modal">
             <div className="header font-bold text-3xl"> Update Course!!!</div>
             <div className="content">
-            {updated && (
+              {updated && (
                 <div className="w-full text-green-500 font-semibold text-xl">
                   Updating successfully!!!
                 </div>

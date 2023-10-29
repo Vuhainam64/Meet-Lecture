@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import moment from "moment";
 import "../../cssstyles/popupStyles.css";
 import { getAllUser,deleteAccountById } from "../../api";
+import AdminUpdateAccount from "./AdminUpdateAccount";
 
 export default function AdminListStudents({students, setRefresh}) {
   
@@ -11,7 +12,13 @@ export default function AdminListStudents({students, setRefresh}) {
   const [searchComponent, setSearchComponent] = useState('');
   const [open, setOpen] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState('');
-  const closeModal = () => setOpen(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [updateObject, setUpdateObject] = useState();
+  const closeModal = () => {
+    setOpen(false);
+    setOpenUpdate(false);
+  };
+
   useEffect(()=>{
     getStudentList(students)
     setShowList(students);
@@ -30,6 +37,10 @@ export default function AdminListStudents({students, setRefresh}) {
   function handleDelete(studentId) {
     setOpen((open) => !open);
     setDeleteHolder(studentId);
+  }
+  function handleUpdate(lecturer) {
+    setOpenUpdate((open) => !open);
+    setUpdateObject(lecturer);
   }
   async function handleDeleteYes() {
     if (deleteHolder) {
@@ -117,7 +128,7 @@ export default function AdminListStudents({students, setRefresh}) {
                     {info.email}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-gray-500">Update</button>
+                    <button className="  text-gray-500" onClick={()=>handleUpdate(info)}>Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     <button className="  text-red-500" onClick={()=>handleDelete(info.id)}>Delete</button>
@@ -126,6 +137,7 @@ export default function AdminListStudents({students, setRefresh}) {
               ))}
           </tbody>
         </table>
+        {/* Delete Popup */}
         <Popup open={open} closeOnDocumentClick onClose={closeModal}>
           {(close) => (
             <div className="modal">
@@ -143,6 +155,17 @@ export default function AdminListStudents({students, setRefresh}) {
               </div>
             </div>
           )}
+        </Popup>
+        {/* Update Popup */}
+        <Popup open={openUpdate} closeOnDocumentClick onClose={closeModal}>
+          <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
+            <div className="flex flex-col items-center h-auto w-auto">
+            <AdminUpdateAccount updateObject={updateObject} setRefresh={setRefresh}/>
+            </div>
+          </div>
         </Popup>
       </div>
     </div>
