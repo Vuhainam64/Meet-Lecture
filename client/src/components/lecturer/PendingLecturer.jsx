@@ -5,18 +5,57 @@ import {
   searchSubjectById,
   searchSlotById,
   getAllBookingByLecturerIDORStudentID,
+  updateSlotById,
 } from "../../api";
 import moment from "moment";
+import Popup from "reactjs-popup";
 
 export default function PendingLecturer({ id }) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
+  const [formData, setFormData] = useState({});
+  const [formId, setFormId] = useState(0);
+  const [popup, setPopup] = useState(false);
 
+  const closeModal = () => {
+    setPopup(false);
+    setFormData({});
+    setFormId(0)
+  };
   async function fetchData() {
     const response = await getAllBookingByLecturerIDORStudentID(parseInt(id))
-      .then((data) => setBookedList(data.filter(data=>data.status==="Pending")))
+      .then((data) =>
+        setBookedList(data.filter((data) => data.status === "Pending"))
+      )
       .catch((error) => console.log(error));
   }
+
+  async function makePutData(form, id) {
+    try {
+      const response = await updateSlotById(form, id);
+    } catch {}
+  }
+  async function handleAccpet(id) {
+    const data = bookedList.find((book) => book.id === id);
+    setFormData({
+      studentId: parseInt(data.studentId),
+      slotId: parseInt(data.slotId),
+      subjectId: parseInt(data.subjectId),
+      description: data.description,
+      reason: (data.reason===null?"":data.reason),
+      status: "Booked",
+    });
+    setFormId(data.id)
+    setPopup(true);
+
+    console.log(data.id);
+  }
+
+  async function handleDeleteYes() {
+    console.log(formData);
+    await makePutData(formData, formId);
+  }
+
   async function addObject() {
     const updatedRequestedList = await Promise.all(
       bookedList.map(async (infor) => {
@@ -55,7 +94,6 @@ export default function PendingLecturer({ id }) {
         <table className="w-full">
           <thead>
             <tr>
-             
               <th className="text-xl p-3 font-semibold bg-gray-200 border-black border-b-2 border-t-2 border-l-2">
                 Name
               </th>
@@ -106,7 +144,10 @@ export default function PendingLecturer({ id }) {
                     {info.description}
                   </td>
                   <td className="text-center font-medium text-4xl p-2 border-black border-b-2">
-                    <button className=" text-white bg-green-400 rounded-full">
+                    <button
+                      className=" text-white bg-green-400 rounded-full"
+                      onClick={() => handleAccpet(info.id)}
+                    >
                       <TiTick />
                     </button>
                   </td>
@@ -120,6 +161,32 @@ export default function PendingLecturer({ id }) {
           </tbody>
         </table>
       </div>
+      {/* Popup up */}
+      <Popup open={popup} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
+          </button>
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to delete this course!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 }

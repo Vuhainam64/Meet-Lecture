@@ -24,7 +24,6 @@ export default function CreateSlotLecturer() {
   const [added, setAdded] = useState(false);
 
   const copyInforDetailToFormData = () => {
-    console.log( inforDetail.createdAt);
     setFormData({
       code: inforDetail.code,
       createdAt: inforDetail.createdAt,

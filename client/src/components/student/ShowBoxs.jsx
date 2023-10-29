@@ -139,7 +139,7 @@ export default function ShowBoxs({ childArray, role }) {
               </span>
             )}
             {infor.limitBooking && (
-              <span className="text-xl">Limit: {infor.limitBooking}/6</span>
+              <span className="text-xl">Limit: {infor.bookingId.length}/{infor.limitBooking}</span>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {infor.Finish ? (
@@ -178,7 +178,7 @@ export default function ShowBoxs({ childArray, role }) {
                   &times;
                 </button>
                 {infor.code !== "" ? (
-                  <form className="flex flex-col gap-3 justify-end items-end relative">
+                  <form className="flex flex-col gap-3 justify-end items-end relative w-full">
                     <div className="flex flex-row justify-between items-center w-full">
                       <span>Course:</span>
                       <input
@@ -197,12 +197,12 @@ export default function ShowBoxs({ childArray, role }) {
                         {errors.subjectCode}
                       </div>
                     )}
-                    <div className="flex flex-row justify-center items-center gap-5">
+                    <div className="flex flex-row justify-between items-center w-full">
                       <span>Code:</span>
                       <input
                         name="code"
                         onChange={handleInputChange}
-                        className={`border-2 ${
+                        className={`border-2 w-[11rem] ${
                           errors.code
                             ? "border-red-500 border-2"
                             : "border-gray-900"
