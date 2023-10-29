@@ -296,6 +296,9 @@ export default function AdminListCourse({ course, setRefresh }) {
         {/* Create Popup */}
         <Popup open={openCreate} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
             <div className="header font-bold text-3xl"> Create Course!!!</div>
             <div className="content">
               {added && (
@@ -363,6 +366,9 @@ export default function AdminListCourse({ course, setRefresh }) {
         {/* Update Popup */}
         <Popup open={openUpdate} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
+            <button className="close" onClick={closeModal}>
+              &times;
+            </button>
             <div className="header font-bold text-3xl"> Update Course!!!</div>
             <div className="content">
               {updated && (
