@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
-import { ShowBoxs } from "../styles";
+import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 import { getAllSlotByLecturerID } from "../../api";
 

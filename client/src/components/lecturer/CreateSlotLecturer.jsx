@@ -9,13 +9,13 @@ export default function CreateSlotLecturer() {
   const zeroFormData = 
   {
     code: "",
-    date: "",
-    endDateTime: "",
+    createdAt: "",
+    endDatetime: "",
     lecturerId: 3,
     limitBooking: 0,
     location: "",
     mode: "Public",
-    startDateTime: "",
+    startDatetime: "",
     title: "",
   };
   const [formData, setFormData] = useState(zeroFormData);
@@ -24,21 +24,21 @@ export default function CreateSlotLecturer() {
   const [added, setAdded] = useState(false);
 
   const copyInforDetailToFormData = () => {
+    console.log( inforDetail.createdAt);
     setFormData({
       code: inforDetail.code,
-      date: moment(inforDetail.date).format("YYYY-MM-DDTHH:mm"),
-      endDateTime: moment(inforDetail.endDateTime).format("YYYY-MM-DDTHH:mm"),
+      createdAt: inforDetail.createdAt,
+      endDatetime: inforDetail.endDatetime,
       lecturerId: parseInt(inforDetail.lecturerId),
       limitBooking: parseInt(inforDetail.limitBooking),
       location: inforDetail.location,
       mode: inforDetail.mode,
-      startDateTime: moment(inforDetail.startDateTime).format(
-        "YYYY-MM-DDTHH:mm"
-      ),
+      startDatetime: inforDetail.startDatetime,
       id: parseInt(inforDetail.id),
       status: inforDetail.status,
       title: inforDetail.title,
     });
+    
   };
   async function makePostRequest(form) {
     try {
@@ -115,19 +115,34 @@ export default function CreateSlotLecturer() {
       newErrors.title = "Title is required";
     }
 
-    // Check if date is not empty
-    if (!formData.date) {
-      newErrors.date = "Created At is required";
+    // Check if createdAt is not empty
+    if (!formData.createdAt) {
+      newErrors.createdAt = "Created At is required";
     }
 
-    // Check if startDateTime is not empty
-    if (!formData.startDateTime) {
-      newErrors.startDateTime = "Start Date and Time is required";
+    // Check if startDatetime is not empty
+    if (!formData.startDatetime) {
+      newErrors.startDatetime = "Start createdAt and Time is required";
     }
 
-    // Check if endDateTime is not empty
-    if (!formData.endDateTime) {
-      newErrors.endDateTime = "End Date and Time is required";
+    // Check if endDatetime is not empty
+    if (!formData.endDatetime) {
+      newErrors.endDatetime = "End Date and Time is required";
+    } else {
+      const start = new Date(formData.startDatetime);
+      const end = new Date(formData.endDatetime);
+  
+      const timeDifference = (end - start) / 1000 / 60; // Difference in minutes
+  
+      // Check if endDatetime is at least 15 minutes greater than startDatetime
+      if (timeDifference < 15) {
+        newErrors.endDatetime = "End Date and Time must be at least 15 minutes greater than Start Date and Time";
+      }
+  
+      // Check if endDatetime is no more than 3 hours greater than startDatetime
+      if (timeDifference > 180) {
+        newErrors.endDatetime = "End Date and Time must be no more than 3 hours greater than Start Date and Time";
+      }
     }
 
     // Check if limitBooking is a number
@@ -184,6 +199,7 @@ export default function CreateSlotLecturer() {
             <span className="font-semibold text-2xl mb-5">
               {parseInt(id) !==0 ? "Update Booking Slot" : "Create Booking Slot"}
             </span>
+            {added&&(<div className="text-xl text-green-500 font-semibold"> {parseInt(id) !==0 ? "Update successfully!" : "Create successfully!"}</div>)}
             <form className="w-[80%] mx-auto flex flex-col gap-5">
             <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Title</span>
@@ -222,54 +238,54 @@ export default function CreateSlotLecturer() {
                 <span className="text-xl font-medium w-[30%]">Date</span>
                 <input
                   className={`border ${
-                    errors.date
+                    errors.createdAt
                       ? "border-red-500 border-2"
                       : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                   type="datetime-local" // Corrected type attribute
-                  value={formData.date}
+                  value={formData.createdAt}
                   onChange={handleInputChange}
-                  name="date" // Corrected name attribute
+                  name="createdAt" // Corrected name attribute
                 ></input>
               </div>
-              {errors.date && (
-                <div className="text-red-500 text-sm">{errors.date}</div>
+              {errors.createdAt && (
+                <div className="text-red-500 text-sm">{errors.createdAt}</div>
               )}
               <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Start Date</span>
                 <input
                   className={`border ${
-                    errors.startDateTime
+                    errors.startDatetime
                       ? "border-red-500 border-2"
                       : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                   type="datetime-local" // Corrected type attribute
-                  value={formData.startDateTime}
+                  value={formData.startDatetime}
                   onChange={handleInputChange}
-                  name="startDateTime" // Corrected name attribute
+                  name="startDatetime" // Corrected name attribute
                 ></input>
               </div>
-              {errors.startDateTime && (
+              {errors.startDatetime && (
                 <div className="text-red-500 text-sm">
-                  {errors.startDateTime}
+                  {errors.startDatetime}
                 </div>
               )}
               <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">End Date</span>
                 <input
                   className={`border ${
-                    errors.endDateTime
+                    errors.endDatetime
                       ? "border-red-500 border-2"
                       : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                   type="datetime-local" // Corrected type attribute
-                  value={formData.endDateTime}
+                  value={formData.endDatetime}
                   onChange={handleInputChange}
-                  name="endDateTime" // Corrected name attribute
+                  name="endDatetime" // Corrected name attribute
                 ></input>
               </div>
-              {errors.endDateTime && (
-                <div className="text-red-500 text-sm">{errors.endDateTime}</div>
+              {errors.endDatetime && (
+                <div className="text-red-500 text-sm">{errors.endDatetime}</div>
               )}
               <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Limit</span>
@@ -323,9 +339,9 @@ export default function CreateSlotLecturer() {
               </button>
               <button
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={parseInt(id)!==0 ? handleUpdate : handleSubmit}
+                onClick={id==="0" ?  handleSubmit:handleUpdate}
               >
-                Request
+                {id==="0" ? "Create" : "Update"}
               </button>
             </div>
           </div>

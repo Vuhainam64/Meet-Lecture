@@ -133,16 +133,13 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
           {errors.dob && <p className="text-red-500">{errors.dob}</p>}
           <div className="flex flex-row w-full items-center">
             <span className="text-xl font-medium w-[30%]">Role</span>
-            <select
+            <input
               name="role"
-              onChange={handleInputChange}
               className="border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]"
               value={formData.role}
+              readOnly
             >
-              <option value="Student">Student</option>
-              <option value="Lecturer">Lecturer</option>
-   
-            </select>
+            </input>
           </div>
           <div className="flex flex-row w-full items-center">
             <span className="text-xl font-medium w-[30%]">Username</span>

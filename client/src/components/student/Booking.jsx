@@ -1,6 +1,6 @@
 import { Link ,useParams} from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
-import { ShowBoxs } from "../styles";
+import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 import { getAllSlotByLecturerID } from "../../api";
 
@@ -26,7 +26,7 @@ export default function Booking() {
         </span>{" "}
         <span className="text-2xl underline">Home</span>
       </Link>
-      <div className="w-[90%] mx-[5%] h-full">
+      <div className="w-[90%] mx-[5%] h-full bg-white">
         <ShowBoxs childArray={bookingRooms} role="Student"></ShowBoxs>
       </div>
     </div>

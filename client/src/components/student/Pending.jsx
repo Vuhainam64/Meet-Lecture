@@ -4,7 +4,7 @@ import {
   searchSlotById,
   getAllBookingByLecturerIDORStudentID,
 } from "../../api";
-import { ShowBoxs } from "../styles";
+import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 
 export default function Pending() {
