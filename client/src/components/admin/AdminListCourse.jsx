@@ -4,7 +4,7 @@ import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
 import { createCourse, deleteSubjectById, updateCourseById } from "../../api";
 
-export default function AdminListCourse({ course, setRefresh }) {
+export default function AdminListCourse({ course, setRefresh,chosePage }) {
   //form mẫu
   const zeroFormData = {
     subjectCode: "",
@@ -154,6 +154,7 @@ export default function AdminListCourse({ course, setRefresh }) {
   };
 
   useEffect(() => {
+    chosePage('Course')
     setCourseList(course);
     setShowList(course);
     console.log(courseList);

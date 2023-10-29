@@ -5,8 +5,8 @@ import "../../cssstyles/popupStyles.css";
 import { getAllUser,deleteAccountById } from "../../api";
 import AdminUpdateAccount from "./AdminUpdateAccount";
 
-export default function AdminListStudents({students, setRefresh}) {
-  
+export default function AdminListStudents({students, setRefresh,chosePage}) {
+
   const [studentList, getStudentList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState('');
@@ -20,6 +20,7 @@ export default function AdminListStudents({students, setRefresh}) {
   };
 
   useEffect(()=>{
+    chosePage('Student')
     getStudentList(students)
     setShowList(students);
   },[students])

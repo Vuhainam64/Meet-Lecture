@@ -5,7 +5,7 @@ import "../../cssstyles/popupStyles.css";
 import { getAllUser, deleteAccountById } from "../../api";
 import AdminUpdateAccount from "./AdminUpdateAccount";
 
-export default function AdminListLecturer({ lecturers, setRefresh }) {
+export default function AdminListLecturer({ lecturers, setRefresh ,chosePage}) {
   const [lecturerList, setLecturerList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [searchComponent, setSearchComponent] = useState("");
@@ -13,13 +13,14 @@ export default function AdminListLecturer({ lecturers, setRefresh }) {
   const [deleteHolder, setDeleteHolder] = useState("");
   const [openUpdate, setOpenUpdate] = useState(false);
   const [updateObject, setUpdateObject] = useState();
-
+ 
   const closeModal = () => {
     setOpen(false);
     setOpenUpdate(false);
   };
 
   useEffect(() => {
+    chosePage('Lecturer')
     setLecturerList(lecturers);
     setShowList(lecturers);
     console.log(lecturerList);
