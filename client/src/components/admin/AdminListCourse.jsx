@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Popup from "reactjs-popup";
 import { LuPlusCircle } from "react-icons/lu";
 import "../../cssstyles/popupStyles.css";
-import { createCourse, deleteSubjectById } from "../../api";
+import { createCourse, deleteSubjectById,updateCourseById } from "../../api";
 
 export default function AdminListCourse({ course, setRefresh }) {
   const zeroFormData = {
@@ -16,13 +16,22 @@ export default function AdminListCourse({ course, setRefresh }) {
   const [openCreate, setOpenCreate] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState();
+  const [updateHolder, setUpdateHolder] = useState();
 
   const [formData, setFormData] = useState(zeroFormData);
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
+  const [updated, setUpdated] = useState(false);
   async function makePostRequest(form) {
     try {
       const response = await createCourse(form);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async function makePutRequest(form,id) {
+    try {
+      const response = await updateCourseById(form,id);
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +48,7 @@ export default function AdminListCourse({ course, setRefresh }) {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  async function handleSubmitCreate  (e) {
     e.preventDefault();
 
     // Validate the form
@@ -50,16 +59,43 @@ export default function AdminListCourse({ course, setRefresh }) {
     if (Object.keys(newErrors).length === 0) {
       // No validation errors, proceed with the submission
       console.log("Form submitted:", formData);
-      makePostRequest(formData);
+      await makePostRequest(formData);
       setFormData(zeroFormData);
       setAdded(true);
       setRefresh(true);
     }
   };
+  async function handleSubmitUpdate  (e) {
+    e.preventDefault();
 
-  const cancelAll = (e) => {
+    // Validate the form
+    const newErrors = validateForm();
+    setErrors(newErrors);
+
+    // If there are errors, do not proceed with the submission
+    if (Object.keys(newErrors).length === 0) {
+      // No validation errors, proceed with the submission
+      console.log("Form submitted:", formData);
+      await makePutRequest(formData,updateHolder.id);
+      setUpdateHolder({...formData,id:updateHolder.id})
+      setFormData(formData);
+      setUpdated(true);
+      setRefresh(true);
+    }
+  };
+
+  const cancelAllCreate = (e) => {
     e.preventDefault();
     setFormData(zeroFormData);
+    setErrors([]);
+    setAdded(false);
+  };
+  const cancelAllUpdate = (e) => {
+    e.preventDefault();
+    setFormData({
+      subjectCode: updateHolder.subjectCode,
+      name: updateHolder.name,
+    });
     setErrors([]);
     setAdded(false);
   };
@@ -87,6 +123,13 @@ export default function AdminListCourse({ course, setRefresh }) {
 
   const closeModal = () => {
     setOpenDelete(false);
+    setOpenCreate(false);
+    setOpenUpdate(false);
+    setFormData(zeroFormData);
+    setDeleteHolder();
+    setUpdateHolder({});
+    setAdded(false);
+    setUpdated(false);
   };
 
   useEffect(() => {
@@ -121,11 +164,21 @@ export default function AdminListCourse({ course, setRefresh }) {
         // If the deletion is successful, you can update the local state.
         setDeleteHolder(0);
         setOpenDelete(false);
+        setRefresh(true);
       } catch (error) {
         // Handle the error
         console.error("Error deleting account:", error);
       }
     }
+  }
+
+  function handleUpdate(subject,e){
+    setOpenUpdate((open) => !open);
+    setUpdateHolder(subject);
+    setFormData({
+      subjectCode: subject.subjectCode,
+      name:subject.name,
+    })
   }
 
   return (
@@ -187,7 +240,7 @@ export default function AdminListCourse({ course, setRefresh }) {
                     {info.subjectCode}
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
-                    <button className="  text-gray-500">Update</button>
+                    <button className="  text-gray-500" onClick={()=>handleUpdate(info)}>Update</button>
                   </td>
                   <td className="text-center font-medium text-lg p-2 border-black border-r-2">
                     <button
@@ -279,13 +332,13 @@ export default function AdminListCourse({ course, setRefresh }) {
                 <div className="flex flex-row gap-20 ">
                   <button
                     className="text-xl bg-green-500 p-1 border rounded-lg border-black"
-                    onClick={handleSubmit}
+                    onClick={handleSubmitCreate}
                   >
                     Create
                   </button>
                   <button
                     className="text-xl bg-red-500 p-1 border rounded-lg border-black"
-                    onClick={cancelAll}
+                    onClick={cancelAllCreate}
                   >
                     Cancel
                   </button>
@@ -297,8 +350,13 @@ export default function AdminListCourse({ course, setRefresh }) {
         {/* Update Popup */}
         <Popup open={openUpdate} closeOnDocumentClick onClose={closeModal}>
           <div className="modal">
-            <div className="header font-bold text-3xl"> Create Course!!!</div>
+            <div className="header font-bold text-3xl"> Update Course!!!</div>
             <div className="content">
+            {updated && (
+                <div className="w-full text-green-500 font-semibold text-xl">
+                  Updating successfully!!!
+                </div>
+              )}
               <form className="w-full flex justify-center flex-col gap-5 items-center min-h-[10rem]">
                 <div className="flex flex-row w-full items-center justify-center">
                   <span className="text-xl font-medium w-[30%]">
@@ -341,13 +399,13 @@ export default function AdminListCourse({ course, setRefresh }) {
                 <div className="flex flex-row gap-20 ">
                   <button
                     className="text-xl bg-green-500 p-1 border rounded-lg border-black"
-                    onClick={handleSubmit}
+                    onClick={handleSubmitUpdate}
                   >
-                    Create
+                    Update
                   </button>
                   <button
                     className="text-xl bg-red-500 p-1 border rounded-lg border-black"
-                    onClick={cancelAll}
+                    onClick={cancelAllUpdate}
                   >
                     Cancel
                   </button>

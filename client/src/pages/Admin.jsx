@@ -23,7 +23,7 @@ function Admin() {
   }
   async function fetchCourse() {
     const response = await getAllSubject()
-      .then((result) => setCourseList(result))
+      .then((result) => setCourseList(result.filter((course) => course.status !== "Unactive")))
       .catch((error) => console.log(error));
     console.log(users);
   }
