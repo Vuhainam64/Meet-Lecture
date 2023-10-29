@@ -5,7 +5,7 @@ import {
   searchSubjectById,
   searchSlotById,
   getAllBookingByLecturerIDORStudentID,
-  updateSlotById,
+  updateBookingById,
 } from "../../api";
 import moment from "moment";
 import Popup from "reactjs-popup";
@@ -16,11 +16,20 @@ export default function PendingLecturer({ id }) {
   const [formData, setFormData] = useState({});
   const [formId, setFormId] = useState(0);
   const [popup, setPopup] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [deny, setDeny] = useState(false);
+  const [reason, setReason] = useState("");
+  const [errors, setErrors] = useState("");
 
   const closeModal = () => {
     setPopup(false);
     setFormData({});
-    setFormId(0)
+    setFormId(0);
+  };
+  const closeModalDeny = () => {
+    setDeny(false);
+    setReason("");
+    setErrors("");
   };
   async function fetchData() {
     const response = await getAllBookingByLecturerIDORStudentID(parseInt(id))
@@ -32,7 +41,7 @@ export default function PendingLecturer({ id }) {
 
   async function makePutData(form, id) {
     try {
-      const response = await updateSlotById(form, id);
+      const response = await updateBookingById(form, id);
     } catch {}
   }
   async function handleAccpet(id) {
@@ -42,18 +51,43 @@ export default function PendingLecturer({ id }) {
       slotId: parseInt(data.slotId),
       subjectId: parseInt(data.subjectId),
       description: data.description,
-      reason: (data.reason===null?"":data.reason),
+      reason: data.reason === null ? "" : data.reason,
       status: "Booked",
     });
-    setFormId(data.id)
+    setFormId(data.id);
     setPopup(true);
-
+    console.log(data.id);
+  }
+  async function handleDeny(id) {
+    const data = bookedList.find((book) => book.id === id);
+    setFormData({
+      studentId: parseInt(data.studentId),
+      slotId: parseInt(data.slotId),
+      subjectId: parseInt(data.subjectId),
+      description: data.description,
+      reason: data.reason === null ? "" : data.reason,
+      status: "Denied",
+    });
+    setFormId(data.id);
+    setDeny(true);
     console.log(data.id);
   }
 
-  async function handleDeleteYes() {
+  async function submitAccept() {
     console.log(formData);
     await makePutData(formData, formId);
+    setPopup(false);
+    setRefresh(true);
+  }
+
+  async function submitDeny(e) {
+    e.preventDefault();
+    console.log(formData);
+    if (reason !== "") {
+      await makePutData({ ...formData, reason }, formId);
+      setDeny(false);
+      setRefresh(true);
+    } else setErrors("You need a reason to deny.");
   }
 
   async function addObject() {
@@ -75,11 +109,12 @@ export default function PendingLecturer({ id }) {
     setShowList(updatedRequestedList);
   }
   useEffect(() => {
-    if (id) {
+    if (id || refresh == true) {
       fetchData();
       console.log(bookedList);
+      setRefresh(false);
     }
-  }, [id, bookedList <= 0]);
+  }, [id, bookedList <= 0, refresh]);
   useEffect(() => {
     addObject();
     console.log(showList);
@@ -151,11 +186,49 @@ export default function PendingLecturer({ id }) {
                       <TiTick />
                     </button>
                   </td>
-                  <td className="text-center font-medium text-4xl  p-2 border-black  border-r-2 border-b-2">
-                    <button className=" text-white bg-red-400 rounded-full">
+                  <td className="text-center font-medium text-4xl  p-2 border-black  border-r-2 border-b-2 relative">
+                    <button
+                      className=" text-white bg-red-400 rounded-full"
+                      onClick={() => handleDeny(info.id)}
+                    >
                       <TiTimes />
                     </button>
                   </td>
+                  {deny === true && (
+                    <div
+                      className={`flex flex-col items-end absolute w-fit border-2 right-[7rem] bottom-[12rem] min-h-[5rem] border-black bg-white z-50 opacity-80 px-5 py-1 pb-5`}
+                    >
+                      <button
+                        className="text-2xl w-fit"
+                        onClick={closeModalDeny}
+                      >
+                        &times;
+                      </button>
+                      <form className="flex flex-col gap-3 justify-end items-end relative w-full">
+                        <div className="flex flex-row justify-between items-center w-full">
+                          <span>Reason:</span>
+                          <input
+                            onChange={(e) => setReason(e.target.value)}
+                            className={`border-2 w-[11rem] ${
+                              errors !== ""
+                                ? "border-red-500 "
+                                : "border-gray-900"
+                            } `}
+                            value={reason}
+                          />
+                        </div>
+                        {errors !== "" && (
+                          <div className="text-red-500 text-sm">{errors}</div>
+                        )}
+                        <button
+                          className=" border border-black px-2 bg-cyan-400 text-white"
+                          onClick={submitDeny}
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+                  )}
                 </tr>
               ))}
           </tbody>
@@ -174,7 +247,7 @@ export default function PendingLecturer({ id }) {
           <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
             <button
               className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
-              onClick={handleDeleteYes}
+              onClick={submitAccept}
             >
               Yes, Im sure!!!
             </button>

@@ -27,7 +27,7 @@ export default function Booking() {
         <span className="text-2xl underline">Home</span>
       </Link>
       <div className="w-[90%] mx-[5%] h-full bg-white">
-        <ShowBoxs childArray={bookingRooms} role="Student"></ShowBoxs>
+        <ShowBoxs childArray={bookingRooms}></ShowBoxs>
       </div>
     </div>
   );

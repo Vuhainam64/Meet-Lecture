@@ -211,9 +211,9 @@ export const updateCourseById= async (form,id) => {
         console.error('Error update Subject:', err);
     }
 }
-export const updateSlotById= async (form,id) => {
+export const updateBookingById= async (form,id) => {
     try {
-        const res = await axios.put(`${baseURL}/Slot/${id}`,form);
+        const res = await axios.put(`${baseURL}/Booking/${id}`,form);
         // Check if the response status is 200 OK
         if (res.status === 200) {
             console.log('Slot update successfully.');

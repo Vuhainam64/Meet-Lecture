@@ -3,6 +3,7 @@ import { LuPencilLine, LuTrash2, LuPlusCircle, LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
+import {  } from "../../api";
 export default function ShowBoxs({ childArray }) {
   const [showInformations, setShowInformations] = useState(childArray);
   useEffect(() => {
@@ -21,9 +22,7 @@ export default function ShowBoxs({ childArray }) {
     }
   }
 
-  async function handleDelete(e,infor){
 
-  }
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative">
       {showInformations && showInformations.length === 0 && (
@@ -72,7 +71,7 @@ export default function ShowBoxs({ childArray }) {
               ) : (
                 <></>
               )}
-              <Link to={`/Lecturer/Create/${infor.id}`}>
+              <Link to={`/Lecturer/Update/${infor.id}`}>
                 <button className="text-3xl">
                   <LuPencilLine />
                 </button>
@@ -91,7 +90,7 @@ export default function ShowBoxs({ childArray }) {
               >
                 {infor.mode}
               </button>
-              <button className="text-3xl" onClick={handleDelete}>
+              <button className="text-3xl">
                 <LuTrash2 />
               </button>
             </div>

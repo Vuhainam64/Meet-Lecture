@@ -4,7 +4,7 @@ import { LuLock } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { getAllSubject } from "../../api";
-export default function ShowBoxs({ childArray, role }) {
+export default function ShowBoxs({ childArray }) {
   const [showInformations, setShowInformations] = useState(childArray);
   const [clickBook, setClickBook] = useState("");
   const [bookingHolder, setBookingHolder] = useState({});
@@ -60,7 +60,9 @@ export default function ShowBoxs({ childArray, role }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    // Validate the form
+    // Validate the form\
+    console.log('tới đây r');
+    console.log(formData);
     const newErrors = validateForm();
     setErrors(newErrors);
 
