@@ -3,14 +3,32 @@ import { LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { getAllSubject } from "../../api";
-export default function ShowBoxs({ childArray }) {
+import { createBooking, createBookingByCode, getAllSubject } from "../../api";
+export default function ShowBoxs({ childArray, setRefresh }) {
   const [showInformations, setShowInformations] = useState(childArray);
   const [clickBook, setClickBook] = useState("");
   const [bookingHolder, setBookingHolder] = useState({});
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [subjectList, setSubjectList] = useState([]);
+  const [added, setAdded] = useState(false);
+  const [codeError, setCodeError] = useState("");
+
+  async function makePostRequest(form) {
+    try {
+      const response = await createBooking(form);
+    } catch (error) {}
+  }
+  async function makePostRequestByCode(form) {
+    try {
+      const response = await createBookingByCode(form);
+      console.log(response);
+      setCodeError(response);
+    } catch (error) {
+      // Handle other errors such as network issues
+      console.error("Error:", error);
+    }
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -31,26 +49,34 @@ export default function ShowBoxs({ childArray }) {
 
   const validateForm = () => {
     const newErrors = {};
-    // Check if the fullname is not empty
-    if (!formData.code) {
-      newErrors.code = "Code is required";
+
+    // Check if either code or (subjectCode and description) is provided
+    if (!(formData.code || (formData.subjectCode && formData.description))) {
+      newErrors.description =
+        "Either Code or (Subject Code and Description) is required";
+      newErrors.code =
+        "Either Code or (Subject Code and Description) is required";
+    } else {
+      // If subjectCode is provided, validate it
+      if (formData.subjectCode) {
+        if (/^\d/.test(formData.subjectCode)) {
+          newErrors.subjectCode = "Subject Code cannot start with a number";
+        } else if (searchCourseName(formData.subjectCode) === 0) {
+          newErrors.subjectCode = "Can't find this course";
+        }
+      }
+
+      // If description is provided, validate it
+      if (formData.description) {
+        if (/^\d/.test(formData.description)) {
+          newErrors.description = "Description cannot start with a number";
+        }
+      }
     }
-    if (!formData.subjectCode) {
-      newErrors.subjectCode = "Course is required";
-    } else if (/^\d/.test(formData.subjectCode)) {
-      newErrors.subjectCode = "Course cannot start with a number";
-    } else if (searchCourseName(formData.subjectCode) === 0) {
-      newErrors.subjectCode = "Can't find this course";
-    }
-    if (!formData.description) {
-      newErrors.description = "Description is required";
-    } else if (/^\d/.test(formData.description)) {
-      newErrors.description = "Description cannot start with a number";
-    }
-    // Add more validation rules for other fields as needed
 
     return newErrors;
   };
+
   async function fetchData() {
     const response = await getAllSubject()
       .then((data) => setSubjectList(data))
@@ -59,21 +85,49 @@ export default function ShowBoxs({ childArray }) {
   }
   async function handleSubmit(e) {
     e.preventDefault();
-
-    // Validate the form\
-    console.log('tới đây r');
+    // Validate the form
+    console.log("tới đây r");
     console.log(formData);
-    const newErrors = validateForm();
-    setErrors(newErrors);
 
-    // If there are errors, do not proceed with the submission
-    if (Object.keys(newErrors).length === 0) {
-      // No validation errors, proceed with the submission
-      console.log("Form submitted:", formData);
-      // await makePostRequest(formData);
-      setFormData({});
-      // setAdded(true);
-      // setRefresh(true);
+    if (formData.description && !formData.code) {
+      const submitData = {
+        studentId: 2,
+        slotId: parseInt(clickBook),
+        subjectId: parseInt(searchCourseName(formData.subjectCode)),
+        description: formData.description,
+        status: "Pending",
+      };
+      console.log("SubmitData:", submitData);
+      const newErrors = validateForm();
+      setErrors(newErrors);
+
+      // If there are errors, do not proceed with the submission
+      if (Object.keys(newErrors).length === 0) {
+        // No validation errors, proceed with the submission
+        console.log("Form submitted:", submitData);
+        await makePostRequest(submitData);
+        setAdded(true);
+        setRefresh(true);
+      }
+    } else if (formData.code) {
+      console.log("code");
+      const submitData = {
+        studentId: 2,
+        slotId: parseInt(clickBook),
+        subjectId: parseInt(searchCourseName(formData.subjectCode)),
+        code: formData.code,
+      };
+      console.log("SubmitData:", submitData);
+      const newErrors = validateForm();
+      setErrors(newErrors);
+      // If there are errors, do not proceed with the submission
+      if (Object.keys(newErrors).length === 0) {
+        // No validation errors, proceed with the submission
+        console.log("Form submitted:", submitData);
+        await makePostRequestByCode(submitData);
+        setAdded(true);
+        setRefresh(true);
+      }
     }
   }
 
@@ -85,6 +139,7 @@ export default function ShowBoxs({ childArray }) {
   const navigate = useNavigate();
 
   function handleClick(e, infor) {
+    handleClose();
     const key = e.target.value;
     console.log(key);
     if (key === "Feedback") {
@@ -101,6 +156,9 @@ export default function ShowBoxs({ childArray }) {
   function handleClose() {
     setBookingHolder({});
     setClickBook(0);
+    setAdded(false);
+    setFormData({})
+    setCodeError("")
   }
 
   return (
@@ -141,7 +199,9 @@ export default function ShowBoxs({ childArray }) {
               </span>
             )}
             {infor.limitBooking && (
-              <span className="text-xl">Limit: {infor.bookingId.length}/{infor.limitBooking}</span>
+              <span className="text-xl">
+                Limit: {infor.bookingId.length}/{infor.limitBooking}
+              </span>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {infor.Finish ? (
@@ -181,6 +241,10 @@ export default function ShowBoxs({ childArray }) {
                 </button>
                 {infor.code !== "" ? (
                   <form className="flex flex-col gap-3 justify-end items-end relative w-full">
+                    
+                      <div className={`w-full text-left font-semibold ${codeError==="Booked succesfully!!!"?"text-green-500":"text-red-500"}`}>
+                      {codeError}
+                      </div>
                     <div className="flex flex-row justify-between items-center w-full">
                       <span>Course:</span>
                       <input
@@ -224,6 +288,11 @@ export default function ShowBoxs({ childArray }) {
                   </form>
                 ) : (
                   <form className="flex flex-col gap-3 justify-end items-end relative w-full">
+                    {added === true && (
+                      <div className="w-full text-left font-semibold text-green-500">
+                        Booked Succesfully
+                      </div>
+                    )}
                     <div className="flex flex-col gap-3 justify-end items-start w-full">
                       <div className="flex flex-row justify-between items-center w-full">
                         <span>Course:</span>

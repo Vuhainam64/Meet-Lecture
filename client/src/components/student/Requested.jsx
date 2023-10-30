@@ -39,7 +39,6 @@ export default function Requested({ id }) {
     setDeleteHolder(id);
     const requestData = await searchRequestById(parseInt(id));
     console.log(requestData);
-
     setFormData({
       studentId: parseInt(requestData.studentId),
       lecturerId: parseInt(requestData.lecturerId),
@@ -99,6 +98,7 @@ export default function Requested({ id }) {
       setAddObjectStatus(false);
     }
   }, [addObjectStatus]);
+  console.log('request');
   console.log(requestedList);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">

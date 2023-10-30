@@ -146,6 +146,22 @@ export const createCourse= async (form) => {
         console.error('Error create course:', err);
     }
 }
+export const createBookingByCode= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Booking/CreateByCode`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Slot create successfully.');
+            return ("Booked succesfully!!!")
+        } else {
+    
+            return ("Wrong code or slot!!!");
+        }
+    } catch (err) {
+        // Log the detailed error message
+        return (err.response.data);
+    }
+}
 export const createBooking= async (form) => {
     try {
         const res = await axios.post(`${baseURL}/Booking`,form);

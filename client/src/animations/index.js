@@ -1,5 +1,5 @@
 export const buttonClick = {
-  whileTap: { scale: 0.95 },
+  whiletap: { scale: 0.95 },
 };
 
 export const fadeInOut = {
