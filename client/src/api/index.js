@@ -146,6 +146,22 @@ export const createCourse= async (form) => {
         console.error('Error create course:', err);
     }
 }
+export const createBookingByCode= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Booking/CreateByCode`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Slot create successfully.');
+            return ("Booked succesfully!!!")
+        } else {
+    
+            return ("Wrong code or slot!!!");
+        }
+    } catch (err) {
+        // Log the detailed error message
+        return (err.response.data);
+    }
+}
 export const createBooking= async (form) => {
     try {
         const res = await axios.post(`${baseURL}/Booking`,form);
@@ -172,6 +188,20 @@ export const createSlot= async (form) => {
     } catch (err) {
         // Log the detailed error message
         console.error('Error create slot:', err);
+    }
+}
+export const createRequest= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Request`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Request create successfully.');
+        } else {
+            console.log(`Request status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error create request:', err);
     }
 }
 
@@ -233,6 +263,21 @@ export const deleteRequestById = async (id) => {
         console.error('Error deleting subject:', err);
     }
 }
+export const deleteBookingtById = async (id) => {
+    try {
+        const res = await axios.delete(`${baseURL}/Booking/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Booking deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting booking:', err);
+    }
+}
+
 //update
 export const updateAccountById= async (form,id) => {
     try {
@@ -288,6 +333,20 @@ export const updateSlotById= async (form,id) => {
     } catch (err) {
         // Log the detailed error message
         console.error('Error update slot:', err);
+    }
+}
+export const updateRequestById= async (form,id) => {
+    try {
+        const res = await axios.put(`${baseURL}/Request/${id}`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Request update successfully.');
+        } else {
+            console.log(`Request status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error update request:', err);
     }
 }
 
