@@ -8,7 +8,7 @@ export default function HomeLecturer({ id }) {
   const [bookingRooms, setBookingRooms] = useState([]);
   async function fetchData() {
     const response = await getAllSlotByLecturerID(parseInt(id))
-      .then((data) => setBookingRooms(data))
+      .then((data) => setBookingRooms(data.filter(slot=>slot.status!=="Unactive")))
       .catch((error) => console.log(error));
   }
   useEffect(() => {

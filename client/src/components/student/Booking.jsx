@@ -9,7 +9,7 @@ export default function Booking() {
   const [bookingRooms, setBookingRooms] = useState([]);
   async function fetchData(id) {
     const response = await getAllSlotByLecturerID(parseInt(id))
-      .then((data) => setBookingRooms(data.filter(slot=>slot.mode!=="Private")))
+      .then((data) => setBookingRooms(data.filter(slot=>(slot.mode!=="Private"&&slot.status!=="Unactive"))))
       .catch((error) => console.log(error));
   }
   useEffect(() => {
