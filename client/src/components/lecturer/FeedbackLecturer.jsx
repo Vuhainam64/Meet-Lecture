@@ -7,7 +7,7 @@ import {
   searchSubjectById,
 } from "../../api";
 import moment from "moment";
-export default function FeedbackLecturer({ id }) {
+export default function FeedbackLecturer({ id ,chosePage}) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
 
@@ -33,6 +33,7 @@ export default function FeedbackLecturer({ id }) {
   }
 
   useEffect(() => {
+    chosePage('History')
     if (id) {
       fetchData();
       console.log(requestedList);

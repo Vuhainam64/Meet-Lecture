@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs"; // Sửa đổi import
 import { NavLink, useParams } from "react-router-dom";
-import { createSlot, searchRequestById } from "../../api";
+import {
+  createBooking,
+  createSlot,
+  getAllSlotByLecturerID,
+  searchRequestById,
+} from "../../api";
 import moment from "moment";
 
 export default function CreateRequestSlot() {
-  const { id } = useParams()
+  const { id } = useParams();
   const zeroFormData = {
     code: "",
     lecturerId: 3,
@@ -13,14 +18,16 @@ export default function CreateRequestSlot() {
     location: "",
     mode: "Public",
     title: "",
-    date:"",
+    date: "",
     endDatetime: "",
-    startDatetime:"",
+    startDatetime: "",
   };
   const [formData, setFormData] = useState(zeroFormData);
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
-  const [inforDetail,setInforDetail]=useState({});
+  const [inforDetail, setInforDetail] = useState({});
+  const [bookingRooms, setBookingRooms] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const copyInforDetailToFormData = () => {
     setFormData({
@@ -41,10 +48,22 @@ export default function CreateRequestSlot() {
       .then((data) => setInforDetail(data))
       .catch((error) => console.log(error));
   }
+  async function fetchDataSlot(slotId) {
+    const response = await getAllSlotByLecturerID(parseInt(slotId))
+      .then((data) =>
+        setBookingRooms(data.filter((slot) => slot.status !== "Unactive"))
+      )
+      .catch((error) => console.log(error));
+  }
 
   async function makePostRequest(form) {
     try {
       const response = await createSlot(form);
+    } catch (error) {}
+  }
+  async function makePostBooking(form) {
+    try {
+      const response = await createBooking(form);
     } catch (error) {}
   }
 
@@ -53,8 +72,9 @@ export default function CreateRequestSlot() {
     const newValue = name === "limitBooking" ? parseInt(value, 10) : value;
     setFormData({ ...formData, [name]: newValue });
   };
+  console.log(inforDetail);
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     console.log();
     e.preventDefault();
     console.log("create nè");
@@ -67,12 +87,22 @@ export default function CreateRequestSlot() {
       console.log("tới đây r nè");
       // No validation errors, proceed with the submission
       console.log("Form submitted:", formData);
-      makePostRequest({
+
+      await makePostRequest({
         ...formData,
         date: `${formData.date}T00:00`,
         startDatetime: `1111-11-11T${formData.startDatetime}`,
         endDatetime: `1111-11-11T${formData.endDatetime}`,
       });
+      await makePostBooking({
+        studentId: parseInt(inforDetail.studentId),
+        slotId: parseInt(bookingRooms.length),
+        subjectId: parseInt(inforDetail.studentId),
+        description: inforDetail.description,
+        status:'Success'
+      });
+
+      setRefresh(true);
       setFormData({
         ...zeroFormData,
         date: "",
@@ -81,13 +111,14 @@ export default function CreateRequestSlot() {
       });
       setAdded(true);
     }
-  };
+  }
 
   const cancelAll = () => {
     setFormData(zeroFormData);
     setErrors([]);
     setAdded(false);
   };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -104,9 +135,9 @@ export default function CreateRequestSlot() {
       newErrors.date = "Created At is required";
     } else {
       // Convert formData.date to a Date object for comparison
-      const selectedDate = moment(formData.date).format('DD-MM-yyyy');
-      const currentDate = moment().format('DD-MM-yyyy');
-  
+      const selectedDate = moment(formData.date).format("DD-MM-yyyy");
+      const currentDate = moment().format("DD-MM-yyyy");
+
       // Compare the selected date with the current date
       if (selectedDate < currentDate) {
         newErrors.date = "Date must be equal to or greater than today";
@@ -124,15 +155,15 @@ export default function CreateRequestSlot() {
     } else {
       const start = moment(formData.startDatetime, "HH:mm");
       const end = moment(formData.endDatetime, "HH:mm");
-  
+
       const timeDifference = end.diff(start, "minutes"); // Difference in minutes
-  
+
       // Check if endDatetime is at least 15 minutes greater than startDatetime
       if (timeDifference < 15) {
         newErrors.endDatetime =
           "End Date and Time must be at least 15 minutes greater than Start Time";
       }
-  
+
       // Check if endDatetime is no more than 3 hours greater than startDatetime
       if (timeDifference > 180) {
         newErrors.endDatetime =
@@ -164,6 +195,8 @@ export default function CreateRequestSlot() {
     if (id != 0) {
       console.log(id);
       fetchData(id);
+      fetchDataSlot(3);
+      console.log(bookingRooms);
     }
   }, [id]);
 
@@ -198,146 +231,156 @@ export default function CreateRequestSlot() {
                 Create successfully!
               </div>
             )}
-            <form className="w-[80%] mx-auto flex flex-col gap-5">
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Title</span>
-                <input
-                  className={`border ${
-                    errors.title ? "border-red-500 border-2" : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="text"
-                  value={formData.title} // Sử dụng giá trị từ formData
-                  onChange={handleInputChange}
-                  name="title"
-                ></input>
-              </div>{" "}
-              {errors.title && (
-                <div className="text-red-500 text-sm">{errors.title}</div>
-              )}
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Location</span>
-                <input
-                  className={`border ${
-                    errors.location
-                      ? "border-red-500 border-2"
-                      : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="text"
-                  value={formData.location} // Sử dụng giá trị từ formData
-                  onChange={handleInputChange}
-                  name="location"
-                ></input>
-              </div>
-              {errors.location && (
-                <div className="text-red-500 text-sm">{errors.location}</div>
-              )}
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Date</span>
-                <input
-                  className={`border ${
-                    errors.date ? "border-red-500 border-2" : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="date" // Corrected type attribute
-                  value={formData.date}
-                  onChange={handleInputChange}
-                  name="date" // Corrected name attribute
-                ></input>
-              </div>
-              {errors.date && (
-                <div className="text-red-500 text-sm">{errors.date}</div>
-              )}
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Start Time</span>
-                <input
-                  className={`border ${
-                    errors.startDatetime
-                      ? "border-red-500 border-2"
-                      : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="time" // Corrected type attribute
-                  value={formData.startDatetime}
-                  onChange={handleInputChange}
-                  name="startDatetime" // Corrected name attribute
-                ></input>
-              </div>
-              {errors.startDatetime && (
-                <div className="text-red-500 text-sm">
-                  {errors.startDatetime}
+            {refresh === false && (
+              <form className="w-[80%] mx-auto flex flex-col gap-5">
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">Title</span>
+                  <input
+                    className={`border ${
+                      errors.title
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="text"
+                    value={formData.title} // Sử dụng giá trị từ formData
+                    onChange={handleInputChange}
+                    name="title"
+                  ></input>
+                </div>{" "}
+                {errors.title && (
+                  <div className="text-red-500 text-sm">{errors.title}</div>
+                )}
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">Location</span>
+                  <input
+                    className={`border ${
+                      errors.location
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="text"
+                    value={formData.location} // Sử dụng giá trị từ formData
+                    onChange={handleInputChange}
+                    name="location"
+                  ></input>
                 </div>
-              )}
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">End Time</span>
-                <input
-                  className={`border ${
-                    errors.endDatetime
-                      ? "border-red-500 border-2"
-                      : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="time" // Corrected type attribute
-                  value={formData.endDatetime}
-                  onChange={handleInputChange}
-                  name="endDatetime" // Corrected name attribute
-                ></input>
-              </div>
-              {errors.endDatetime && (
-                <div className="text-red-500 text-sm">{errors.endDatetime}</div>
-              )}
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Limit</span>
-                <input
-                  className={`border ${
-                    errors.limitBooking
-                      ? "border-red-500 border-2"
-                      : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="number"
-                  value={formData.limitBooking} // Sử dụng giá trị từ formData
-                  onChange={handleInputChange}
-                  name="limitBooking"
-                ></input>
-              </div>
-              {errors.limitBooking && (
-                <div className="text-red-500 text-sm">
-                  {errors.limitBooking}
+                {errors.location && (
+                  <div className="text-red-500 text-sm">{errors.location}</div>
+                )}
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">Date</span>
+                  <input
+                    className={`border ${
+                      errors.date
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="date" // Corrected type attribute
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    name="date" // Corrected name attribute
+                  ></input>
                 </div>
-              )}
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Mode</span>
-                <select
-                  className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  name="mode"
-                  value={formData.mode} // Sử dụng giá trị từ formData
-                  onChange={handleInputChange}
-                >
-                  <option value="Public">Public</option>
-                  <option value="Private">Private</option>
-                </select>
-              </div>
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Code</span>
-                <input
-                  className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="text"
-                  value={formData.code} // Sử dụng giá trị từ formData
-                  onChange={handleInputChange}
-                  name="code"
-                ></input>
-              </div>
-            </form>
-            <div className="flex flex-row w-full items-center justify-center gap-10">
-              <button
-                className="text-white bg-red-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={cancelAll}
-              >
-                Cancel
-              </button>
-              <button
-                className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={handleSubmit}
-              >
-                Create
-              </button>
-            </div>
+                {errors.date && (
+                  <div className="text-red-500 text-sm">{errors.date}</div>
+                )}
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">
+                    Start Time
+                  </span>
+                  <input
+                    className={`border ${
+                      errors.startDatetime
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="time" // Corrected type attribute
+                    value={formData.startDatetime}
+                    onChange={handleInputChange}
+                    name="startDatetime" // Corrected name attribute
+                  ></input>
+                </div>
+                {errors.startDatetime && (
+                  <div className="text-red-500 text-sm">
+                    {errors.startDatetime}
+                  </div>
+                )}
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">End Time</span>
+                  <input
+                    className={`border ${
+                      errors.endDatetime
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="time" // Corrected type attribute
+                    value={formData.endDatetime}
+                    onChange={handleInputChange}
+                    name="endDatetime" // Corrected name attribute
+                  ></input>
+                </div>
+                {errors.endDatetime && (
+                  <div className="text-red-500 text-sm">
+                    {errors.endDatetime}
+                  </div>
+                )}
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">Limit</span>
+                  <input
+                    className={`border ${
+                      errors.limitBooking
+                        ? "border-red-500 border-2"
+                        : "border-gray-900"
+                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="number"
+                    value={formData.limitBooking} // Sử dụng giá trị từ formData
+                    onChange={handleInputChange}
+                    name="limitBooking"
+                  ></input>
+                </div>
+                {errors.limitBooking && (
+                  <div className="text-red-500 text-sm">
+                    {errors.limitBooking}
+                  </div>
+                )}
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">Mode</span>
+                  <select
+                    className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    name="mode"
+                    value={formData.mode} // Sử dụng giá trị từ formData
+                    onChange={handleInputChange}
+                  >
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                  </select>
+                </div>
+                <div className="flex flex-row w-full items-center">
+                  <span className="text-xl font-medium w-[30%]">Code</span>
+                  <input
+                    className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
+                    type="text"
+                    value={formData.code} // Sử dụng giá trị từ formData
+                    onChange={handleInputChange}
+                    name="code"
+                  ></input>
+                </div>
+                <div className="flex flex-row w-full items-center justify-center gap-10">
+                  <button
+                    className="text-white bg-red-500 px-3 py-2 rounded-xl border-black border-2"
+                    onClick={cancelAll}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
+                    onClick={handleSubmit}
+                  >
+                    Create
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
