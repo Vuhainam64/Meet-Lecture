@@ -196,6 +196,20 @@ export const deleteSlotById = async (id) => {
         console.error('Error deleting subject:', err);
     }
 }
+export const deleteRequestById = async (id) => {
+    try {
+        const res = await axios.delete(`${baseURL}/Request/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('subject deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting subject:', err);
+    }
+}
 //update
 export const updateAccountById= async (form,id) => {
     try {

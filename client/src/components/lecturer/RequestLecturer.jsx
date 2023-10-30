@@ -1,14 +1,37 @@
 import { useEffect, useState } from "react";
 import {
+  deleteRequestById,
   getAllRequestByLecturerORStudentID,
   searchStudentById,
   searchSubjectById,
 } from "../../api";
 import moment from "moment";
+import Popup from "reactjs-popup";
 
 export default function RequestLecturer({ id }) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteHolder, setDeleteHolder] = useState("");
+  const [refresh, setRefresh] = useState(false);
+  const [addObjectStatus, setAddObjectStatus] = useState(false);
+  const closeModal = () => {
+    setOpenDelete(false);
+    setDeleteHolder(0);
+  };
+  async function handleDeleteYes() {
+    try {
+      const response = await deleteRequestById(parseInt(deleteHolder));
+      setRefresh(true);
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  function handleDelete(id) {
+    setOpenDelete((open) => !open);
+    setDeleteHolder(id);
+  }
 
   async function fetchData() {
     const response = await getAllRequestByLecturerORStudentID(parseInt(id))
@@ -31,13 +54,23 @@ export default function RequestLecturer({ id }) {
     setShowList(updatedRequestedList);
   }
   useEffect(() => {
-    if (id) {
-      fetchData();
-    }
-  }, [id]);
+    const fetchDataAndAddObject = async () => {
+      if (id || refresh === true) {
+        await fetchData();
+        setRefresh(false);
+        setAddObjectStatus(true);
+      }
+    };
+
+    fetchDataAndAddObject();
+  }, [id, refresh]);
+
   useEffect(() => {
-    addObject();
-  }, [requestedList <= 0]);
+    if (addObjectStatus === true) {
+      addObject();
+      setAddObjectStatus(false);
+    }
+  }, [addObjectStatus]);
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
@@ -80,7 +113,10 @@ export default function RequestLecturer({ id }) {
                   <button className="text-white bg-green-500 px-3 py-2 rounded-3xl">
                     Accept
                   </button>
-                  <button className="text-white bg-red-500 px-3 py-2 rounded-3xl">
+                  <button
+                    className="text-white bg-red-500 px-3 py-2 rounded-3xl"
+                    onClick={() => handleDelete(infor.id)}
+                  >
                     Decline
                   </button>
                 </div>
@@ -88,6 +124,31 @@ export default function RequestLecturer({ id }) {
             ))}
         </div>
       </div>
+      <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
+          </button>
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to delete this course!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 }
