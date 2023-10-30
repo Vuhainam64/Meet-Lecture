@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Footer, Header } from "../layout";
 import { FiUser, FiLock } from "react-icons/fi";
+import { signInWithGoogle } from "../ultils/helpers";
+import { buttonClick } from "../animations";
 
 function Home() {
   const [userName, setUserName] = useState("");
@@ -74,7 +76,11 @@ function Home() {
                   </select>
                 </form>
                 <span className="font-semibold">Login your account on:</span>
-                <button className="gap-3  w-full bg-gray-200 h-16 font-bold text-base flex flex-row items-center justify-center">
+                <button
+                  {...buttonClick}
+                  onClick={signInWithGoogle}
+                  className="gap-3  w-full bg-gray-200 h-16 font-bold text-base flex flex-row items-center justify-center"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="2rem"
@@ -99,7 +105,7 @@ function Home() {
                       fill="#EB4335"
                     />
                   </svg>
-                  <span >Login email @fpt.edu.vn</span>
+                  <span>Login email @fpt.edu.vn</span>
                 </button>
               </div>
             </div>
