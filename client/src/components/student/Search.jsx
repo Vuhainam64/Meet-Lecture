@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { PiArrowFatLineRightBold } from "react-icons/pi";
 import { getAllUser } from "../../api";
 import { Link } from "react-router-dom";
-export default function Search() {
+export default function Search({chosePage}) {
   const [searchComponent, setSearchComponent] = useState("");
   const [lecturers, setLecturers] = useState([]);
   const [result, setResult] = useState([]);
@@ -16,6 +16,7 @@ export default function Search() {
   }
   useEffect(() => {
     fetchData();
+    chosePage("Home")
   }, [lecturers.length === 0]);
 
   function handleSearching(e) {

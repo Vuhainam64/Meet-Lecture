@@ -1,6 +1,6 @@
 import { ShowBoxs } from "./index";
 
-export default function History() {
+export default function History({id}) {
   const bookingRooms = [
     {
       Location: "P.102",

@@ -6,14 +6,14 @@ import {
 } from "../../api";
 import { Requested, ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
-import { Link, Route, Routes } from "react-router-dom";
 
-export default function Pending() {
+
+export default function Pending({id}) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [slotArray,setSlotArray]=useState([]);
   const [route, setRoute] = useState("Booked");
-  const [refesh, setRefesh] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const studentId = 2;
   async function fetchData(studentId) {
     const response = await getAllBookingByLecturerIDORStudentID(
@@ -40,17 +40,21 @@ export default function Pending() {
       })
     );
     // Updated array\
-    const slots=updatedRequestedList.map(item => item.slotInfor);
+    const slots= updatedRequestedList.map(item => ({...item.slotInfor,bookedId:item.id}));
     setShowList(updatedRequestedList);
     setSlotArray(slots)
   }
   useEffect(() => {
-    if (refesh===true||studentId) {
+    if (refresh===true||studentId) {
       fetchData(studentId);
       console.log(bookedList);
       addObject();
+      setRefresh(false)
     }
-  }, [refesh,studentId, bookedList <= 0]);
+  }, [refresh,studentId, bookedList <= 0]);
+  const triggerUseEffect = () => {
+    setRefresh(!refresh);
+  };
   // useEffect(() => {
   
   //   console.log(showList);
@@ -80,9 +84,9 @@ export default function Pending() {
           Requested
         </button>
       </div>
-      <div className="w-full ">
+      <div className="w-[90%] flex justify-center pl-[5%]">
         {route === "Booked" ? (
-          <ShowBoxs childArray={slotArray}></ShowBoxs>
+          <ShowBoxs childArray={slotArray.filter(slot=>slot.status==="Not Book")} type='Pending' setRefresh={setRefresh}></ShowBoxs>
         ) : (
           <Requested id={studentId}></Requested>
         )}

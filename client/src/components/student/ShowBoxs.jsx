@@ -3,9 +3,15 @@ import { LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { createBooking, createBookingByCode, getAllSubject } from "../../api";
-export default function ShowBoxs({ childArray, setRefresh }) {
-  const [showInformations, setShowInformations] = useState(childArray);
+import {
+  createBooking,
+  createBookingByCode,
+  getAllSubject,
+  deleteBookingtById,
+} from "../../api";
+import Popup from "reactjs-popup";
+export default function ShowBoxs({ childArray, setRefresh, type }) {
+  const [showInformations, setShowInformations] = useState();
   const [clickBook, setClickBook] = useState("");
   const [bookingHolder, setBookingHolder] = useState({});
   const [formData, setFormData] = useState({});
@@ -13,6 +19,32 @@ export default function ShowBoxs({ childArray, setRefresh }) {
   const [subjectList, setSubjectList] = useState([]);
   const [added, setAdded] = useState(false);
   const [codeError, setCodeError] = useState("");
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteHolder,setDeleteHolder]=useState('');
+
+  const closeModal = () => {
+    setOpenDelete(false);
+  };
+  function handleDelete(id) {
+    setOpenDelete((open) => !open);
+    setDeleteHolder(id);
+  }
+  
+   async function handleDeleteYes() {
+    if (deleteHolder !== 0) {
+      try {
+        console.log(deleteHolder);
+       const response =await makeDeleteRequest(parseInt(deleteHolder));
+        // If the deletion is successful, you can update the local state.
+        setDeleteHolder(0);
+        setOpenDelete(false);
+        setRefresh(true);
+      } catch (error) {
+        // Handle the error
+        console.error("Error deleting account:", error);
+      }
+    }
+  }
 
   async function makePostRequest(form) {
     try {
@@ -27,6 +59,13 @@ export default function ShowBoxs({ childArray, setRefresh }) {
     } catch (error) {
       // Handle other errors such as network issues
       console.error("Error:", error);
+    }
+  }
+  async function makeDeleteRequest(bookingId) {
+    try {
+      const response = await deleteBookingtById(bookingId);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -151,14 +190,17 @@ export default function ShowBoxs({ childArray, setRefresh }) {
       setClickBook(infor.id);
       setBookingHolder(infor);
     }
+    if (key === "Cancel") {
+      handleDelete(infor?.bookedId)
+    }
   }
 
   function handleClose() {
     setBookingHolder({});
     setClickBook(0);
     setAdded(false);
-    setFormData({})
-    setCodeError("")
+    setFormData({});
+    setCodeError("");
   }
 
   return (
@@ -214,7 +256,9 @@ export default function ShowBoxs({ childArray, setRefresh }) {
               <button
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
-              infor.status === "Cancel"
+              (type === "Pending"
+                ? infor.status === "Not Book" && "Cancel"
+                : infor.status) === "Cancel"
                 ? "bg-red-500"
                 : infor.status === "Booked"
                 ? "bg-green-500"
@@ -224,10 +268,20 @@ export default function ShowBoxs({ childArray, setRefresh }) {
                 ? "bg-blue-700"
                 : "bg-black"
             }`}
-                value={infor.status}
+                value={
+                  type === "Pending"
+                    ? infor.status === "Not Book" && "Cancel"
+                    : infor.status
+                }
                 onClick={(e) => handleClick(e, infor)}
               >
-                {infor.status === "Not Book" ? "Book" : infor.status}
+                {type === "Pending"
+                  ? infor.status === "Not Book"
+                    ? "Cancel"
+                    : infor.status
+                  : infor.status === "Not Book"
+                  ? "Book"
+                  : infor.status}
               </button>
             </div>
             {clickBook === infor.id && (
@@ -241,10 +295,15 @@ export default function ShowBoxs({ childArray, setRefresh }) {
                 </button>
                 {infor.code !== "" ? (
                   <form className="flex flex-col gap-3 justify-end items-end relative w-full">
-                    
-                      <div className={`w-full text-left font-semibold ${codeError==="Booked succesfully!!!"?"text-green-500":"text-red-500"}`}>
+                    <div
+                      className={`w-full text-left font-semibold ${
+                        codeError === "Booked succesfully!!!"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
                       {codeError}
-                      </div>
+                    </div>
                     <div className="flex flex-row justify-between items-center w-full">
                       <span>Course:</span>
                       <input
@@ -343,6 +402,31 @@ export default function ShowBoxs({ childArray, setRefresh }) {
             )}
           </div>
         ))}
+      <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
+          </button>
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to delete this course!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 }
