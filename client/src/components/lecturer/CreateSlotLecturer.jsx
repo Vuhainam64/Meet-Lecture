@@ -42,7 +42,7 @@ export default function CreateSlotLecturer() {
     setErrors(newErrors);
 
     // If there are errors, do not proceed with the submission
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(newErrors).length === 0) {
       console.log("tới đây r nè");
       // No validation errors, proceed with the submission
       console.log("Form submitted:", formData);
@@ -76,6 +76,15 @@ export default function CreateSlotLecturer() {
     // Check if date is not empty
     if (!formData.date) {
       newErrors.date = "Created At is required";
+    } else {
+      // Convert formData.date to a Date object for comparison
+      const selectedDate = new Date(formData.date);
+      const currentDate = new Date();
+  
+      // Compare the selected date with the current date
+      if (selectedDate < currentDate) {
+        newErrors.date = "Date must be equal to or greater than today";
+      }
     }
 
     // Check if startDatetime is not empty
@@ -87,21 +96,21 @@ export default function CreateSlotLecturer() {
     if (!formData.endDatetime) {
       newErrors.endDatetime = "End Date and Time is required";
     } else {
-      const start = new Date(formData.startDatetime);
-      const end = new Date(formData.endDatetime);
-
-      const timeDifference = (end - start) / 1000 / 60; // Difference in minutes
-
+      const start = moment(formData.startDatetime, "HH:mm");
+      const end = moment(formData.endDatetime, "HH:mm");
+  
+      const timeDifference = end.diff(start, "minutes"); // Difference in minutes
+  
       // Check if endDatetime is at least 15 minutes greater than startDatetime
       if (timeDifference < 15) {
         newErrors.endDatetime =
-          "End Date and Time must be at least 15 minutes greater than Start Date and Time";
+          "End Date and Time must be at least 15 minutes greater than Start Time";
       }
-
+  
       // Check if endDatetime is no more than 3 hours greater than startDatetime
       if (timeDifference > 180) {
         newErrors.endDatetime =
-          "End Date and Time must be no more than 3 hours greater than Start Date and Time";
+          "End Date and Time must be no more than 3 hours greater than Start Time";
       }
     }
 

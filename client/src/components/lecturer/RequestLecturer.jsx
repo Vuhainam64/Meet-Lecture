@@ -7,6 +7,7 @@ import {
 } from "../../api";
 import moment from "moment";
 import Popup from "reactjs-popup";
+import { Link } from "react-router-dom";
 
 export default function RequestLecturer({ id }) {
   const [requestedList, setRequestedList] = useState([]);
@@ -53,6 +54,7 @@ export default function RequestLecturer({ id }) {
     // Updated array\
     setShowList(updatedRequestedList);
   }
+
   useEffect(() => {
     const fetchDataAndAddObject = async () => {
       if (id || refresh === true) {
@@ -71,7 +73,7 @@ export default function RequestLecturer({ id }) {
       setAddObjectStatus(false);
     }
   }, [addObjectStatus]);
-
+  console.log(requestedList);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -95,12 +97,12 @@ export default function RequestLecturer({ id }) {
                       Course: {infor.subjectInfor?.subjectCode}
                     </div>
                     <div className="text-lg">
-                      Date: {moment(infor.createdAt).format("DD/MM/YYYY")}
+                      Date: {moment(infor.startDatetime).format("DD/MM/YYYY")}
                     </div>
                     <div className="text-lg">
-                      Time:{" "}
-                      {moment(infor.slotId?.startDatetime).format("HH:mm")}-
-                      {moment(infor.slotId?.endDatetime).format("HH:mm")}
+                      Time:
+                      {moment(infor.startDatetime).format("HH:mm")}-
+                      {moment(infor.endDatetime).format("HH:mm")}
                     </div>
                   </div>
                   <div className="w-full">
@@ -110,9 +112,11 @@ export default function RequestLecturer({ id }) {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <button className="text-white bg-green-500 px-3 py-2 rounded-3xl">
-                    Accept
-                  </button>
+                  <Link to={`/Lecturer/CreateByRequest/${infor.id}`}>
+                    <button className="text-white bg-green-500 px-3 py-2 rounded-3xl">
+                      Accept
+                    </button>
+                  </Link>
                   <button
                     className="text-white bg-red-500 px-3 py-2 rounded-3xl"
                     onClick={() => handleDelete(infor.id)}
@@ -124,6 +128,7 @@ export default function RequestLecturer({ id }) {
             ))}
         </div>
       </div>
+      {/* Delete Popup */}
       <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
         <div className="modal">
           <button className="close" onClick={closeModal}>

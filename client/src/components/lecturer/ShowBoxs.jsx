@@ -22,7 +22,7 @@ export default function ShowBoxs({ childArray,setRefresh }) {
       console.log(error);
     }
   }
-  
+
   function handleDelete(id) {
     setOpenDelete((open) => !open);
     setDeleteHolder(id);
@@ -123,7 +123,7 @@ export default function ShowBoxs({ childArray,setRefresh }) {
           </div>
         ))}
       <Link
-        to={`/Lecturer/Create/0`}
+        to={`/Lecturer/Create`}
         className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
       >
         <button>

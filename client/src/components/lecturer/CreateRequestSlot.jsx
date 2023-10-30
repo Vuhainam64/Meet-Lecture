@@ -1,53 +1,51 @@
 import { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs"; // Sửa đổi import
 import { NavLink, useParams } from "react-router-dom";
-import { searchSlotById, updateSlotById } from "../../api";
+import { createSlot, searchRequestById } from "../../api";
 import moment from "moment";
 
-export default function CreateSlotLecturer() {
-  const { id } = useParams();
+export default function CreateRequestSlot() {
+  const { id } = useParams()
   const zeroFormData = {
     code: "",
-    date: "",
-    endDatetime: "",
     lecturerId: 3,
     limitBooking: 0,
     location: "",
     mode: "Public",
-    startDatetime: "",
     title: "",
+    date:"",
+    endDatetime: "",
+    startDatetime:"",
   };
   const [formData, setFormData] = useState(zeroFormData);
-  const [formId, setFormId] = useState('');
-  const [inforDetail, setInforDetail] = useState({});
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
+  const [inforDetail,setInforDetail]=useState({});
 
   const copyInforDetailToFormData = () => {
     setFormData({
-      lecturerId: parseInt(inforDetail.lecturerId),
-      title: inforDetail.title,
-      location: inforDetail.location,
-      code: inforDetail.code,
-      limitBooking: parseInt(inforDetail.limitBooking),
-      mode: inforDetail.mode,
+      lecturerId: 3,
+      title: "",
+      location: "",
+      code: "",
+      limitBooking: "",
+      mode: "Public",
       date: moment(inforDetail.startDatetime).format("yyyy-MM-DD"),
       endDatetime: moment(inforDetail.endDatetime).format("HH:mm"),
       startDatetime: moment(inforDetail.startDatetime).format("HH:mm"),
     });
   };
-
-  async function makeUpdateRequest(form, id) {
-    try {
-      const response = await updateSlotById(form, id);
-    } catch (error) {}
-  }
-
   async function fetchData(slotId) {
     // Chuyển đổi id thành kiểu số
-    const response = await searchSlotById(parseInt(slotId))
+    const response = await searchRequestById(parseInt(slotId))
       .then((data) => setInforDetail(data))
       .catch((error) => console.log(error));
+  }
+
+  async function makePostRequest(form) {
+    try {
+      const response = await createSlot(form);
+    } catch (error) {}
   }
 
   const handleInputChange = (e) => {
@@ -56,34 +54,34 @@ export default function CreateSlotLecturer() {
     setFormData({ ...formData, [name]: newValue });
   };
 
-  async function handleUpdate(e) {
+  const handleSubmit = (e) => {
+    console.log();
     e.preventDefault();
+    console.log("create nè");
     // Validate the form
     const newErrors = validateForm();
     setErrors(newErrors);
 
     // If there are errors, do not proceed with the submission
     if (Object.keys(newErrors).length === 0) {
+      console.log("tới đây r nè");
       // No validation errors, proceed with the submission
-      console.log("Form submitted:", {
+      console.log("Form submitted:", formData);
+      makePostRequest({
         ...formData,
-        limitBooking: parseInt(formData.limitBooking),
-        date:`${formData.date}T00:00`,
-        startDatetime:`1111-11-11T${formData.startDatetime}`,
-        endDatetime:`1111-11-11T${formData.endDatetime}`
+        date: `${formData.date}T00:00`,
+        startDatetime: `1111-11-11T${formData.startDatetime}`,
+        endDatetime: `1111-11-11T${formData.endDatetime}`,
       });
-      console.log(id);
-      await makeUpdateRequest({
-        ...formData,
-        limitBooking: parseInt(formData.limitBooking),
-        date:`${formData.date}T00:00`,
-        startDatetime:`1111-11-11T${formData.startDatetime}`,
-        endDatetime:`1111-11-11T${formData.endDatetime}`
-      },parseInt(id));
-      setFormData(formData);
+      setFormData({
+        ...zeroFormData,
+        date: "",
+        endDatetime: "",
+        startDatetime: "",
+      });
       setAdded(true);
     }
-  }
+  };
 
   const cancelAll = () => {
     setFormData(zeroFormData);
@@ -108,8 +106,6 @@ export default function CreateSlotLecturer() {
       // Convert formData.date to a Date object for comparison
       const selectedDate = moment(formData.date).format('DD-MM-yyyy');
       const currentDate = moment().format('DD-MM-yyyy');
-      console.log(selectedDate);
-      console.log(currentDate);
   
       // Compare the selected date with the current date
       if (selectedDate < currentDate) {
@@ -164,7 +160,6 @@ export default function CreateSlotLecturer() {
 
     return newErrors;
   };
-
   useEffect(() => {
     if (id != 0) {
       console.log(id);
@@ -186,7 +181,7 @@ export default function CreateSlotLecturer() {
       <div className="flex flex-row h-[10%]">
         <NavLink
           className="h-[10%]  font-bold flex flex-row gap-5 items-center"
-          to="/Lecturer"
+          to="/Lecturer/Request"
         >
           <span className="text-4xl">
             <BsArrowLeft />
@@ -196,16 +191,11 @@ export default function CreateSlotLecturer() {
         <div className="w-full flex justify-center items-center">
           <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%] ">
             <span className="font-semibold text-2xl mb-5">
-              {parseInt(id) !== 0
-                ? "Update Booking Slot"
-                : "Create Booking Slot"}
+              Create Booking Slot
             </span>
             {added && (
               <div className="text-xl text-green-500 font-semibold">
-                {" "}
-                {parseInt(id) !== 0
-                  ? "Update successfully!"
-                  : "Create successfully!"}
+                Create successfully!
               </div>
             )}
             <form className="w-[80%] mx-auto flex flex-col gap-5">
@@ -343,9 +333,9 @@ export default function CreateSlotLecturer() {
               </button>
               <button
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={handleUpdate}
+                onClick={handleSubmit}
               >
-                Update
+                Create
               </button>
             </div>
           </div>
