@@ -57,7 +57,7 @@ export default function ShowBoxs({ childArray }) {
             )}
             {infor.startDatetime && (
               <span className="text-xl">
-                Date: {moment(infor.startDatetime).format("DD/MM/YY")}
+                Date: {moment(infor.startDatetime).format("DD/MM/YYYY")}
               </span>
             )}
             {infor.limitBooking && (

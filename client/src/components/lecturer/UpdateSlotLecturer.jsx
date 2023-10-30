@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs"; // Sửa đổi import
 import { NavLink, useParams } from "react-router-dom";
-import { createSlot, searchSlotById } from "../../api";
+import { searchSlotById, updateSlotById } from "../../api";
 import moment from "moment";
 
 export default function CreateSlotLecturer() {
   const { id } = useParams();
-  const zeroFormData = 
-  {
+  const zeroFormData = {
     code: "",
     date: "",
     endDatetime: "",
@@ -19,36 +18,30 @@ export default function CreateSlotLecturer() {
     title: "",
   };
   const [formData, setFormData] = useState(zeroFormData);
+  const [formId, setFormId] = useState('');
   const [inforDetail, setInforDetail] = useState({});
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
 
   const copyInforDetailToFormData = () => {
     setFormData({
-      code: inforDetail.code,
-      date: moment(inforDetail.endDatetime).format('yyyy-MM-DD'),
-      endDatetime: inforDetail.endDatetime,
       lecturerId: parseInt(inforDetail.lecturerId),
-      limitBooking: parseInt(inforDetail.limitBooking),
-      location: inforDetail.location,
-      mode: inforDetail.mode,
-      startDatetime: inforDetail.startDatetime,
-      id: parseInt(inforDetail.id),
-      status: inforDetail.status,
       title: inforDetail.title,
+      location: inforDetail.location,
+      code: inforDetail.code,
+      limitBooking: parseInt(inforDetail.limitBooking),
+      mode: inforDetail.mode,
+      date: moment(inforDetail.startDatetime).format("yyyy-MM-DD"),
+      endDatetime: moment(inforDetail.endDatetime).format("HH:mm"),
+      startDatetime: moment(inforDetail.startDatetime).format("HH:mm"),
     });
-    
   };
-  async function makePostRequest(form) {
+
+  async function makeUpdateRequest(form, id) {
     try {
-      const response = await createSlot(form);
+      const response = await updateSlotById(form, id);
     } catch (error) {}
   }
-  // async function makeUpdateRequest(form) {
-  //   try {
-  //     const response = await createAccount(form);
-  //   } catch (error) {}
-  // }
 
   async function fetchData(slotId) {
     // Chuyển đổi id thành kiểu số
@@ -63,40 +56,34 @@ export default function CreateSlotLecturer() {
     setFormData({ ...formData, [name]: newValue });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('create nè');
-    // Validate the form
-    const newErrors = validateForm();
-    setErrors(newErrors);
-
-    // If there are errors, do not proceed with the submission
-    if (Object.keys(errors).length === 0) {
-      console.log('tới đây r nè');
-      // No validation errors, proceed with the submission
-      console.log("Form submitted:", formData);
-      makePostRequest(formData);
-      setFormData(zeroFormData);
-      setAdded(true);
-    }
-  };
-  const handleUpdate = (e) => {
+  async function handleUpdate(e) {
     e.preventDefault();
     // Validate the form
     const errors = validateForm();
     setErrors(errors);
-    const newLimitBooking=parseInt(formData.limitBooking);
-    setFormData({...formData,limitBooking:newLimitBooking})
 
     // If there are errors, do not proceed with the submission
     if (Object.keys(errors).length === 0) {
       // No validation errors, proceed with the submission
-      console.log("Form submitted:", formData);
-      // makePostRequest(formData);
-      setFormData(zeroFormData);
+      console.log("Form submitted:", {
+        ...formData,
+        limitBooking: parseInt(formData.limitBooking),
+        date:`${formData.date}T00:00`,
+        startDatetime:`1111-11-11T${formData.startDatetime}`,
+        endDatetime:`1111-11-11T${formData.endDatetime}`
+      });
+      console.log(id);
+      await makeUpdateRequest({
+        ...formData,
+        limitBooking: parseInt(formData.limitBooking),
+        date:`${formData.date}T00:00`,
+        startDatetime:`1111-11-11T${formData.startDatetime}`,
+        endDatetime:`1111-11-11T${formData.endDatetime}`
+      },parseInt(id));
+      setFormData(formData);
       setAdded(true);
     }
-  };
+  }
 
   const cancelAll = () => {
     setFormData(zeroFormData);
@@ -130,17 +117,19 @@ export default function CreateSlotLecturer() {
     } else {
       const start = new Date(formData.startDatetime);
       const end = new Date(formData.endDatetime);
-  
+
       const timeDifference = (end - start) / 1000 / 60; // Difference in minutes
-  
+
       // Check if endDatetime is at least 15 minutes greater than startDatetime
       if (timeDifference < 15) {
-        newErrors.endDatetime = "End Date and Time must be at least 15 minutes greater than Start Date and Time";
+        newErrors.endDatetime =
+          "End Date and Time must be at least 15 minutes greater than Start Date and Time";
       }
-  
+
       // Check if endDatetime is no more than 3 hours greater than startDatetime
       if (timeDifference > 180) {
-        newErrors.endDatetime = "End Date and Time must be no more than 3 hours greater than Start Date and Time";
+        newErrors.endDatetime =
+          "End Date and Time must be no more than 3 hours greater than Start Date and Time";
       }
     }
 
@@ -151,7 +140,7 @@ export default function CreateSlotLecturer() {
     if (!formData.limitBooking) {
       newErrors.limitBooking = "Limit is required";
     }
-    if (formData.limitBooking<=0) {
+    if (formData.limitBooking <= 0) {
       newErrors.limitBooking = "Limit must be more than 0";
     }
 
@@ -196,24 +185,32 @@ export default function CreateSlotLecturer() {
         <div className="w-full flex justify-center items-center">
           <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%] ">
             <span className="font-semibold text-2xl mb-5">
-              {parseInt(id) !==0 ? "Update Booking Slot" : "Create Booking Slot"}
+              {parseInt(id) !== 0
+                ? "Update Booking Slot"
+                : "Create Booking Slot"}
             </span>
-            {added&&(<div className="text-xl text-green-500 font-semibold"> {parseInt(id) !==0 ? "Update successfully!" : "Create successfully!"}</div>)}
+            {added && (
+              <div className="text-xl text-green-500 font-semibold">
+                {" "}
+                {parseInt(id) !== 0
+                  ? "Update successfully!"
+                  : "Create successfully!"}
+              </div>
+            )}
             <form className="w-[80%] mx-auto flex flex-col gap-5">
-            <div className="flex flex-row w-full items-center">
+              <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Title</span>
                 <input
                   className={`border ${
-                    errors.title
-                      ? "border-red-500 border-2"
-                      : "border-gray-900"
+                    errors.title ? "border-red-500 border-2" : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                   type="text"
                   value={formData.title} // Sử dụng giá trị từ formData
                   onChange={handleInputChange}
                   name="title"
                 ></input>
-              </div> {errors.title && (
+              </div>{" "}
+              {errors.title && (
                 <div className="text-red-500 text-sm">{errors.title}</div>
               )}
               <div className="flex flex-row w-full items-center">
@@ -237,9 +234,7 @@ export default function CreateSlotLecturer() {
                 <span className="text-xl font-medium w-[30%]">Date</span>
                 <input
                   className={`border ${
-                    errors.date
-                      ? "border-red-500 border-2"
-                      : "border-gray-900"
+                    errors.date ? "border-red-500 border-2" : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                   type="date" // Corrected type attribute
                   value={formData.date}
@@ -251,14 +246,14 @@ export default function CreateSlotLecturer() {
                 <div className="text-red-500 text-sm">{errors.date}</div>
               )}
               <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Start Date</span>
+                <span className="text-xl font-medium w-[30%]">Start Time</span>
                 <input
                   className={`border ${
                     errors.startDatetime
                       ? "border-red-500 border-2"
                       : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="datetime-local" // Corrected type attribute
+                  type="time" // Corrected type attribute
                   value={formData.startDatetime}
                   onChange={handleInputChange}
                   name="startDatetime" // Corrected name attribute
@@ -270,14 +265,14 @@ export default function CreateSlotLecturer() {
                 </div>
               )}
               <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">End Date</span>
+                <span className="text-xl font-medium w-[30%]">End Time</span>
                 <input
                   className={`border ${
                     errors.endDatetime
                       ? "border-red-500 border-2"
                       : "border-gray-900"
                   } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="datetime-local" // Corrected type attribute
+                  type="time" // Corrected type attribute
                   value={formData.endDatetime}
                   onChange={handleInputChange}
                   name="endDatetime" // Corrected name attribute
@@ -317,7 +312,6 @@ export default function CreateSlotLecturer() {
                   <option value="Private">Private</option>
                 </select>
               </div>
-
               <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Code</span>
                 <input
@@ -338,9 +332,9 @@ export default function CreateSlotLecturer() {
               </button>
               <button
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={id==="0" ?  handleSubmit:handleUpdate}
+                onClick={handleUpdate}
               >
-                {id==="0" ? "Create" : "Update"}
+                Update
               </button>
             </div>
           </div>

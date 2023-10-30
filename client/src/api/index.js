@@ -225,4 +225,18 @@ export const updateBookingById= async (form,id) => {
         console.error('Error update slot:', err);
     }
 }
+export const updateSlotById= async (form,id) => {
+    try {
+        const res = await axios.put(`${baseURL}/Slot/${id}`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Slot update successfully.');
+        } else {
+            console.log(`Slot status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error update slot:', err);
+    }
+}
 
