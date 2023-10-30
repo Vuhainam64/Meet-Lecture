@@ -290,4 +290,18 @@ export const updateSlotById= async (form,id) => {
         console.error('Error update slot:', err);
     }
 }
+export const updateRequestById= async (form,id) => {
+    try {
+        const res = await axios.put(`${baseURL}/Request/${id}`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Request update successfully.');
+        } else {
+            console.log(`Request status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error update request:', err);
+    }
+}
 

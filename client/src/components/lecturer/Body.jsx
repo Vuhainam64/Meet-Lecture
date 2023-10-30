@@ -54,10 +54,10 @@ export default function Body() {
       </div>
       <div className="h-[90%]">
         <Routes>
-          <Route path="*" element={<HomeLecturer id='3'/>} />
-          <Route path="Pending" element={<PendingLecturer  id='3' chosePage={chosePage}/>} />
-          <Route path="Request" element={<RequestLecturer id='2' chosePage={chosePage}/>} />
-          <Route path="History" element={<FeedbackLecturer id='3' chosePage={chosePage}/>} />
+          <Route path="/Home" element={<HomeLecturer id='3'/>} />
+          <Route path="/Pending/*" element={<PendingLecturer  id='3' chosePage={chosePage}/>} />
+          <Route path="/Request" element={<RequestLecturer id='2' chosePage={chosePage}/>} />
+          <Route path="/History" element={<FeedbackLecturer id='3' chosePage={chosePage}/>} />
         </Routes>
         {/*,
 ScheduleLecturer, */}
