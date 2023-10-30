@@ -1,14 +1,14 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Student, Login, Admin, Lecturer } from "./pages";
 import { CreateSlotLecturer } from "./components/lecturer";
 import { auth, db } from "./config/firebase.config";
 import { doc, setDoc } from "firebase/firestore";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { SET_USER } from "./context/actions/userActions";
 
 function App() {
-  const navigate = useNavigate();
+  const user = useSelector((state) => state.user?.user);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -22,7 +22,6 @@ function App() {
           }
         );
       } else {
-        navigate("/login", { replace: true });
       }
     });
 
@@ -43,11 +42,19 @@ function App() {
       ) : (
         <div className="bg-white h-full">
           <Routes>
-            <Route path="/Student/*" element={<Student />} />
-            <Route path="/Admin/*" element={<Admin />} />
-            <Route path="/login/*" element={<Login />} />
-            <Route path="/Lecturer/*" element={<Lecturer />} />
-            <Route path="*" element={<Navigate to="/home" />} />
+            {!user ? (
+              <>
+                <Route path="/login/*" element={<Login />} />
+                <Route path="*" element={<Navigate to={"/login"} />} />
+              </>
+            ) : (
+              <>
+                <Route path="/Student/*" element={<Student />} />
+                <Route path="/Admin/*" element={<Admin />} />
+                <Route path="/Lecturer/*" element={<Lecturer />} />
+                <Route path="*" element={<Navigate to="/Student" />} />
+              </>
+            )}
           </Routes>
         </div>
       )}
