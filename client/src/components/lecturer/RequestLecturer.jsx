@@ -9,7 +9,7 @@ import moment from "moment";
 import Popup from "reactjs-popup";
 import { Link } from "react-router-dom";
 
-export default function RequestLecturer({ id }) {
+export default function RequestLecturer({ id,chosePage }) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
@@ -58,6 +58,7 @@ export default function RequestLecturer({ id }) {
   }
 
   useEffect(() => {
+    chosePage('Request');
     const fetchDataAndAddObject = async () => {
       if (id || refresh === true) {
         await fetchData();

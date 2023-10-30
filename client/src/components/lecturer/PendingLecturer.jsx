@@ -10,7 +10,7 @@ import {
 import moment from "moment";
 import Popup from "reactjs-popup";
 
-export default function PendingLecturer({ id }) {
+export default function PendingLecturer({ id,chosePage }) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [formData, setFormData] = useState({});
@@ -109,6 +109,7 @@ export default function PendingLecturer({ id }) {
     setShowList(updatedRequestedList);
   }
   useEffect(() => {
+    chosePage("Pending")
     if (id || refresh == true) {
       fetchData();
       console.log(bookedList);
