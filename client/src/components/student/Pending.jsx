@@ -52,9 +52,6 @@ export default function Pending({id}) {
       setRefresh(false)
     }
   }, [refresh,studentId, bookedList <= 0]);
-  const triggerUseEffect = () => {
-    setRefresh(!refresh);
-  };
   // useEffect(() => {
   
   //   console.log(showList);

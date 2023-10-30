@@ -20,7 +20,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
   const [added, setAdded] = useState(false);
   const [codeError, setCodeError] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
-  const [deleteHolder,setDeleteHolder]=useState('');
+  const [deleteHolder, setDeleteHolder] = useState("");
 
   const closeModal = () => {
     setOpenDelete(false);
@@ -29,12 +29,12 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
     setOpenDelete((open) => !open);
     setDeleteHolder(id);
   }
-  
-   async function handleDeleteYes() {
+
+  async function handleDeleteYes() {
     if (deleteHolder !== 0) {
       try {
         console.log(deleteHolder);
-       const response =await makeDeleteRequest(parseInt(deleteHolder));
+        await makeDeleteRequest(parseInt(deleteHolder));
         // If the deletion is successful, you can update the local state.
         setDeleteHolder(0);
         setOpenDelete(false);
@@ -191,7 +191,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
       setBookingHolder(infor);
     }
     if (key === "Cancel") {
-      handleDelete(infor?.bookedId)
+      handleDelete(infor?.bookedId);
     }
   }
 
@@ -212,7 +212,10 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
       )}
       {showInformations &&
         showInformations.map((infor) => (
-          <div className="relative w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
+          <div
+            key={infor.id}
+            className="relative w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]"
+          >
             {infor.code && (
               <div className="absolute top-0 right-0 text-3xl p-2">
                 <LuLock />
