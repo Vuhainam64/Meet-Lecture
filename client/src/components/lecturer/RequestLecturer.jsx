@@ -40,19 +40,21 @@ export default function RequestLecturer({ id }) {
       .catch((error) => console.log(error));
   }
   async function addObject() {
-    const updatedRequestedList = await Promise.all(
-      requestedList.map(async (infor) => {
-        const response1 = await searchStudentById(infor.studentId);
-        // Update the infor object with the response object in the studentId property
-        infor.studentInfor = response1;
-        // Update the infor object with the response object in the subjectId property
-        const response2 = await searchSubjectById(infor.subjectId);
-        infor.subjectInfor = response2;
-        return infor; // Return the updated infor object
-      })
-    );
-    // Updated array\
-    setShowList(updatedRequestedList);
+    if (requestedList) {
+      const updatedRequestedList = await Promise.all(
+        requestedList.map(async (infor) => {
+          const response1 = await searchStudentById(infor.studentId);
+          // Update the infor object with the response object in the studentId property
+          infor.studentInfor = response1;
+          // Update the infor object with the response object in the subjectId property
+          const response2 = await searchSubjectById(infor.subjectId);
+          infor.subjectInfor = response2;
+          return infor; // Return the updated infor object
+        })
+      );
+      // Updated array\
+      setShowList(updatedRequestedList);
+    }
   }
 
   useEffect(() => {
