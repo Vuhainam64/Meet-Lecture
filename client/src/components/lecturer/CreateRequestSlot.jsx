@@ -1,25 +1,46 @@
 import { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs"; // Sửa đổi import
-import { NavLink } from "react-router-dom";
-import { createSlot } from "../../api";
+import { NavLink, useParams } from "react-router-dom";
+import { createSlot, searchRequestById } from "../../api";
 import moment from "moment";
 
-export default function CreateSlotLecturer() {
+export default function CreateRequestSlot() {
+  const { id } = useParams()
   const zeroFormData = {
     code: "",
-    date: "",
-    endDatetime: "",
     lecturerId: 3,
     limitBooking: 0,
     location: "",
     mode: "Public",
-    startDatetime: "",
     title: "",
+    date:"",
+    endDatetime: "",
+    startDatetime:"",
   };
   const [formData, setFormData] = useState(zeroFormData);
-
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
+  const [inforDetail,setInforDetail]=useState({});
+
+  const copyInforDetailToFormData = () => {
+    setFormData({
+      lecturerId: 3,
+      title: "",
+      location: "",
+      code: "",
+      limitBooking: "",
+      mode: "Public",
+      date: moment(inforDetail.startDatetime).format("yyyy-MM-DD"),
+      endDatetime: moment(inforDetail.endDatetime).format("HH:mm"),
+      startDatetime: moment(inforDetail.startDatetime).format("HH:mm"),
+    });
+  };
+  async function fetchData(slotId) {
+    // Chuyển đổi id thành kiểu số
+    const response = await searchRequestById(parseInt(slotId))
+      .then((data) => setInforDetail(data))
+      .catch((error) => console.log(error));
+  }
 
   async function makePostRequest(form) {
     try {
@@ -52,7 +73,12 @@ export default function CreateSlotLecturer() {
         startDatetime: `1111-11-11T${formData.startDatetime}`,
         endDatetime: `1111-11-11T${formData.endDatetime}`,
       });
-      setFormData(zeroFormData);
+      setFormData({
+        ...zeroFormData,
+        date: "",
+        endDatetime: "",
+        startDatetime: "",
+      });
       setAdded(true);
     }
   };
@@ -78,8 +104,8 @@ export default function CreateSlotLecturer() {
       newErrors.date = "Created At is required";
     } else {
       // Convert formData.date to a Date object for comparison
-      const selectedDate = new Date(formData.date);
-      const currentDate = new Date();
+      const selectedDate = moment(formData.date).format('DD-MM-yyyy');
+      const currentDate = moment().format('DD-MM-yyyy');
   
       // Compare the selected date with the current date
       if (selectedDate < currentDate) {
@@ -134,13 +160,28 @@ export default function CreateSlotLecturer() {
 
     return newErrors;
   };
+  useEffect(() => {
+    if (id != 0) {
+      console.log(id);
+      fetchData(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id != 0) {
+      if (inforDetail) {
+        copyInforDetailToFormData();
+        console.log(formData);
+      }
+    }
+  }, [inforDetail, id]);
 
   return (
     <div className="min-h-[80%] flex flex-col bg-white">
       <div className="flex flex-row h-[10%]">
         <NavLink
           className="h-[10%]  font-bold flex flex-row gap-5 items-center"
-          to="/Lecturer"
+          to="/Lecturer/Request"
         >
           <span className="text-4xl">
             <BsArrowLeft />

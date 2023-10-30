@@ -1,14 +1,38 @@
 import { useEffect, useState } from "react";
 import {
+  deleteRequestById,
   getAllRequestByLecturerORStudentID,
   searchStudentById,
   searchSubjectById,
 } from "../../api";
 import moment from "moment";
+import Popup from "reactjs-popup";
+import { Link } from "react-router-dom";
 
 export default function RequestLecturer({ id }) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteHolder, setDeleteHolder] = useState("");
+  const [refresh, setRefresh] = useState(false);
+  const [addObjectStatus, setAddObjectStatus] = useState(false);
+  const closeModal = () => {
+    setOpenDelete(false);
+    setDeleteHolder(0);
+  };
+  async function handleDeleteYes() {
+    try {
+      const response = await deleteRequestById(parseInt(deleteHolder));
+      setRefresh(true);
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  function handleDelete(id) {
+    setOpenDelete((open) => !open);
+    setDeleteHolder(id);
+  }
 
   async function fetchData() {
     const response = await getAllRequestByLecturerORStudentID(parseInt(id))
@@ -16,29 +40,42 @@ export default function RequestLecturer({ id }) {
       .catch((error) => console.log(error));
   }
   async function addObject() {
-    const updatedRequestedList = await Promise.all(
-      requestedList.map(async (infor) => {
-        const response1 = await searchStudentById(infor.studentId);
-        // Update the infor object with the response object in the studentId property
-        infor.studentInfor = response1;
-        // Update the infor object with the response object in the subjectId property
-        const response2 = await searchSubjectById(infor.subjectId);
-        infor.subjectInfor = response2;
-        return infor; // Return the updated infor object
-      })
-    );
-    // Updated array\
-    setShowList(updatedRequestedList);
-  }
-  useEffect(() => {
-    if (id) {
-      fetchData();
+    if (requestedList) {
+      const updatedRequestedList = await Promise.all(
+        requestedList.map(async (infor) => {
+          const response1 = await searchStudentById(infor.studentId);
+          // Update the infor object with the response object in the studentId property
+          infor.studentInfor = response1;
+          // Update the infor object with the response object in the subjectId property
+          const response2 = await searchSubjectById(infor.subjectId);
+          infor.subjectInfor = response2;
+          return infor; // Return the updated infor object
+        })
+      );
+      // Updated array\
+      setShowList(updatedRequestedList);
     }
-  }, [id]);
-  useEffect(() => {
-    addObject();
-  }, [requestedList <= 0]);
+  }
 
+  useEffect(() => {
+    const fetchDataAndAddObject = async () => {
+      if (id || refresh === true) {
+        await fetchData();
+        setRefresh(false);
+        setAddObjectStatus(true);
+      }
+    };
+
+    fetchDataAndAddObject();
+  }, [id, refresh]);
+
+  useEffect(() => {
+    if (addObjectStatus === true) {
+      addObject();
+      setAddObjectStatus(false);
+    }
+  }, [addObjectStatus]);
+  console.log(requestedList);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -62,12 +99,12 @@ export default function RequestLecturer({ id }) {
                       Course: {infor.subjectInfor?.subjectCode}
                     </div>
                     <div className="text-lg">
-                      Date: {moment(infor.createdAt).format("DD/MM/YY")}
+                      Date: {moment(infor.startDatetime).format("DD/MM/YYYY")}
                     </div>
                     <div className="text-lg">
-                      Time:{" "}
-                      {moment(infor.slotId?.startDatetime).format("HH:mm")}-
-                      {moment(infor.slotId?.endDatetime).format("HH:mm")}
+                      Time:
+                      {moment(infor.startDatetime).format("HH:mm")}-
+                      {moment(infor.endDatetime).format("HH:mm")}
                     </div>
                   </div>
                   <div className="w-full">
@@ -77,10 +114,15 @@ export default function RequestLecturer({ id }) {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <button className="text-white bg-green-500 px-3 py-2 rounded-3xl">
-                    Accept
-                  </button>
-                  <button className="text-white bg-red-500 px-3 py-2 rounded-3xl">
+                  <Link to={`/Lecturer/CreateByRequest/${infor.id}`}>
+                    <button className="text-white bg-green-500 px-3 py-2 rounded-3xl">
+                      Accept
+                    </button>
+                  </Link>
+                  <button
+                    className="text-white bg-red-500 px-3 py-2 rounded-3xl"
+                    onClick={() => handleDelete(infor.id)}
+                  >
                     Decline
                   </button>
                 </div>
@@ -88,6 +130,32 @@ export default function RequestLecturer({ id }) {
             ))}
         </div>
       </div>
+      {/* Delete Popup */}
+      <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
+          </button>
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to delete this course!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 }

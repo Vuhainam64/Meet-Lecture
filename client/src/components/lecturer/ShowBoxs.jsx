@@ -3,8 +3,31 @@ import { LuPencilLine, LuTrash2, LuPlusCircle, LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-export default function ShowBoxs({ childArray, role }) {
+import { deleteSlotById } from "../../api";
+import Popup from "reactjs-popup";
+export default function ShowBoxs({ childArray,setRefresh }) {
   const [showInformations, setShowInformations] = useState(childArray);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteHolder, setDeleteHolder] = useState("");
+  const closeModal = () => {
+    setOpenDelete(false);
+    setDeleteHolder(0);
+  };
+  async function handleDeleteYes() {
+    try {
+      const response = await deleteSlotById(parseInt(deleteHolder));
+      setRefresh(true);
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleDelete(id) {
+    setOpenDelete((open) => !open);
+    setDeleteHolder(id);
+  }
+
   useEffect(() => {
     setShowInformations(childArray);
   }, [childArray]);
@@ -20,9 +43,14 @@ export default function ShowBoxs({ childArray, role }) {
       );
     }
   }
+
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative">
-      {showInformations&&showInformations.length===0&&(<div className="w-full font-bold text-2xl">THERE ARE NO SLOT HERE!!!!</div>)}
+      {showInformations && showInformations.length === 0 && (
+        <div className="w-full font-bold text-2xl">
+          THERE ARE NO SLOT HERE!!!!
+        </div>
+      )}
       {showInformations &&
         showInformations.map((infor) => (
           <div className="relative w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
@@ -50,11 +78,13 @@ export default function ShowBoxs({ childArray, role }) {
             )}
             {infor.startDatetime && (
               <span className="text-xl">
-                Date: {moment(infor.startDatetime).format("DD/MM/YY")}
+                Date: {moment(infor.startDatetime).format("DD/MM/YYYY")}
               </span>
             )}
             {infor.limitBooking && (
-              <span className="text-xl">Limit: {infor.limitBooking}/6</span>
+              <span className="text-xl">
+                Limit: {infor.bookingId.length}/{infor.limitBooking}
+              </span>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {infor.Finish ? (
@@ -64,61 +94,67 @@ export default function ShowBoxs({ childArray, role }) {
               ) : (
                 <></>
               )}
-              {role && role === "Lecturer" ? (
-                <Link
-                  to={`/Lecturer/Create/${infor.id}`}
-                >
-                  <button className="text-3xl">
-                    <LuPencilLine />
-                  </button>
-                </Link>
-              ) : (
-                <></>
-              )}
+              <Link to={`/Lecturer/Update/${infor.id}`}>
+                <button className="text-3xl">
+                  <LuPencilLine />
+                </button>
+              </Link>
               <button
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
-              (role==="Student"?infor.status:infor.mode) === "Cancel"
+              infor.mode === "Private"
                 ? "bg-red-500"
-                : (role==="Student"?infor.status:infor.mode) === "Booked"
-                ? "bg-green-500"
-                : (role==="Student"?infor.status:infor.mode) === "Not Book"
-                ? "bg-blue-500"
-                : (role==="Student"?infor.status:infor.mode) === "Feedback"
-                ? "bg-blue-700"
-                : (role==="Student"?infor.status:infor.mode) === "Private"
-                ? "bg-red-500"
-                : (role==="Student"?infor.status:infor.mode) === "Public"
+                : infor.mode === "Public"
                 ? "bg-blue-400"
                 : "bg-black"
             }`}
-                value={role==="Student"?infor.status:infor.mode}
+                value={infor.mode}
                 onClick={(e) => handleClick(e, infor)}
               >
-                {role==="Student"?(infor.status==='Not Book'?'Book':infor.status):infor.mode}
+                {infor.mode}
               </button>
-              {role && role === "Lecturer" ? (
-                <button className="text-3xl">
-                  <LuTrash2 />
-                </button>
-              ) : (
-                <></>
-              )}
+              <button
+                className="text-3xl"
+                onClick={() => handleDelete(infor.id)}
+              >
+                <LuTrash2 />
+              </button>
             </div>
           </div>
         ))}
-      {role && role === "Lecturer" ? (
-        <Link
-        to={`/Lecturer/Create/0`}
-          className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
-        >
-          <button>
-            <LuPlusCircle />
+      <Link
+        to={`/Lecturer/Create`}
+        className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
+      >
+        <button>
+          <LuPlusCircle />
+        </button>
+      </Link>
+      <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
           </button>
-        </Link>
-      ) : (
-        <></>
-      )}
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to delete this course!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 }

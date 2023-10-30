@@ -5,3 +5,6 @@ export {default as RequestLecturer} from "./RequestLecturer";
 export {default as ScheduleLecturer} from "./ScheduleLecturer";
 export {default as FeedbackLecturer} from "./FeedbackLecturer";
 export {default as Body} from "./Body";
+export {default as ShowBoxs} from "./ShowBoxs";
+export {default as UpdateSlotLecturer} from "./UpdateSlotLecturer";
+export {default as CreateRequestSlot} from "./CreateRequestSlot";

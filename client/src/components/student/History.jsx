@@ -1,4 +1,4 @@
-import { ShowBoxs } from "../styles";
+import { ShowBoxs } from "./index";
 
 export default function History() {
   const bookingRooms = [

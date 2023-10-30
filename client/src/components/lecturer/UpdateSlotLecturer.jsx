@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs"; // Sửa đổi import
-import { NavLink } from "react-router-dom";
-import { createSlot } from "../../api";
+import { NavLink, useParams } from "react-router-dom";
+import { searchSlotById, updateSlotById } from "../../api";
 import moment from "moment";
 
 export default function CreateSlotLecturer() {
+  const { id } = useParams();
   const zeroFormData = {
     code: "",
     date: "",
@@ -17,14 +18,36 @@ export default function CreateSlotLecturer() {
     title: "",
   };
   const [formData, setFormData] = useState(zeroFormData);
-
+  const [formId, setFormId] = useState('');
+  const [inforDetail, setInforDetail] = useState({});
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState(false);
 
-  async function makePostRequest(form) {
+  const copyInforDetailToFormData = () => {
+    setFormData({
+      lecturerId: parseInt(inforDetail.lecturerId),
+      title: inforDetail.title,
+      location: inforDetail.location,
+      code: inforDetail.code,
+      limitBooking: parseInt(inforDetail.limitBooking),
+      mode: inforDetail.mode,
+      date: moment(inforDetail.startDatetime).format("yyyy-MM-DD"),
+      endDatetime: moment(inforDetail.endDatetime).format("HH:mm"),
+      startDatetime: moment(inforDetail.startDatetime).format("HH:mm"),
+    });
+  };
+
+  async function makeUpdateRequest(form, id) {
     try {
-      const response = await createSlot(form);
+      const response = await updateSlotById(form, id);
     } catch (error) {}
+  }
+
+  async function fetchData(slotId) {
+    // Chuyển đổi id thành kiểu số
+    const response = await searchSlotById(parseInt(slotId))
+      .then((data) => setInforDetail(data))
+      .catch((error) => console.log(error));
   }
 
   const handleInputChange = (e) => {
@@ -33,29 +56,34 @@ export default function CreateSlotLecturer() {
     setFormData({ ...formData, [name]: newValue });
   };
 
-  const handleSubmit = (e) => {
-    console.log();
+  async function handleUpdate(e) {
     e.preventDefault();
-    console.log("create nè");
     // Validate the form
     const newErrors = validateForm();
     setErrors(newErrors);
 
     // If there are errors, do not proceed with the submission
     if (Object.keys(newErrors).length === 0) {
-      console.log("tới đây r nè");
       // No validation errors, proceed with the submission
-      console.log("Form submitted:", formData);
-      makePostRequest({
+      console.log("Form submitted:", {
         ...formData,
-        date: `${formData.date}T00:00`,
-        startDatetime: `1111-11-11T${formData.startDatetime}`,
-        endDatetime: `1111-11-11T${formData.endDatetime}`,
+        limitBooking: parseInt(formData.limitBooking),
+        date:`${formData.date}T00:00`,
+        startDatetime:`1111-11-11T${formData.startDatetime}`,
+        endDatetime:`1111-11-11T${formData.endDatetime}`
       });
-      setFormData(zeroFormData);
+      console.log(id);
+      await makeUpdateRequest({
+        ...formData,
+        limitBooking: parseInt(formData.limitBooking),
+        date:`${formData.date}T00:00`,
+        startDatetime:`1111-11-11T${formData.startDatetime}`,
+        endDatetime:`1111-11-11T${formData.endDatetime}`
+      },parseInt(id));
+      setFormData(formData);
       setAdded(true);
     }
-  };
+  }
 
   const cancelAll = () => {
     setFormData(zeroFormData);
@@ -78,8 +106,10 @@ export default function CreateSlotLecturer() {
       newErrors.date = "Created At is required";
     } else {
       // Convert formData.date to a Date object for comparison
-      const selectedDate = new Date(formData.date);
-      const currentDate = new Date();
+      const selectedDate = moment(formData.date).format('DD-MM-yyyy');
+      const currentDate = moment().format('DD-MM-yyyy');
+      console.log(selectedDate);
+      console.log(currentDate);
   
       // Compare the selected date with the current date
       if (selectedDate < currentDate) {
@@ -135,6 +165,22 @@ export default function CreateSlotLecturer() {
     return newErrors;
   };
 
+  useEffect(() => {
+    if (id != 0) {
+      console.log(id);
+      fetchData(id);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id != 0) {
+      if (inforDetail) {
+        copyInforDetailToFormData();
+        console.log(formData);
+      }
+    }
+  }, [inforDetail, id]);
+
   return (
     <div className="min-h-[80%] flex flex-col bg-white">
       <div className="flex flex-row h-[10%]">
@@ -150,11 +196,16 @@ export default function CreateSlotLecturer() {
         <div className="w-full flex justify-center items-center">
           <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%] ">
             <span className="font-semibold text-2xl mb-5">
-              Create Booking Slot
+              {parseInt(id) !== 0
+                ? "Update Booking Slot"
+                : "Create Booking Slot"}
             </span>
             {added && (
               <div className="text-xl text-green-500 font-semibold">
-                Create successfully!
+                {" "}
+                {parseInt(id) !== 0
+                  ? "Update successfully!"
+                  : "Create successfully!"}
               </div>
             )}
             <form className="w-[80%] mx-auto flex flex-col gap-5">
@@ -292,9 +343,9 @@ export default function CreateSlotLecturer() {
               </button>
               <button
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
-                onClick={handleSubmit}
+                onClick={handleUpdate}
               >
-                Create
+                Update
               </button>
             </div>
           </div>

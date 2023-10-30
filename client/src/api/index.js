@@ -65,6 +65,7 @@ export const getAllSubject = async () => {
         return null;
     }
 };
+//search
 export const searchTeacherById = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Account/${id}`);
@@ -103,6 +104,14 @@ export const searchSlotById = async (id) => {
 export const searchBookingById = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Booking/${id}`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
+export const searchRequestById = async (id) => {
+    try {
+        const res = await axios.get(`${baseURL}/Request/${id}`);
         return res.data.data;
     } catch (err) {
         return null;
@@ -182,6 +191,34 @@ export const deleteSubjectById = async (id) => {
         console.error('Error deleting subject:', err);
     }
 }
+export const deleteSlotById = async (id) => {
+    try {
+        const res = await axios.delete(`${baseURL}/Slot/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('subject deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting subject:', err);
+    }
+}
+export const deleteRequestById = async (id) => {
+    try {
+        const res = await axios.delete(`${baseURL}/Request/${id}`);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('subject deleted successfully.');
+        } else {
+            console.log(`Received status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error deleting subject:', err);
+    }
+}
 //update
 export const updateAccountById= async (form,id) => {
     try {
@@ -208,6 +245,35 @@ export const updateCourseById= async (form,id) => {
         }
     } catch (err) {
         // Log the detailed error message
-        console.error('Error update course:', err);
+        console.error('Error update Subject:', err);
     }
 }
+export const updateBookingById= async (form,id) => {
+    try {
+        const res = await axios.put(`${baseURL}/Booking/${id}`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Slot update successfully.');
+        } else {
+            console.log(`Slot status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error update slot:', err);
+    }
+}
+export const updateSlotById= async (form,id) => {
+    try {
+        const res = await axios.put(`${baseURL}/Slot/${id}`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Slot update successfully.');
+        } else {
+            console.log(`Slot status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error update slot:', err);
+    }
+}
+
