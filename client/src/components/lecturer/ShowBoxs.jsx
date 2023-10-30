@@ -3,9 +3,31 @@ import { LuPencilLine, LuTrash2, LuPlusCircle, LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import {  } from "../../api";
-export default function ShowBoxs({ childArray }) {
+import { deleteSlotById } from "../../api";
+import Popup from "reactjs-popup";
+export default function ShowBoxs({ childArray,setRefresh }) {
   const [showInformations, setShowInformations] = useState(childArray);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [deleteHolder, setDeleteHolder] = useState("");
+  const closeModal = () => {
+    setOpenDelete(false);
+    setDeleteHolder(0);
+  };
+  async function handleDeleteYes() {
+    try {
+      const response = await deleteSlotById(parseInt(deleteHolder));
+      setRefresh(true);
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  function handleDelete(id) {
+    setOpenDelete((open) => !open);
+    setDeleteHolder(id);
+  }
+
   useEffect(() => {
     setShowInformations(childArray);
   }, [childArray]);
@@ -21,7 +43,6 @@ export default function ShowBoxs({ childArray }) {
       );
     }
   }
-
 
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative">
@@ -61,7 +82,9 @@ export default function ShowBoxs({ childArray }) {
               </span>
             )}
             {infor.limitBooking && (
-              <span className="text-xl">Limit: {infor.bookingId.length}/{infor.limitBooking}</span>
+              <span className="text-xl">
+                Limit: {infor.bookingId.length}/{infor.limitBooking}
+              </span>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {infor.Finish ? (
@@ -79,7 +102,7 @@ export default function ShowBoxs({ childArray }) {
               <button
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
-                infor.mode === "Private"
+              infor.mode === "Private"
                 ? "bg-red-500"
                 : infor.mode === "Public"
                 ? "bg-blue-400"
@@ -90,7 +113,10 @@ export default function ShowBoxs({ childArray }) {
               >
                 {infor.mode}
               </button>
-              <button className="text-3xl">
+              <button
+                className="text-3xl"
+                onClick={() => handleDelete(infor.id)}
+              >
                 <LuTrash2 />
               </button>
             </div>
@@ -104,6 +130,31 @@ export default function ShowBoxs({ childArray }) {
           <LuPlusCircle />
         </button>
       </Link>
+      <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
+          </button>
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to delete this course!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
     </div>
   );
 }

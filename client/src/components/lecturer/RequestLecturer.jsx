@@ -62,7 +62,7 @@ export default function RequestLecturer({ id }) {
                       Course: {infor.subjectInfor?.subjectCode}
                     </div>
                     <div className="text-lg">
-                      Date: {moment(infor.createdAt).format("DD/MM/YY")}
+                      Date: {moment(infor.createdAt).format("DD/MM/YYYY")}
                     </div>
                     <div className="text-lg">
                       Time:{" "}
