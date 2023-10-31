@@ -4,7 +4,6 @@ import { FiUser, FiLock } from "react-icons/fi";
 import { signInWithGoogle } from "../ultils/helpers";
 import { buttonClick } from "../animations";
 import { getLogin } from "../api";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { SET_USER } from "../context/actions/userActions";
 import { auth } from "../config/firebase.config";
@@ -17,12 +16,8 @@ function Home() {
   const [campus, choseCampus] = useState("");
   const [error, setError] = useState("");
 
+  const dispatch = useDispatch();
 
-  const [cookies, setCookie] = useCookies(["user"]); // Specify the cookie name 'user'
-
-  const setUserCookie = (accountInfor) => {
-    setCookie("user", accountInfor, { maxAge: 7 * 24 * 60 * 60 }); // Set the 'user' cookie with a 7-day expiration
-  };
   async function loginSubmit(e) {
     e.preventDefault();
     console.log(userName);
@@ -34,14 +29,13 @@ function Home() {
         email: userName,
         password: userPassword,
       });
-      // const result =await auth.signInWithEmailAndPassword(userName, userPassword);
+      dispatch(SET_USER(result));
+
       console.log(result);
       if (result === undefined) {
         setError("Your password or email is wrong. Try again");
       } else {
         console.log(result);
-
-        setUserCookie(result);
       }
     }
   }
