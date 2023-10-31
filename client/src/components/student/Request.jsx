@@ -6,7 +6,7 @@ import {
   getAllUser,
 } from "../../api";
 
-export default function Request({ id,chosePage }) {
+export default function Request({ userId,chosePage }) {
   const zeroFormData = {
     lecturer: "",
     course: "",
@@ -59,7 +59,7 @@ export default function Request({ id,chosePage }) {
       console.log("Part 2:", endDateTime);
     }
     const submitData = {
-      studentId: parseInt(id),
+      studentId: parseInt(userId),
       lecturerId: parseInt(searchLecturerName(formData.lecturer)),
       subjectId: parseInt(searchCourseName(formData.course)),
       date: `${formData.date}T00:00`,

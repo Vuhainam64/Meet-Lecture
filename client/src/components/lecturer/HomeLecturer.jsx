@@ -3,21 +3,21 @@ import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 import { getAllSlotByLecturerID } from "../../api";
 
-export default function HomeLecturer({ id }) {
+export default function HomeLecturer({ userId }) {
   const [bookingRooms, setBookingRooms] = useState([]);
   const [refresh, setRefresh] = useState(false);
   async function fetchData() {
-    const response = await getAllSlotByLecturerID(parseInt(id))
+    const response = await getAllSlotByLecturerID(parseInt(userId))
       .then((data) => setBookingRooms(data.filter(slot=>slot.status!=="Unactive"&&slot.status!=="Finish")))
       .catch((error) => console.log(error));
   }
   useEffect(() => {
-    if(id||refresh===true)
+    if(userId||refresh===true)
     fetchData();
     console.log("booking room");
     console.log(bookingRooms);
     setRefresh(false);
-  }, [id,refresh]);
+  }, [userId,refresh]);
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">

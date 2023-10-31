@@ -11,7 +11,7 @@ import moment from "moment";
 import Popup from "reactjs-popup";
 import { Link } from "react-router-dom";
 
-export default function Requested({ id }) {
+export default function Requested({ userId }) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
@@ -52,12 +52,12 @@ export default function Requested({ id }) {
   }
 
   async function fetchData() {
-    const response = await getAllRequestByLecturerORStudentID(parseInt(id))
+    const response = await getAllRequestByLecturerORStudentID(parseInt(userId))
       .then((data) =>
         setRequestedList(
           data.filter(
             (request) =>
-              request.studentId === parseInt(id) && request.status !== "Cancel"
+              request.studentId === parseInt(userId) && request.status !== "Cancel"
           )
         )
       )
@@ -83,14 +83,14 @@ export default function Requested({ id }) {
 
   useEffect(() => {
     const fetchDataAndAddObject = async () => {
-      if (id || refresh === true) {
+      if (userId || refresh === true) {
         await fetchData();
         setRefresh(false);
         setAddObjectStatus(true);
       }
     };
     fetchDataAndAddObject();
-  }, [id, refresh]);
+  }, [userId, refresh]);
 
   useEffect(() => {
     if (addObjectStatus === true) {

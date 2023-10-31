@@ -6,7 +6,7 @@ import {
     RequestLecturer,
   } from "./index";
   import { Link, Route, Routes } from "react-router-dom";
-export default function Body() {
+export default function Body({userId}) {
     const [page, chosePage] = useState("Home");
   return (
     <div className="min-h-[90%] flex flex-col bg-white">
@@ -54,10 +54,10 @@ export default function Body() {
       </div>
       <div className="h-[90%]">
         <Routes>
-          <Route path="/*" element={<HomeLecturer id='3'/>} />
-          <Route path="/Pending" element={<PendingLecturer  id='3' chosePage={chosePage}/>} />
-          <Route path="/Request" element={<RequestLecturer id='2' chosePage={chosePage}/>} />
-          <Route path="/History" element={<FeedbackLecturer id='3' chosePage={chosePage}/>} />
+          <Route path="/*" element={<HomeLecturer userId={userId}/>} />
+          <Route path="/Pending" element={<PendingLecturer  userId={userId} chosePage={chosePage}/>} />
+          <Route path="/Request" element={<RequestLecturer userId={userId} chosePage={chosePage}/>} />
+          <Route path="/History" element={<FeedbackLecturer userId={userId} chosePage={chosePage}/>} />
         </Routes>
         {/*,
 ScheduleLecturer, */}

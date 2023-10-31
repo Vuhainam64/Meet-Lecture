@@ -7,12 +7,12 @@ import {
   searchSubjectById,
 } from "../../api";
 import moment from "moment";
-export default function FeedbackLecturer({ id ,chosePage}) {
+export default function FeedbackLecturer({ userId ,chosePage}) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
 
   async function fetchData() {
-    const response = await getAllFeedBackByLecturer(parseInt(id))
+    const response = await getAllFeedBackByLecturer(parseInt(userId))
       .then((data) => setRequestedList(data))
       .catch((error) => console.log(error));
   }
@@ -34,11 +34,11 @@ export default function FeedbackLecturer({ id ,chosePage}) {
 
   useEffect(() => {
     chosePage('History')
-    if (id) {
+    if (userId) {
       fetchData();
       console.log(requestedList);
     }
-  }, [id, requestedList <= 0]);
+  }, [userId, requestedList <= 0]);
   useEffect(() => {
     addObject();
     console.log(showList);

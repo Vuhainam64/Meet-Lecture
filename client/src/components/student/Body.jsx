@@ -9,7 +9,7 @@ import {
   Booking,
 } from "./index";
 import { Link, Route, Routes } from "react-router-dom";
-export default function Body() {
+export default function Body({userId}) {
   const [page, chosePage] = useState("Home");
   return (
     <div className="min-h-[90%] flex flex-col bg-white">
@@ -58,9 +58,9 @@ export default function Body() {
       <div className="h-[90%]">
         <Routes>
           <Route path="*" element={<Search chosePage={chosePage}/>} />
-          <Route path="Pending" element={<Pending id='2' chosePage={chosePage} />} />
-          <Route path="Request" element={<Request id='2' chosePage={chosePage} />} />
-          <Route path="History" element={<History id='2' chosePage={chosePage} />} />
+          <Route path="Pending" element={<Pending userId={userId} chosePage={chosePage} />} />
+          <Route path="Request" element={<Request userId={userId} chosePage={chosePage} />} />
+          <Route path="History" element={<History userId={userId} chosePage={chosePage} />} />
         </Routes>
         {/*,
   ScheduleLecturer, */}

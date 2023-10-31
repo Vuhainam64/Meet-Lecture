@@ -4,13 +4,13 @@ import { NavLink, useParams } from "react-router-dom";
 import { searchSlotById, updateSlotById } from "../../api";
 import moment from "moment";
 
-export default function CreateSlotLecturer() {
+export default function CreateSlotLecturer({userId}) {
   const { id } = useParams();
   const zeroFormData = {
     code: "",
     date: "",
     endDatetime: "",
-    lecturerId: 3,
+    lecturerId: parseInt(userId),
     limitBooking: 0,
     location: "",
     mode: "Public",

@@ -10,7 +10,7 @@ import {
 import moment from "moment";
 import Popup from "reactjs-popup";
 
-export default function PendingLecturer({ id,chosePage }) {
+export default function PendingLecturer({ userId,chosePage }) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [formData, setFormData] = useState({});
@@ -32,7 +32,7 @@ export default function PendingLecturer({ id,chosePage }) {
     setErrors("");
   };
   async function fetchData() {
-    const response = await getAllBookingByLecturerIDORStudentID(parseInt(id))
+    const response = await getAllBookingByLecturerIDORStudentID(parseInt(userId))
       .then((data) =>
         setBookedList(data.filter((data) => data.status === "Pending"))
       )
@@ -110,12 +110,12 @@ export default function PendingLecturer({ id,chosePage }) {
   }
   useEffect(() => {
     chosePage("Pending")
-    if (id || refresh == true) {
+    if (userId || refresh == true) {
       fetchData();
       console.log(bookedList);
       setRefresh(false);
     }
-  }, [id, bookedList <= 0, refresh]);
+  }, [userId, bookedList <= 0, refresh]);
   useEffect(() => {
     addObject();
     console.log(showList);

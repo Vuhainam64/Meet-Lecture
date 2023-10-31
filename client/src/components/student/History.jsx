@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ShowBoxs } from "./index";
 import { getAllBookingByLecturerIDORStudentID, searchSlotById, searchStudentById, searchSubjectById } from "../../api";
 
-export default function History({id}) {
+export default function History({userId}) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [slotArray,setSlotArray]=useState([]);
@@ -38,13 +38,13 @@ export default function History({id}) {
     setSlotArray(slots)
   }
   useEffect(() => {
-    if (refresh===true||id) {
-      fetchData(id);
+    if (refresh===true||userId) {
+      fetchData(userId);
       console.log(bookedList);
       addObject();
       setRefresh(false)
     }
-  }, [refresh,id, bookedList <= 0]);
+  }, [refresh,userId, bookedList <= 0]);
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">

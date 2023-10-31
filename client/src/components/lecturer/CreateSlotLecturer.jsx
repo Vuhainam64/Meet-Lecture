@@ -4,12 +4,12 @@ import { NavLink } from "react-router-dom";
 import { createSlot } from "../../api";
 import moment from "moment";
 
-export default function CreateSlotLecturer() {
+export default function CreateSlotLecturer({userId}) {
   const zeroFormData = {
     code: "",
     date: "",
     endDatetime: "",
-    lecturerId: 3,
+    lecturerId: parseInt(userId),
     limitBooking: 0,
     location: "",
     mode: "Public",

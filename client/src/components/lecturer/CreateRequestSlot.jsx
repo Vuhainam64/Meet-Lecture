@@ -9,11 +9,11 @@ import {
 } from "../../api";
 import moment from "moment";
 
-export default function CreateRequestSlot() {
+export default function CreateRequestSlot({userId}) {
   const { id } = useParams();
   const zeroFormData = {
     code: "",
-    lecturerId: 3,
+    lecturerId: userId,
     limitBooking: 0,
     location: "",
     mode: "Public",

@@ -8,13 +8,13 @@ import { Requested, ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 
 
-export default function Pending({id}) {
+export default function Pending({userId}) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [slotArray,setSlotArray]=useState([]);
   const [route, setRoute] = useState("Booked");
   const [refresh, setRefresh] = useState(false);
-  const studentId = 2;
+
   async function fetchData(studentId) {
     const response = await getAllBookingByLecturerIDORStudentID(
       parseInt(studentId)
@@ -45,13 +45,13 @@ export default function Pending({id}) {
     setSlotArray(slots)
   }
   useEffect(() => {
-    if (refresh===true||studentId) {
-      fetchData(studentId);
+    if (refresh===true||userId) {
+      fetchData(userId);
       console.log(bookedList);
       addObject();
       setRefresh(false)
     }
-  }, [refresh,studentId, bookedList <= 0]);
+  }, [refresh,userId, bookedList <= 0]);
   // useEffect(() => {
   
   //   console.log(showList);
@@ -85,7 +85,7 @@ export default function Pending({id}) {
         {route === "Booked" ? (
           <ShowBoxs childArray={slotArray.filter(slot=>slot.status==="Not Book")} type='Pending' setRefresh={setRefresh}></ShowBoxs>
         ) : (
-          <Requested id={studentId}></Requested>
+          <Requested userId={userId}></Requested>
         )}
       </div>
     </div>

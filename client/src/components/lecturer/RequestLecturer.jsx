@@ -9,7 +9,7 @@ import moment from "moment";
 import Popup from "reactjs-popup";
 import { Link } from "react-router-dom";
 
-export default function RequestLecturer({ id,chosePage }) {
+export default function RequestLecturer({ userId,chosePage }) {
   const [requestedList, setRequestedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [openDelete, setOpenDelete] = useState(false);
@@ -35,7 +35,7 @@ export default function RequestLecturer({ id,chosePage }) {
   }
 
   async function fetchData() {
-    const response = await getAllRequestByLecturerORStudentID(parseInt(id))
+    const response = await getAllRequestByLecturerORStudentID(parseInt(userId))
       .then((data) => setRequestedList(data.filter(request=>request.status==="Pending")))
       .catch((error) => console.log(error));
   }
@@ -60,7 +60,7 @@ export default function RequestLecturer({ id,chosePage }) {
   useEffect(() => {
     chosePage('Request');
     const fetchDataAndAddObject = async () => {
-      if (id || refresh === true) {
+      if (userId || refresh === true) {
         await fetchData();
         setRefresh(false);
         setAddObjectStatus(true);
@@ -68,7 +68,7 @@ export default function RequestLecturer({ id,chosePage }) {
     };
 
     fetchDataAndAddObject();
-  }, [id, refresh]);
+  }, [userId, refresh]);
 
   useEffect(() => {
     if (addObjectStatus === true) {
