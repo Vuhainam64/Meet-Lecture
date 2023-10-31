@@ -14,7 +14,7 @@ function Header() {
       <div className="mx-10 uppercase text-white w-full">meet lecturer</div>
       {/* {user && ( */}
       <div className="absolute bottom-0 right-0 text-white flex items-center space-x-2 gap-5 pr-5 pb-3">
-        <div>User name</div>
+        <div>{user.username}</div>
         <img src={Avatar} alt="avatar" className="w-10 rounded-full" />
         <Link to={"/calendar"}>
           <AiOutlineCalendar className="text-4xl" />
