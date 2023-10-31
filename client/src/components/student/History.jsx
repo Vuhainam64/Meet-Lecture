@@ -18,6 +18,7 @@ export default function History({userId}) {
       .catch((error) => console.log(error));
   }
   async function addObject() {
+    setSlotArray([]); // Clear the slot array first
     const updatedRequestedList = await Promise.all(
       bookedList.map(async (infor) => {
         const studentInfor = await searchStudentById(infor.studentId);
@@ -32,23 +33,34 @@ export default function History({userId}) {
         return infor; // Return the updated infor object
       })
     );
-    // Updated array\
-    const slots= updatedRequestedList.map(item => ({...item.slotInfor,bookedId:item.id}));
+  
+    const slots = updatedRequestedList.map(item => ({...item.slotInfor, bookedId: item.id}));
+  
+    // Set the updatedRequestedList and slotArray after Promise.all is completed
+    console.log('updated');
+    console.log(updatedRequestedList);
+    console.log("slot");
+    console.log(slots);
     setShowList(updatedRequestedList);
-    setSlotArray(slots)
+    setSlotArray(slots);
   }
   useEffect(() => {
-    if (refresh===true||userId) {
+    if (refresh === true || userId) {
       fetchData(userId);
       console.log(bookedList);
-      addObject();
-      setRefresh(false)
+      setRefresh(false);
+      console.log('hello');
     }
-  }, [refresh,userId, bookedList <= 0]);
+  }, [refresh, userId]);
+  
+  useEffect(() => {
+    // Call addObject() when bookedList changes
+    addObject();
+  }, [bookedList]);
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">
-        <ShowBoxs childArray={slotArray} lectureName="Chua co"></ShowBoxs>
+        <ShowBoxs childArray={slotArray.filter((value, index, self) => self.map(obj => obj.id).indexOf(value.id) === index)} type="History"></ShowBoxs>
       </div>
     </div>
   );

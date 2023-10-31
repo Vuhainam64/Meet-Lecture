@@ -171,7 +171,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
   }
 
   useEffect(() => {
-    setShowInformations(childArray);
+    setShowInformations(childArray.map(slot=>({...slot,status:"Feedback"})));
     fetchData();
   }, [childArray]);
   console.log(showInformations);
@@ -249,7 +249,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
               </span>
             )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
-              {infor.Finish ? (
+              {type==="History"? (
                 <div className="absolute -left-4 bg-green-400 py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white">
                   Finished
                 </div>
@@ -260,7 +260,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
                 className={`text-white  p-3 w-[8rem] rounded-3xl font-bold
             ${
               (type === "Pending"
-                ? infor.status === "Not Book" && "Cancel"
+                ? (infor.status === "Not Book" && "Cancel")
                 : infor.status) === "Cancel"
                 ? "bg-red-500"
                 : infor.status === "Booked"
