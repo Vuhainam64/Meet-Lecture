@@ -11,6 +11,7 @@ export const signInWithGoogle = async () => {
   });
 };
 
+
 export const signOutAction = async () => {
   await auth.signOut().then(() => {
     window.location.reload();

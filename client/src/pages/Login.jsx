@@ -1,15 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Footer, Header } from "../layout";
 import { FiUser, FiLock } from "react-icons/fi";
 import { signInWithGoogle } from "../ultils/helpers";
 import { buttonClick } from "../animations";
+import { getLogin } from "../api";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { SET_USER } from "../context/actions/userActions";
+import { auth } from "../config/firebase.config";
+import { useDispatch } from "react-redux";
 
 function Home() {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [remember, isRemember] = useState(false);
   const [campus, choseCampus] = useState("");
-  function loginSubmit() {}
+  const [error, setError] = useState("");
+
+
+  const [cookies, setCookie] = useCookies(["user"]); // Specify the cookie name 'user'
+
+  const setUserCookie = (accountInfor) => {
+    setCookie("user", accountInfor, { maxAge: 7 * 24 * 60 * 60 }); // Set the 'user' cookie with a 7-day expiration
+  };
+  async function loginSubmit(e) {
+    e.preventDefault();
+    console.log(userName);
+    console.log(userPassword);
+    if (userName === "" || userPassword === "") {
+      setError("Please fill full information to login to the website.");
+    } else {
+      const result = await getLogin({
+        email: userName,
+        password: userPassword,
+      });
+      // const result =await auth.signInWithEmailAndPassword(userName, userPassword);
+      console.log(result);
+      if (result === undefined) {
+        setError("Your password or email is wrong. Try again");
+      } else {
+        console.log(result);
+
+        setUserCookie(result);
+      }
+    }
+  }
   return (
     <div className="bg-white h-full relative box-border">
       <div className="flex h-[90%] items-center justify-center ">
@@ -23,8 +58,8 @@ function Home() {
                   </div>
                   <input
                     className="w-full border border-gray-900 rounded-md py-3 pl-16 pr-3 placeholder:italic placeholder:text-gray-900 min-w-[20rem]"
-                    placeholder="UserName"
-                    type="text"
+                    placeholder="Email"
+                    type="email"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                   />
@@ -50,9 +85,10 @@ function Home() {
                   ></input>
                   <span className="text-xl">Remeber Me</span>
                 </div>
+                {error !== "" && <div className="text-red-500">{error}</div>}
                 <button
                   className="text-center w-full bg-gray-200 h-16 font-bold text-2xl"
-                  onClick={loginSubmit()}
+                  onClick={loginSubmit}
                 >
                   LOG IN
                 </button>

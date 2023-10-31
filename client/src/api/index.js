@@ -24,6 +24,14 @@ export const getAllUser = async () => {
         return null;
     }
 };
+export const getLogin = async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Account/Login`,form);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
 export const getAllBookingByLecturerIDORStudentID = async (id) => {
     try {
         const res = await axios.get(`${baseURL}/Booking/GetAllById/${id}`);
