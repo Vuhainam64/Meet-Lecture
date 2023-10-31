@@ -44,7 +44,7 @@ function App() {
           <Routes>
             {!user ? (
               <>
-                <Route path="/login/*" element={<Login />} />
+               <Route path="/login/*" element={<Login />} />
                 <Route path="*" element={<Navigate to={"/login"} />} />
               </>
             ) : (
