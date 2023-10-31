@@ -50,8 +50,12 @@ function App() {
             ) : (
               <>
                 <Route path="/Student/*" element={<Student />} />
-                <Route path="/Admin/*" element={<Admin />} />
-                <Route path="/Lecturer/*" element={<Lecturer />} />
+                {user?.role === "Admin" && (
+                  <Route path="/Admin/*" element={<Admin />} />
+                )}
+                {user?.role === "Lecturer" && (
+                  <Route path="/Lecturer/*" element={<Lecturer />} />
+                )}
                 <Route path="*" element={<Navigate to="/Student" />} />
               </>
             )}
