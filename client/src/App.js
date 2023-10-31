@@ -21,18 +21,16 @@ function App() {
     } else {
       const unsubscribe = auth.onAuthStateChanged((userCred) => {
         if (userCred) {
-          setDoc(
-            doc(db, "user", userCred?.uid),
-            userCred?.providerData[0]
-          ).then(() => {
+          const userData = {
+            ...userCred.providerData[0],
+            role: "Student",
+          };
+
+          setDoc(doc(db, "user", userCred?.uid), userData).then(() => {
             // Dispatch the action to store
-            dispatch(SET_USER(userCred?.providerData[0]));
+            dispatch(SET_USER(userData));
             setIsLoading(false);
-            // Save the user data to local storage
-            localStorage.setItem(
-              "user",
-              JSON.stringify(userCred.providerData[0])
-            );
+            localStorage.setItem("user", JSON.stringify(userData));
           });
         } else {
           setIsLoading(false);

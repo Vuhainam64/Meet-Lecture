@@ -11,9 +11,9 @@ export const signInWithGoogle = async () => {
   });
 };
 
-
 export const signOutAction = async () => {
   await auth.signOut().then(() => {
+    localStorage.removeItem("user");
     window.location.reload();
   });
 };
