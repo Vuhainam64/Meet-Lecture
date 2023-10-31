@@ -11,6 +11,7 @@ function App() {
   const user = useSelector((state) => state.user?.user);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const userId=user?.id;
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((userCred) => {
@@ -49,12 +50,14 @@ function App() {
               </>
             ) : (
               <>
-                <Route path="/Student/*" element={<Student />} />
+               {user?.role === "Student" && (
+                <Route path="/Student/*" element={<Student userId={userId}/>} />
+                )}
                 {user?.role === "Admin" && (
-                  <Route path="/Admin/*" element={<Admin />} />
+                  <Route path="/Admin/*" element={<Admin/>} />
                 )}
                 {user?.role === "Lecturer" && (
-                  <Route path="/Lecturer/*" element={<Lecturer />} />
+                  <Route path="/Lecturer/*" element={<Lecturer userId={userId}/>} />
                 )}
                 <Route path="*" element={<Navigate to="/Student" />} />
               </>

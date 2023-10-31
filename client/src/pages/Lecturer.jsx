@@ -4,8 +4,8 @@ import { Link, Route, Routes } from "react-router-dom";
 import { CreateRequestSlot, CreateSlotLecturer, UpdateSlotLecturer } from "../components/lecturer";
 import Body from "../components/lecturer/Body";
 
-export default function Lecturer() {
-  const userId=3;
+export default function Lecturer({userId}) {
+
   return (
     <div className="bg-white h-full">
       <Header />
