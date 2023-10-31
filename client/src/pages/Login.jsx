@@ -4,9 +4,7 @@ import { FiUser, FiLock } from "react-icons/fi";
 import { signInWithGoogle } from "../ultils/helpers";
 import { buttonClick } from "../animations";
 import { getLogin } from "../api";
-import { useNavigate } from "react-router-dom";
 import { SET_USER } from "../context/actions/userActions";
-import { auth } from "../config/firebase.config";
 import { useDispatch } from "react-redux";
 
 function Home() {
@@ -29,9 +27,22 @@ function Home() {
         email: userName,
         password: userPassword,
       });
-      dispatch(SET_USER(result));
-
-      console.log(result);
+      console.log("result.id: ", result.id);
+      if (result) {
+        dispatch(
+          SET_USER({
+            id: result.id.toString(),
+            username: result.username,
+            password: result.password,
+            fullname: result.fullname,
+            email: result.fullname,
+            dob: result.dob,
+            role: result.role,
+            accessToken: result.accessToken,
+            status: result.status,
+          })
+        );
+      }
       if (result === undefined) {
         setError("Your password or email is wrong. Try again");
       } else {

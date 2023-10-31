@@ -13,24 +13,35 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((userCred) => {
-      if (userCred) {
-        setDoc(doc(db, "user", userCred?.uid), userCred?.providerData[0]).then(
-          () => {
-            //dispatch the action to store
-            dispatch(SET_USER(userCred?.providerData[0]));
-          }
-        );
-      } else {
-      }
-    });
-
-    setInterval(() => {
+    const userFromLocalStorage = localStorage.getItem("user");
+    if (userFromLocalStorage) {
+      const userCred = JSON.parse(userFromLocalStorage);
+      dispatch(SET_USER(userCred));
       setIsLoading(false);
-    }, 500);
+    } else {
+      const unsubscribe = auth.onAuthStateChanged((userCred) => {
+        if (userCred) {
+          setDoc(
+            doc(db, "user", userCred?.uid),
+            userCred?.providerData[0]
+          ).then(() => {
+            // Dispatch the action to store
+            dispatch(SET_USER(userCred?.providerData[0]));
+            setIsLoading(false);
+            // Save the user data to local storage
+            localStorage.setItem(
+              "user",
+              JSON.stringify(userCred.providerData[0])
+            );
+          });
+        } else {
+          setIsLoading(false);
+        }
+      });
 
-    //clean up the listener evvvent
-    return () => unsubscribe();
+      // Clean up the listener event
+      return () => unsubscribe();
+    }
   }, []);
 
   return (
@@ -44,19 +55,29 @@ function App() {
           <Routes>
             {!user ? (
               <>
-               <Route path="/login/*" element={<Login />} />
+                <Route path="/login/*" element={<Login />} />
                 <Route path="*" element={<Navigate to={"/login"} />} />
               </>
             ) : (
               <>
-                <Route path="/Student/*" element={<Student />} />
+                {user?.role === "Student" && (
+                  <>
+                    <Route path="/Student/*" element={<Student />} />
+                    <Route path="*" element={<Navigate to="/Student" />} />
+                  </>
+                )}
                 {user?.role === "Admin" && (
-                  <Route path="/Admin/*" element={<Admin />} />
+                  <>
+                    <Route path="/Admin/*" element={<Admin />} />
+                    <Route path="*" element={<Navigate to="/Admin" />} />
+                  </>
                 )}
                 {user?.role === "Lecturer" && (
-                  <Route path="/Lecturer/*" element={<Lecturer />} />
+                  <>
+                    <Route path="/Lecturer/*" element={<Lecturer />} />
+                    <Route path="*" element={<Navigate to="/Lecturer" />} />
+                  </>
                 )}
-                <Route path="*" element={<Navigate to="/Student" />} />
               </>
             )}
           </Routes>

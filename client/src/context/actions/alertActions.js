@@ -1,28 +1,40 @@
 export const alertSuccess = (message) => {
   return {
     type: "SET_SUCCESS",
-    alert: { type: "success", message: message },
+    alert: {
+      type: "success",
+      message: message
+    },
   };
 };
 
 export const alertWarning = (message) => {
   return {
     type: "SET_WARNING",
-    alert: { type: "warning", message: message },
+    alert: {
+      type: "warning",
+      message: message
+    },
   };
 };
 
 export const alertDanger = (message) => {
   return {
     type: "SET_DANGER",
-    alert: { type: "danger", message: message },
+    alert: {
+      type: "danger",
+      message: message
+    },
   };
 };
 
 export const alertInfo = (message) => {
   return {
     type: "SET_INFO",
-    alert: { type: "info", message: message },
+    alert: {
+      type: "info",
+      message: message
+    },
   };
 };
 
