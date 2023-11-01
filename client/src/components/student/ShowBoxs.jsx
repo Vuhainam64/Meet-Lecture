@@ -10,14 +10,15 @@ import {
   deleteBookingtById,
 } from "../../api";
 import Popup from "reactjs-popup";
-export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
+export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
   const [showInformations, setShowInformations] = useState();
   const [clickBook, setClickBook] = useState("");
-  const [bookingHolder, setBookingHolder] = useState({});
+
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [subjectList, setSubjectList] = useState([]);
   const [added, setAdded] = useState(false);
+  const [denided, openDenied] = useState("");
   const [codeError, setCodeError] = useState("");
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState("");
@@ -170,13 +171,17 @@ export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
   }
 
   useEffect(() => {
-     if (type === "History") {
-       setShowInformations(
-         childArray.map((slot) => ({ ...slot, status:slot.denided && slot.denided.length > 0 ? "Denided" : "Feedback",}))
-       );
-     } else {
+    if (type === "History") {
+      setShowInformations(
+        childArray.map((slot) => ({
+          ...slot,
+          status:
+            slot.denided && slot.denided.length > 0 ? "Denided" : "Feedback",
+        }))
+      );
+    } else {
       setShowInformations(childArray);
-     }
+    }
 
     fetchData();
   }, [childArray]);
@@ -192,9 +197,11 @@ export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
         "/student/Feedback/" + encodeURIComponent(JSON.stringify(infor))
       );
     }
-    if (key === ("Not Book")) {
+    if (key === "Not Book") {
       setClickBook(infor.id);
-      setBookingHolder(infor);
+    }
+    if (key === "Denided") {
+      openDenied(infor.id);
     }
     if (key === "Cancel") {
       handleDelete(infor?.bookedId);
@@ -202,7 +209,6 @@ export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
   }
 
   function handleClose() {
-    setBookingHolder({});
     setClickBook(0);
     setAdded(false);
     setFormData({});
@@ -254,15 +260,18 @@ export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
                 Limit: {infor.bookingId.length}/{infor.limitBooking}
               </span>
             )}
-            {infor?.denided && (
-              <span className="text-xl">
-                Reason: {infor.denided}
-              </span>
-            )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {type === "History" ? (
-                <div className={`absolute -left-4 ${infor.denided&&infor.denided.length>0?"bg-red-500 ":"bg-green-400 "} py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white`}>
-              {infor.denided&&infor.denided.length>0?("Denided") :  ("Finished")}
+                <div
+                  className={`absolute -left-4 ${
+                    infor.denided && infor.denided.length > 0
+                      ? "bg-red-500 "
+                      : "bg-green-400 "
+                  } py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white`}
+                >
+                  {infor.denided && infor.denided.length > 0
+                    ? "Denided"
+                    : "Finished"}
                 </div>
               ) : (
                 <></>
@@ -272,9 +281,9 @@ export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
             ${
               (type === "Pending"
                 ? infor.status === "Not Book" && "Cancel"
-                : infor.status) === ("Cancel"&&"Denided")
+                : infor.status) === ("Cancel" && "Denided")
                 ? "bg-red-500"
-                : infor.status === ("Booked")
+                : infor.status === "Booked"
                 ? "bg-green-500"
                 : infor.status === "Not Book"
                 ? "bg-blue-500"
@@ -412,6 +421,18 @@ export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
                     </button>
                   </form>
                 )}
+              </div>
+            )}
+            {denided === infor.id&& (
+              <div
+                className={`flex flex-col items-end absolute -bottom-[4rem] w-full border-2 left-0 min-h-[5rem] border-black bg-white z-50 opacity-80 px-5 py-1 pb-5`}
+              >
+                <button className="text-2xl w-fit" onClick={()=>openDenied("")}>
+                  &times;
+                </button>
+                  <div className="flex flex-col gap-3 justify-endrelative w-full ">
+                     <span className=""> {infor.denided}</span>
+                  </div>
               </div>
             )}
           </div>

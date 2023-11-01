@@ -1,51 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllSlotByLecturerID } from "../../api";
+import moment from "moment";
 
-export default function ScheduleLecturer({ lectureName }) {
-  const list = [
-    {
-      Number: "4/6",
-      Location: "P.203",
-      Date: "09/10/2003",
-      Time: "15:00-17:15",
-    },
-    {
-      Number: "4/6",
-      Location: "P.137",
-      Date: "10/10/2003",
-      Time: "09:30-11:45",
-    },
-    {
-      Number: "5/6",
-      Location: "P.311",
-      Date: "13/10/2003",
-      Time: "07:30-09:15",
-    },
-    {
-      Number: "2/6",
-      Location: "P.220",
-      Date: "14/10/2003",
-      Time: "15:00-17:15",
-    },
-    {
-      Number: "6/6",
-      Location: "P.203",
-      Date: "09/10/2003",
-      Time: "15:00-17:15",
-    },
-    {
-      Number: "1/6",
-      Location: "P.137",
-      Date: "10/10/2003",
-      Time: "09:30-11:45",
-    },
-    {
-      Number: "3/6",
-      Location: "P.311",
-      Date: "13/10/2003",
-      Time: "07:30-09:15",
-    },
-  ];
-  const [scheduleInfors,setScheduleInfors]=useState(list)
+export default function ScheduleLecturer({ userId, chosePage }) {
+  const [bookingRooms, setBookingRooms] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  async function fetchData() {
+    const response = await getAllSlotByLecturerID(parseInt(userId))
+      .then((data) =>
+        setBookingRooms(
+          data.filter(
+            (slot) => slot.status !== "Unactive" && slot.status !== "Finish"
+          )
+        )
+      )
+      .catch((error) => console.log(error));
+  }
+  useEffect(() => {
+    chosePage("");
+    if (userId || refresh === true) fetchData();
+    console.log("booking room");
+    console.log(bookingRooms);
+    setRefresh(false);
+  }, [userId, refresh]);
+  
+  const compareDateAndTime = (a, b) => {
+    const dateA = moment(a.startDatetime);
+    const dateB = moment(b.startDatetime);
+    if (dateA.isBefore(dateB)) return -1;
+    if (dateA.isAfter(dateB)) return 1;
+    return 0;
+  };
+
+  const sortedBookingRooms = [...bookingRooms].sort(compareDateAndTime);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -66,31 +53,32 @@ export default function ScheduleLecturer({ lectureName }) {
                   Time
                 </th>
                 <th className="text-xl font-medium border-b-2 border-black ">
-                  Number
+                  Numbers
                 </th>
               </tr>
             </thead>
             <tbody>
-              {scheduleInfors ? (
-                scheduleInfors.map((info, index) => (
-                  <tr className="">
+              {sortedBookingRooms &&
+                sortedBookingRooms.map((info, index) => (
+                  <tr className="" key={index}>
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
                       {index + 1}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
-                      {info.Location}
+                      {info.location}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black  border-r-2">
-                      {info.Date + ", " + info.Time}
+                      {moment(info.startDatetime).format("DD/MM/YYYY") +
+                        " , " +
+                        moment(info.startDatetime).format("HH:mm") +
+                        "-" +
+                        moment(info.startDatetime).format("HH:mm")}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black ">
-                      {info.Number}
+                      {info.bookingId?.length + "/" + info.limitBooking}
                     </td>
                   </tr>
-                ))
-              ) : (
-                <></>
-              )}
+                ))}
             </tbody>
           </table>
         </div>

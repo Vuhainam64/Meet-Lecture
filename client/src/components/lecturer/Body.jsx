@@ -4,6 +4,7 @@ import {
     HomeLecturer,
     PendingLecturer,
     RequestLecturer,
+    ScheduleLecturer,
   } from "./index";
   import { Link, Route, Routes } from "react-router-dom";
 export default function Body({userId}) {
@@ -58,6 +59,7 @@ export default function Body({userId}) {
           <Route path="/Pending" element={<PendingLecturer  userId={userId} chosePage={chosePage}/>} />
           <Route path="/Request" element={<RequestLecturer userId={userId} chosePage={chosePage}/>} />
           <Route path="/History" element={<FeedbackLecturer userId={userId} chosePage={chosePage}/>} />
+          <Route path="/Schedule" element={<ScheduleLecturer userId={userId} chosePage={chosePage}/>} />
         </Routes>
         {/*,
 ScheduleLecturer, */}
