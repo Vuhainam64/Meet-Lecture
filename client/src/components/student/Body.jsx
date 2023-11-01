@@ -61,6 +61,7 @@ export default function Body({userId}) {
           <Route path="Pending" element={<Pending userId={userId} chosePage={chosePage} />} />
           <Route path="Request" element={<Request userId={userId} chosePage={chosePage} />} />
           <Route path="History" element={<History userId={userId} chosePage={chosePage} />} />
+          <Route path="Schedule" element={<Schedule userId={userId} chosePage={chosePage} />} />
         </Routes>
         {/*,
   ScheduleLecturer, */}

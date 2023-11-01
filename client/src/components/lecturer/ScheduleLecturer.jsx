@@ -23,7 +23,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
     console.log(bookingRooms);
     setRefresh(false);
   }, [userId, refresh]);
-  
+
   const compareDateAndTime = (a, b) => {
     const dateA = moment(a.startDatetime);
     const dateB = moment(b.startDatetime);
@@ -72,7 +72,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                         " , " +
                         moment(info.startDatetime).format("HH:mm") +
                         "-" +
-                        moment(info.startDatetime).format("HH:mm")}
+                        moment(info.endDatetime).format("HH:mm")}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black ">
                       {info.bookingId?.length + "/" + info.limitBooking}
