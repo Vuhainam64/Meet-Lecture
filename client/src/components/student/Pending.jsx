@@ -20,7 +20,7 @@ export default function Pending({userId}) {
       parseInt(studentId)
     )
       .then((data) =>
-        setBookedList(data.filter(booked=>booked.studentId===studentId))
+        setBookedList(data.filter(booked=>booked.studentId===parseInt(studentId)))
       )
       .catch((error) => console.log(error));
   }
@@ -47,15 +47,16 @@ export default function Pending({userId}) {
   useEffect(() => {
     if (refresh===true||userId) {
       fetchData(userId);
+      
       console.log(bookedList);
-      addObject();
+    
       setRefresh(false)
     }
-  }, [refresh,userId, bookedList <= 0]);
-  // useEffect(() => {
-  
-  //   console.log(showList);
-  // }, [bookedList <= 0]);
+  }, [refresh,userId]);
+  useEffect(() => {
+    addObject();
+    console.log(showList);
+  }, [bookedList]);
   console.log('booking');
   console.log(bookedList);
   console.log(showList);
@@ -83,7 +84,7 @@ export default function Pending({userId}) {
       </div>
       <div className="w-[90%] flex justify-center pl-[5%]">
         {route === "Booked" ? (
-          <ShowBoxs childArray={slotArray.filter(slot=>slot.status==="Not Book")} type='Pending' setRefresh={setRefresh}></ShowBoxs>
+          <ShowBoxs  userId={userId} childArray={slotArray.filter(slot=>slot.status==="Not Book")} type='Pending' setRefresh={setRefresh}></ShowBoxs>
         ) : (
           <Requested userId={userId}></Requested>
         )}

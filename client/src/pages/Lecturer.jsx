@@ -11,7 +11,8 @@ import { useSelector } from "react-redux";
 export default function Lecturer() {
   const user = useSelector((state) => state.user?.user);
 
-  const userId = 3;
+  const userId = user?.id;
+  console.log(userId);
   return (
     <div className="bg-white h-full">
       <Header />

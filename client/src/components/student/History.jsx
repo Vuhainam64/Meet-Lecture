@@ -6,14 +6,15 @@ export default function History({userId}) {
   const [bookedList, setBookedList] = useState([]);
   const [showList, setShowList] = useState([]);
   const [slotArray,setSlotArray]=useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(true);
+  console.log(userId);
 
   async function fetchData(studentId) {
     const response = await getAllBookingByLecturerIDORStudentID(
       parseInt(studentId)
     )
       .then((data) =>
-        setBookedList(data.filter(booked=>booked.studentId===studentId&&booked.status==='Success'))
+        setBookedList(data.filter(booked=>booked.studentId===parseInt(studentId)&&booked.status!=='Pending'))
       )
       .catch((error) => console.log(error));
   }
@@ -34,13 +35,16 @@ export default function History({userId}) {
       })
     );
   
-    const slots = updatedRequestedList.map(item => ({...item.slotInfor, bookedId: item.id}));
-  
+    const result=updatedRequestedList.filter(booked=>booked?.slotInfor?.bookingId.includes(booked.id)||booked.status==="Denied")
+    const slots = result.map(item => ({...item.slotInfor, bookedId: item.id,denided:item.reason}));
     // Set the updatedRequestedList and slotArray after Promise.all is completed
     console.log('updated');
     console.log(updatedRequestedList);
+    console.log("result");
+    console.log(result);
     console.log("slot");
     console.log(slots);
+
     setShowList(updatedRequestedList);
     setSlotArray(slots);
   }
@@ -60,7 +64,7 @@ export default function History({userId}) {
   return (
     <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">
-        <ShowBoxs childArray={slotArray.filter((value, index, self) => self.map(obj => obj.id).indexOf(value.id) === index)} type="History"></ShowBoxs>
+        <ShowBoxs setRefresh={setRefresh} userId={userId} childArray={slotArray.filter((value, index, self) => self.map(obj => obj.id).indexOf(value.id) === index)} type="History"></ShowBoxs>
       </div>
     </div>
   );

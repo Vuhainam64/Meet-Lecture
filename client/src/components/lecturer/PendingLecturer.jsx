@@ -52,7 +52,7 @@ export default function PendingLecturer({ userId,chosePage }) {
       subjectId: parseInt(data.subjectId),
       description: data.description,
       reason: data.reason === null ? "" : data.reason,
-      status: "Booked",
+      status: "Success",
     });
     setFormId(data.id);
     setPopup(true);

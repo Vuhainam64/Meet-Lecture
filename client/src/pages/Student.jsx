@@ -2,9 +2,14 @@ import { useState } from "react";
 import {  Header } from "../layout";
 import { Body, Booking, Feedback } from "../components/student";
 import {  Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 function Student() { 
-  const userId=2;
+  const user = useSelector((state) => state.user?.user);
+  const userId = user?.id;
+  console.log(userId);
+  
   return (
     <div className="bg-white h-full">
       <Header />

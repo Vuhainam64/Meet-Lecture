@@ -10,7 +10,7 @@ import {
   deleteBookingtById,
 } from "../../api";
 import Popup from "reactjs-popup";
-export default function ShowBoxs({ childArray, setRefresh, type }) {
+export default function ShowBoxs({ childArray, setRefresh, type,userId }) {
   const [showInformations, setShowInformations] = useState();
   const [clickBook, setClickBook] = useState("");
   const [bookingHolder, setBookingHolder] = useState({});
@@ -120,7 +120,6 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
     const response = await getAllSubject()
       .then((data) => setSubjectList(data))
       .catch((error) => console.log(error));
-    console.log(subjectList);
   }
   async function handleSubmit(e) {
     e.preventDefault();
@@ -130,7 +129,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
 
     if (formData.description && !formData.code) {
       const submitData = {
-        studentId: 2,
+        studentId: userId,
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         description: formData.description,
@@ -151,7 +150,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
     } else if (formData.code) {
       console.log("code");
       const submitData = {
-        studentId: 2,
+        studentId: userId,
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         code: formData.code,
@@ -171,13 +170,13 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
   }
 
   useEffect(() => {
-    if (type === "History") {
-      setShowInformations(
-        childArray.map((slot) => ({ ...slot, status: "Feedback" }))
-      );
-    } else {
+     if (type === "History") {
+       setShowInformations(
+         childArray.map((slot) => ({ ...slot, status:slot.denided && slot.denided.length > 0 ? "Denided" : "Feedback",}))
+       );
+     } else {
       setShowInformations(childArray);
-    }
+     }
 
     fetchData();
   }, [childArray]);
@@ -193,7 +192,7 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
         "/student/Feedback/" + encodeURIComponent(JSON.stringify(infor))
       );
     }
-    if (key === "Not Book") {
+    if (key === ("Not Book")) {
       setClickBook(infor.id);
       setBookingHolder(infor);
     }
@@ -255,10 +254,15 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
                 Limit: {infor.bookingId.length}/{infor.limitBooking}
               </span>
             )}
+            {infor?.denided && (
+              <span className="text-xl">
+                Reason: {infor.denided}
+              </span>
+            )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {type === "History" ? (
-                <div className="absolute -left-4 bg-green-400 py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white">
-                  Finished
+                <div className={`absolute -left-4 ${infor.denided&&infor.denided.length>0?"bg-red-500 ":"bg-green-400 "} py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white`}>
+              {infor.denided&&infor.denided.length>0?("Denided") :  ("Finished")}
                 </div>
               ) : (
                 <></>
@@ -268,9 +272,9 @@ export default function ShowBoxs({ childArray, setRefresh, type }) {
             ${
               (type === "Pending"
                 ? infor.status === "Not Book" && "Cancel"
-                : infor.status) === "Cancel"
+                : infor.status) === ("Cancel"&&"Denided")
                 ? "bg-red-500"
-                : infor.status === "Booked"
+                : infor.status === ("Booked")
                 ? "bg-green-500"
                 : infor.status === "Not Book"
                 ? "bg-blue-500"
