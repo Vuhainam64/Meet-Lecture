@@ -66,8 +66,8 @@ export default function FeedbackLecturer({ userId ,chosePage}) {
                     Date: {moment(infor.createdAt).format("DD/MM/YY")}
                   </div>
                   <div className="text-lg">
-                    Time: {moment(infor.slotId?.startDatetime).format("HH:mm")}-
-                    {moment(infor.slotId?.endDatetime).format("HH:mm")}
+                    Time: {moment(infor.slot?.startDatetime).format("HH:mm")}-
+                    {moment(infor.slot?.endDatetime).format("HH:mm")}
                   </div>
                 </div>
                 <div className="w-full">

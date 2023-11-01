@@ -36,7 +36,7 @@ export default function History({userId}) {
     );
   
     const result=updatedRequestedList.filter(booked=>booked?.slotInfor?.bookingId.includes(booked.id)||booked.status==="Denied")
-    const slots = result.map(item => ({...item.slotInfor, bookedId: item.id,denided:item.reason}));
+    const slots = result.map(item => ({...item.slotInfor, bookedId: item.id,denided:item.reason,subjectId:item.subjectId}));
     // Set the updatedRequestedList and slotArray after Promise.all is completed
     console.log('updated');
     console.log(updatedRequestedList);

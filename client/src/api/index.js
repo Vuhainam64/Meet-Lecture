@@ -212,6 +212,20 @@ export const createRequest= async (form) => {
         console.error('Error create request:', err);
     }
 }
+export const createFeedback= async (form) => {
+    try {
+        const res = await axios.post(`${baseURL}/Feedback`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Feedback create successfully.');
+        } else {
+            console.log(`Feedback status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error create feedback:', err);
+    }
+}
 
 
 //delete

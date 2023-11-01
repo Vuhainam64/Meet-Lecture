@@ -9,8 +9,8 @@ import Body from "../components/lecturer/Body";
 import { useSelector } from "react-redux";
 
 export default function Lecturer() {
+  
   const user = useSelector((state) => state.user?.user);
-
   const userId = user?.id;
   console.log(userId);
   return (
