@@ -237,9 +237,9 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
                 <LuLock />
               </div>
             )}
-            {infor.title && (
+            {infor?.lecturerInfor?.fullname && (
               <span className="font-bold text-xl w-full flex justify-center">
-                {infor.title}
+                {infor?.lecturerInfor.fullname}
               </span>
             )}
             {infor.Course && (

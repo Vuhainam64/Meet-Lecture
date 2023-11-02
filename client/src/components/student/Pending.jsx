@@ -3,6 +3,7 @@ import {
   searchSubjectById,
   searchSlotById,
   getAllBookingByLecturerIDORStudentID,
+  searchTeacherById,
 } from "../../api";
 import { Requested, ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
@@ -27,11 +28,11 @@ export default function Pending({userId}) {
   async function addObject() {
     const updatedRequestedList = await Promise.all(
       bookedList.map(async (infor) => {
-        const studentInfor = await searchStudentById(infor.studentId);
+        const lecturerInfor = await searchTeacherById(infor.lecturerId);
         const subjectInfor = await searchSubjectById(infor.subjectId);
         const slotInfor = await searchSlotById(infor.slotId);
         // Update the infor object with the response object in the studentId property
-        infor.studentInfor = studentInfor;
+        infor.lecturerInfor = lecturerInfor;
         // Update the infor object with the response object in the subjectId property
         infor.subjectInfor = subjectInfor;
         // Update the infor object with the response object in the slotId property
@@ -40,7 +41,7 @@ export default function Pending({userId}) {
       })
     );
     // Updated array\
-    const slots= updatedRequestedList.map(item => ({...item.slotInfor,bookedId:item.id}));
+    const slots= updatedRequestedList.map(item => ({...item.slotInfor,bookedId:item.id,lecturerInfor:item.lecturerInfor}));
     setShowList(updatedRequestedList);
     setSlotArray(slots)
   }

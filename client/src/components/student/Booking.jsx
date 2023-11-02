@@ -2,11 +2,12 @@ import { Link, useParams } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
-import { getAllSlotByLecturerID } from "../../api";
+import { getAllSlotByLecturerID, searchTeacherById } from "../../api";
 
 export default function Booking({userId}) {
   const { lecturerId } = useParams();
   const [bookingRooms, setBookingRooms] = useState([]);
+  const [showList, setShowList] = useState([]);
   const [refresh, setRefresh] = useState(false);
   async function fetchData(id) {
     const response = await getAllSlotByLecturerID(parseInt(id))
@@ -22,6 +23,20 @@ export default function Booking({userId}) {
       )
       .catch((error) => console.log(error));
   }
+  async function addObject() {
+    const updatedRequestedList = await Promise.all(
+      bookingRooms.map(async (infor) => {
+        const lecturerInfor = await searchTeacherById(infor.lecturerId);
+        // Update the infor object with the response object in the studentId property
+        infor.lecturerInfor = lecturerInfor;
+        // Update the infor object with the response object in the subjectId property
+        // Update the infor object with the response object in the slotId property
+        return infor; // Return the updated infor object
+      })
+    );
+    // Updated array
+    setShowList(updatedRequestedList);
+  }
   useEffect(() => {
     if (lecturerId || refresh === true) {
       fetchData(lecturerId);
@@ -30,6 +45,11 @@ export default function Booking({userId}) {
       setRefresh(false);
     }
   }, [lecturerId, refresh]);
+  useEffect(() => {
+    if(bookingRooms.length>0)
+    addObject();
+    console.log(showList);
+  }, [bookingRooms]);
   return (
     <div className="w-full bg-white flex flex-col justify-center items-start gap-5">
       <Link
@@ -42,7 +62,7 @@ export default function Booking({userId}) {
         <span className="text-2xl underline">Home</span>
       </Link>
       <div className="w-[90%] mx-[5%] h-full bg-white">
-        <ShowBoxs childArray={bookingRooms} setRefresh={setRefresh} userId={userId}></ShowBoxs>
+        <ShowBoxs childArray={showList} setRefresh={setRefresh} userId={userId}></ShowBoxs>
       </div>
     </div>
   );

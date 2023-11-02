@@ -5,6 +5,7 @@ import {
   searchRequestById,
   searchStudentById,
   searchSubjectById,
+  searchTeacherById,
   updateRequestById,
 } from "../../api";
 import moment from "moment";
@@ -67,9 +68,9 @@ export default function Requested({ userId }) {
     if (requestedList) {
       const updatedRequestedList = await Promise.all(
         requestedList.map(async (infor) => {
-          const response1 = await searchStudentById(infor.studentId);
+          const response1 = await searchTeacherById(infor.lecturerId);
           // Update the infor object with the response object in the studentId property
-          infor.studentInfor = response1;
+          infor.lecturerInfor = response1;
           // Update the infor object with the response object in the subjectId property
           const response2 = await searchSubjectById(infor.subjectId);
           infor.subjectInfor = response2;
@@ -116,9 +117,9 @@ export default function Requested({ userId }) {
                 <div className="flex flex-col gap-5">
                   <div className="w-full flex flex-row gap-5">
                     <div className="text-lg">
-                      {infor.studentInfor?.fullname}
+                      {infor.lecturerInfor?.fullname}
                     </div>
-                    <div className="text-lg">{infor.studentInfor?.email}</div>
+                    <div className="text-lg">{infor.lecturerInfor?.email}</div>
                     <div className="text-lg">
                       Course: {infor.subjectInfor?.subjectCode}
                     </div>
