@@ -158,6 +158,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         code: formData.code,
+        status: "Pending",
       };
       console.log("SubmitData:", submitData);
       const newErrors = validateForm();
@@ -168,9 +169,10 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
         console.log("Form submitted:", submitData);
         await makePostRequestByCode(submitData);
         setAdded(true);
-        setRefresh(true);
+      
       }
     }
+    setRefresh(true)
   }
 
   useEffect(() => {
@@ -178,8 +180,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
       setShowInformations(
         childArray.map((slot) => ({
           ...slot,
-          status:
-            slot.denided && slot.denided.length > 0 ? "Denided" : "Feedback",
+          status:slot.denided && slot.denided.length > 0 ? "Denided":slot.status==="Finish" ?(slot.status="Feedback"):(slot.status="Booked")
         }))
       );
     } else {
@@ -268,13 +269,13 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
                 <div
                   className={`absolute -left-4 ${
                     infor.denided && infor.denided.length > 0
-                      ? "bg-red-500 "
-                      : "bg-green-400 "
+                    ? "bg-red-500"
+                    : infor.status==="Finish"?("bg-blue-500"):("bg-green-500")
                   } py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white`}
                 >
                   {infor.denided && infor.denided.length > 0
                     ? "Denided"
-                    : "Finished"}
+                    : infor.status==="Finish"?("Finish"):("Booked")}
                 </div>
               ) : (
                 <></>

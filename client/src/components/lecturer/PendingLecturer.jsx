@@ -42,6 +42,7 @@ export default function PendingLecturer({ userId,chosePage }) {
   async function makePutData(form, id) {
     try {
       const response = await updateBookingById(form, id);
+      setRefresh(true);
     } catch {}
   }
   async function handleAccpet(id) {
@@ -68,6 +69,7 @@ export default function PendingLecturer({ userId,chosePage }) {
       reason: data.reason === null ? "" : data.reason,
       status: "Denied",
     });
+    console.log(data);
     setFormId(data.id);
     setDeny(true);
     console.log(data.id);
@@ -115,11 +117,11 @@ export default function PendingLecturer({ userId,chosePage }) {
       console.log(bookedList);
       setRefresh(false);
     }
-  }, [userId, bookedList <= 0, refresh]);
+  }, [userId, refresh]);
   useEffect(() => {
     addObject();
     console.log(showList);
-  }, [bookedList <= 0]);
+  }, [bookedList.length <= 0]);
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
