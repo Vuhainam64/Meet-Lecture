@@ -99,14 +99,6 @@ export default function RequestLecturer({ userId,chosePage }) {
                     <div className="text-lg">
                       Course: {infor.subjectInfor?.subjectCode}
                     </div>
-                    <div className="text-lg">
-                      Date: {moment(infor.startDatetime).format("DD/MM/YYYY")}
-                    </div>
-                    <div className="text-lg">
-                      Time:
-                      {moment(infor.startDatetime).format("HH:mm")}-
-                      {moment(infor.endDatetime).format("HH:mm")}
-                    </div>
                   </div>
                   <div className="w-full">
                     <div className="text-lg">
@@ -115,7 +107,7 @@ export default function RequestLecturer({ userId,chosePage }) {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Link to={`/Lecturer/CreateByRequest/${infor.id}`}>
+                  <Link to={`/Lecturer/Home/${infor.id}`}>
                     <button className="text-white bg-green-500 px-3 py-2 rounded-3xl">
                       Accept
                     </button>

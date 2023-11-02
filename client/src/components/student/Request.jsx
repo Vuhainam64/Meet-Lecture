@@ -10,8 +10,6 @@ export default function Request({ userId,chosePage }) {
   const zeroFormData = {
     lecturer: "",
     course: "",
-    date: "",
-    time: "",
     description: "",
   };
   const [formData, setFormData] = useState(zeroFormData);
@@ -49,22 +47,11 @@ export default function Request({ userId,chosePage }) {
     const newErrors = validateForm();
     setErrors(newErrors);
     console.log(formData);
-    const parts = formData.time.split("-");
-    let startDateTime;
-    let endDateTime;
-    if (parts.length === 2) {
-      startDateTime = parts[0]; // "12:12"
-      endDateTime = parts[1]; // "14:14"
-      console.log("Part 1:", startDateTime);
-      console.log("Part 2:", endDateTime);
-    }
+
     const submitData = {
       studentId: parseInt(userId),
       lecturerId: parseInt(searchLecturerName(formData.lecturer)),
       subjectId: parseInt(searchCourseName(formData.course)),
-      date: `${formData.date}T00:00`,
-      startDateTime: `1111-11-11T${startDateTime}`,
-      endDateTime: `1111-11-11T${endDateTime}`,
       description: formData.description,
     };
     console.log(submitData);
@@ -122,31 +109,6 @@ export default function Request({ userId,chosePage }) {
     } else if (searchCourseName(formData.course) === 0) {
       newErrors.course = "Can't find this course";
     }
-
-    // Check if date is not empty
-    if (!formData.date) {
-      newErrors.date = "Date is required";
-    }
-
-    // Check if time is not empty
-    if (!formData.time) {
-      newErrors.time = "Time is required";
-    } else {
-      // Validate the time format (00:00-00:00)
-      if (!/^\d{2}:\d{2}-\d{2}:\d{2}$/.test(formData.time)) {
-        newErrors.time = "Invalid time format. Use 00:00-00:00 format.";
-      } else {
-        const [startTime, endTime] = formData.time.split("-").map((time) => time.split(":"));
-        const startMinutes = parseInt(startTime[0]) * 60 + parseInt(startTime[1]);
-        const endMinutes = parseInt(endTime[0]) * 60 + parseInt(endTime[1]);
-  
-        // Check if the second part is larger than the first part by at least 15 minutes (900 seconds)
-        if (endMinutes - startMinutes < 15||endMinutes - startMinutes > 180) {
-          newErrors.time = "The end time must larger from 15 minutes to 3 hours than the start time.";
-        }
-      }
-    }
-
     // Check if description is not empty
     if (!formData.description) {
       newErrors.description = "Description is required";
@@ -198,29 +160,6 @@ export default function Request({ userId,chosePage }) {
             ></input>
           </div>
           {errors.course && <div className="text-red-500">{errors.course}</div>}
-          <div className="flex flex-row w-full items-center">
-            <span className="text-xl font-medium w-[30%]">Date</span>
-            <input
-              name="date"
-              onChange={handleInputChange}
-              value={formData.date}
-              className=" border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]"
-              type="date"
-            ></input>
-          </div>
-          {errors.date && <div className="text-red-500">{errors.date}</div>}
-          <div className="flex flex-row w-full items-center">
-            <span className="text-xl font-medium w-[30%]">Time</span>
-            <input
-              name="time"
-              onChange={handleInputChange}
-              value={formData.time}
-              className=" border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]"
-              type="text"
-              placeholder="00:00-00:00"
-            ></input>
-          </div>
-          {errors.time && <div className="text-red-500">{errors.time}</div>}
           <div className="flex flex-row w-full items-start">
             <span className="text-xl font-medium w-[30%]">Description</span>
             <textarea

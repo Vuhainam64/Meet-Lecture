@@ -2,8 +2,10 @@
 import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 import { getAllSlotByLecturerID, searchTeacherById } from "../../api";
+import { useParams } from "react-router-dom";
 
 export default function HomeLecturer({ userId }) {
+  const {requestId}=useParams();
   const [bookingRooms, setBookingRooms] = useState([]);
   const [showList, setShowList] = useState([]);
 
