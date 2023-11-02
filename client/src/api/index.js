@@ -233,7 +233,7 @@ export const createFeedback= async (form) => {
         }
     } catch (err) {
         // Log the detailed error message
-        console.error('Error create feedback:', err);
+        return (err.response.data);
     }
 }
 

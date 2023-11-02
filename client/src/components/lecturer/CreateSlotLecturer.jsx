@@ -124,6 +124,9 @@ export default function CreateSlotLecturer({userId}) {
     if (formData.limitBooking <= 0) {
       newErrors.limitBooking = "Limit must be more than 0";
     }
+    if (formData.limitBooking > 35) {
+      newErrors.limitBooking = "Limit must be smaller than 35";
+    }
 
     // Check if mode is not empty
     if (!formData.mode) {

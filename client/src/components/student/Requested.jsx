@@ -161,7 +161,7 @@ export default function Requested({ userId }) {
           </button>
           <div className="header font-bold text-xl">
             {" "}
-            Are you sure want to delete this course!!!
+            Are you sure want to cancel this course!!!
           </div>
           <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
             <button
