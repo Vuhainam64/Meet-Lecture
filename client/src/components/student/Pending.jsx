@@ -84,7 +84,7 @@ export default function Pending({userId}) {
       </div>
       <div className="w-[90%] flex justify-center pl-[5%]">
         {route === "Booked" ? (
-          <ShowBoxs  userId={userId} childArray={slotArray.filter(slot=>slot.status==="Not Book")} type='Pending' setRefresh={setRefresh}></ShowBoxs>
+          <ShowBoxs  userId={userId} childArray={slotArray.filter(slot=>slot.status==="Not Book" && !slot.bookingId.includes(slot.bookedId))} type='Pending' setRefresh={setRefresh}></ShowBoxs>
         ) : (
           <Requested userId={userId}></Requested>
         )}
