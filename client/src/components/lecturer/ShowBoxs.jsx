@@ -3,15 +3,26 @@ import { LuPencilLine, LuTrash2, LuPlusCircle, LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { deleteSlotById } from "../../api";
+import { createBooking, deleteRequestById, deleteSlotById } from "../../api";
 import Popup from "reactjs-popup";
-export default function ShowBoxs({ childArray, setRefresh }) {
+export default function ShowBoxs({
+  childArray,
+  setRefresh,
+  requestInfor,
+  setRequestInfor,
+}) {
   const [showInformations, setShowInformations] = useState(childArray);
   const [openDelete, setOpenDelete] = useState(false);
+  const [clickSlot, setClickSlot] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState("");
+  const [slotHolder, setSlotHolder] = useState("");
+  const [countdown, setCountdown] = useState(5);
+  const [error, setNewError] = useState({});
   const closeModal = () => {
     setOpenDelete(false);
     setDeleteHolder(0);
+    setSlotHolder({});
+    setClickSlot(false);
   };
   async function handleDeleteYes() {
     try {
@@ -35,12 +46,47 @@ export default function ShowBoxs({ childArray, setRefresh }) {
   const navigate = useNavigate();
 
   function handleClick(e, infor) {
-    const key = e.target.value;
-    console.log(key);
-    if (key === "Feedback") {
-      navigate(
-        "/student/Feedback/" + encodeURIComponent(JSON.stringify(infor))
-      );
+    if (requestInfor) {
+      const key = e.target.value;
+      console.log(key);
+      if (infor.limitBooking === infor.bookingId.length) {
+        setNewError({ id: infor.id, respone: "This slot is full" });
+      } else {
+        setClickSlot(true);
+        setSlotHolder(infor);
+      }
+    }
+  }
+  async function handleChooseYes() {
+    if (requestInfor) {
+      console.log(slotHolder);
+      console.log(requestInfor);
+      try {
+        const response = await createBooking({
+          studentId: parseInt(requestInfor.studentId),
+          slotId: parseInt(slotHolder.id),
+          subjectId: parseInt(requestInfor.subjectId),
+          description: requestInfor.description,
+          status: "Success",
+        });
+        setNewError({ id: parseInt(slotHolder.id), respone: response });
+        setRefresh(true);
+        closeModal();
+        if (response === "Booked succesfully!!!") {
+          const respone2 = await deleteRequestById(parseInt(requestInfor.id));
+          const countdownTimer = setInterval(() => {
+            setCountdown((prevCountdown) => prevCountdown - 1);
+          }, 1000);
+
+          // After 5 seconds (or your desired time), navigate to the new route
+          setTimeout(() => {
+            clearInterval(countdownTimer); // Clear the countdown timer
+            navigate("/Request"); // Navigate to the new route
+          }, 5000); // 5 seconds (5000 milliseconds)
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   }
 
@@ -89,6 +135,17 @@ export default function ShowBoxs({ childArray, setRefresh }) {
                 Limit: {infor.bookingId.length}/{infor.limitBooking}
               </span>
             )}
+            {error.id === infor.id && (
+              <span
+                className={`text-xl w-full text-center ${
+                  error.respone === "Booked succesfully!!!"
+                    ? "text-green-500"
+                    : "text-red-500"
+                }`}
+              >
+                {error.respone}
+              </span>
+            )}
             <div className="w-full flex flex-row justify-center relative items-center gap-5">
               {infor.Finish ? (
                 <div className="absolute -left-4 bg-green-400 py-[0.3rem] px-[0.6rem] rounded-xl text-xs text-white">
@@ -125,14 +182,26 @@ export default function ShowBoxs({ childArray, setRefresh }) {
             </div>
           </div>
         ))}
-      <Link
-        to={`/Lecturer/Create`}
-        className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
-      >
-        <button>
-          <LuPlusCircle />
-        </button>
-      </Link>
+      {Object.keys(requestInfor).length !== 0 ? (
+        <Link
+          to={`/Lecturer/CreateByRequest/${requestInfor.id}`}
+          className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
+        >
+          <button>
+            <LuPlusCircle />
+          </button>
+        </Link>
+      ) : (
+        <Link
+          to={`/Lecturer/Create`}
+          className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
+        >
+          <button>
+            <LuPlusCircle />
+          </button>
+        </Link>
+      )}
+
       <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
         <div className="modal">
           <button className="close" onClick={closeModal}>
@@ -146,6 +215,31 @@ export default function ShowBoxs({ childArray, setRefresh }) {
             <button
               className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
               onClick={handleDeleteYes}
+            >
+              Yes, Im sure!!!
+            </button>
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-red-500"
+              onClick={closeModal}
+            >
+              No, Im not.
+            </button>
+          </div>
+        </div>
+      </Popup>
+      <Popup open={clickSlot} closeOnDocumentClick onClose={closeModal}>
+        <div className="modal">
+          <button className="close" onClick={closeModal}>
+            &times;
+          </button>
+          <div className="header font-bold text-xl">
+            {" "}
+            Are you sure want to choose this slot!!!
+          </div>
+          <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
+            <button
+              className="w-[25%] text-base border rounded-xl p-2 border-black font-medium bg-green-500"
+              onClick={handleChooseYes}
             >
               Yes, Im sure!!!
             </button>

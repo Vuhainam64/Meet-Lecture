@@ -1,18 +1,28 @@
-
 import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
-import { getAllSlotByLecturerID, searchTeacherById } from "../../api";
+import {
+  getAllSlotByLecturerID,
+  searchRequestById,
+  searchTeacherById,
+} from "../../api";
 import { useParams } from "react-router-dom";
 
-export default function HomeLecturer({ userId }) {
-  const {requestId}=useParams();
+export default function HomeLecturer({ userId,chosePage }) {
+  const { requestId } = useParams();
   const [bookingRooms, setBookingRooms] = useState([]);
   const [showList, setShowList] = useState([]);
+  const [requestInfor, setRequestInfor] = useState({});
 
   const [refresh, setRefresh] = useState(false);
   async function fetchData() {
     const response = await getAllSlotByLecturerID(parseInt(userId))
-      .then((data) => setBookingRooms(data.filter(slot=>slot.status!=="Unactive"&&slot.status!=="Finish")))
+      .then((data) =>
+        setBookingRooms(
+          data.filter(
+            (slot) => slot.status !== "Unactive" && slot.status !== "Finish"
+          )
+        )
+      )
       .catch((error) => console.log(error));
   }
   async function addObject() {
@@ -29,16 +39,24 @@ export default function HomeLecturer({ userId }) {
     // Updated array
     setShowList(updatedRequestedList);
   }
+  async function searchRequest(id) {
+    const response = await searchRequestById(parseInt(id))
+      .then((data) => setRequestInfor(data))
+      .catch((error) => console.log(error));
+  }
+
   useEffect(() => {
-    if(userId||refresh===true)
-    fetchData();
+    chosePage("Home")
+    if (userId || refresh === true) fetchData();
     console.log("booking room");
     console.log(bookingRooms);
     setRefresh(false);
-  }, [userId,refresh]);
+  }, [userId, refresh]);
   useEffect(() => {
-    if(bookingRooms.length>0)
-    addObject();
+    if (bookingRooms.length > 0) {
+      addObject();
+      requestId&&searchRequest(requestId);
+    }
     console.log(showList);
   }, [bookingRooms]);
   return (
@@ -48,6 +66,8 @@ export default function HomeLecturer({ userId }) {
           childArray={showList}
           setRefresh={setRefresh}
           role="Lecturer"
+          requestInfor={requestInfor}
+          setRequestInfor={setRequestInfor}
         ></ShowBoxs>
       </div>
     </div>

@@ -1,26 +1,27 @@
 import { useEffect, useState } from "react";
-import { BsArrowLeft } from "react-icons/bs"; // Sửa đổi import
-import { NavLink, useParams } from "react-router-dom";
+import { BsArrowLeft } from "react-icons/bs";
+import { NavLink, useParams, useNavigate } from "react-router-dom";
 import {
+  baseURL,
   createBooking,
   createSlot,
   getAllSlotByLecturerID,
   searchRequestById,
 } from "../../api";
 import moment from "moment";
+import axios from "axios";
 
-export default function CreateRequestSlot({userId}) {
+export default function CreateRequestSlot({ userId }) {
   const { id } = useParams();
   const zeroFormData = {
-    code: "",
-    lecturerId: userId,
-    limitBooking: 0,
     location: "",
-    mode: "Public",
-    title: "",
     date: "",
     endDatetime: "",
     startDatetime: "",
+    limitBooking: 0,
+    mode: "Public",
+    code: "",
+    lecturerId: userId,
   };
   const [formData, setFormData] = useState(zeroFormData);
   const [errors, setErrors] = useState({});
@@ -28,43 +29,56 @@ export default function CreateRequestSlot({userId}) {
   const [inforDetail, setInforDetail] = useState({});
   const [bookingRooms, setBookingRooms] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const navigate = useNavigate();
 
   const copyInforDetailToFormData = () => {
     setFormData({
-      lecturerId: 3,
-      title: "",
+      lecturerId: parseInt(userId),
       location: "",
       code: "",
       limitBooking: "",
       mode: "Public",
-      date: moment(inforDetail.startDatetime).format("yyyy-MM-DD"),
+      date: moment(inforDetail.startDatetime).format("YYYY-MM-DD"),
       endDatetime: moment(inforDetail.endDatetime).format("HH:mm"),
       startDatetime: moment(inforDetail.startDatetime).format("HH:mm"),
     });
   };
+
   async function fetchData(slotId) {
-    // Chuyển đổi id thành kiểu số
-    const response = await searchRequestById(parseInt(slotId))
-      .then((data) => setInforDetail(data))
-      .catch((error) => console.log(error));
+    try {
+      const data = await searchRequestById(parseInt(slotId));
+      setInforDetail(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   async function fetchDataSlot(slotId) {
-    const response = await getAllSlotByLecturerID(parseInt(slotId))
-      .then((data) =>
-        setBookingRooms(data.filter((slot) => slot.status !== "Unactive"))
-      )
-      .catch((error) => console.log(error));
+    try {
+      const data = await getAllSlotByLecturerID(parseInt(slotId));
+      const filteredData = data.filter(
+        (slot) => slot.status !== "Unactive"
+      );
+      setBookingRooms(filteredData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function makePostRequest(form) {
     try {
-      const response = await createSlot(form);
-    } catch (error) {}
+      await createSlot(form);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
   async function makePostBooking(form) {
     try {
-      const response = await createBooking(form);
-    } catch (error) {}
+      await createBooking(form);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const handleInputChange = (e) => {
@@ -72,46 +86,55 @@ export default function CreateRequestSlot({userId}) {
     const newValue = name === "limitBooking" ? parseInt(value, 10) : value;
     setFormData({ ...formData, [name]: newValue });
   };
-  console.log(inforDetail);
 
   async function handleSubmit(e) {
-    console.log();
     e.preventDefault();
-    console.log("create nè");
-    // Validate the form
+    
     const newErrors = validateForm();
     setErrors(newErrors);
-
-    // If there are errors, do not proceed with the submission
+  
     if (Object.keys(newErrors).length === 0) {
-      console.log("tới đây r nè");
-      // No validation errors, proceed with the submission
-      console.log("Form submitted:", formData);
-
-      await makePostRequest({
-        ...formData,
-        date: `${formData.date}T00:00`,
-        startDatetime: `1111-11-11T${formData.startDatetime}`,
-        endDatetime: `1111-11-11T${formData.endDatetime}`,
-      });
-      await makePostBooking({
-        studentId: parseInt(inforDetail.studentId),
-        slotId: parseInt(bookingRooms.length),
-        subjectId: parseInt(inforDetail.studentId),
-        description: inforDetail.description,
-        status:'Success'
-      });
-
-      setRefresh(true);
-      setFormData({
-        ...zeroFormData,
-        date: "",
-        endDatetime: "",
-        startDatetime: "",
-      });
-      setAdded(true);
+      try {
+        // Create a new slot
+        const slotResponse = await axios.post(`${baseURL}/Booking`,{
+          ...formData,
+          date: `${formData.date}T00:00`,
+          startDatetime: `1111-11-11T${formData.startDatetime}`,
+          endDatetime: `1111-11-11T${formData.endDatetime}`,
+        });
+  
+        // After creating the slot, fetch the updated list of slots
+        await fetchDataSlot(parseInt(userId));
+  
+        // Use the updated data to find the newly created slot
+        const newlyCreatedSlot = bookingRooms.find(slot => slot.id === slotResponse.id);
+  
+        if (newlyCreatedSlot) {
+          // Create a booking with the newly created slot
+          await makePostBooking({
+            studentId: parseInt(inforDetail.studentId),
+            slotId: newlyCreatedSlot.id,
+            subjectId: parseInt(inforDetail.subjectId),
+            description: inforDetail.description,
+            status: "Success",
+          });
+  
+          setRefresh(true);
+          setFormData({
+            ...zeroFormData,
+            date: "",
+            endDatetime: "",
+            startDatetime: "",
+          });
+          setAdded(true);
+        }
+      } catch (error) {
+        // Handle any errors that may occur during API requests
+        console.error(error);
+      }
     }
   }
+  
 
   const cancelAll = () => {
     setFormData(zeroFormData);
@@ -126,27 +149,23 @@ export default function CreateRequestSlot({userId}) {
     if (!formData.location) {
       newErrors.location = "Location is required";
     }
-    if (!formData.title) {
-      newErrors.title = "Title is required";
-    }
-
     // Check if date is not empty
     if (!formData.date) {
-      newErrors.date = "Created At is required";
+      newErrors.date = "Date is required";
     } else {
       // Convert formData.date to a Date object for comparison
-      const selectedDate = moment(formData.date).format("DD-MM-yyyy");
-      const currentDate = moment().format("DD-MM-yyyy");
+      const selectedDate = moment(formData.date, "YYYY-MM-DD");
+      const currentDate = moment();
 
       // Compare the selected date with the current date
-      if (selectedDate < currentDate) {
+      if (selectedDate.isBefore(currentDate, "day")) {
         newErrors.date = "Date must be equal to or greater than today";
       }
     }
 
     // Check if startDatetime is not empty
     if (!formData.startDatetime) {
-      newErrors.startDatetime = "Start date and Time is required";
+      newErrors.startDatetime = "Start Date and Time is required";
     }
 
     // Check if endDatetime is not empty
@@ -190,21 +209,19 @@ export default function CreateRequestSlot({userId}) {
     // Add more validation rules for other fields as needed
 
     return newErrors;
-  };
+  }
+
   useEffect(() => {
-    if (id != 0) {
-      console.log(id);
+    if (id !== "0") {
       fetchData(id);
-      fetchDataSlot(3);
-      console.log(bookingRooms);
+      fetchDataSlot(parseInt(userId));
     }
   }, [id]);
 
   useEffect(() => {
-    if (id != 0) {
+    if (id !== "0") {
       if (inforDetail) {
         copyInforDetailToFormData();
-        console.log(formData);
       }
     }
   }, [inforDetail, id]);
@@ -213,7 +230,7 @@ export default function CreateRequestSlot({userId}) {
     <div className="min-h-[80%] flex flex-col bg-white">
       <div className="flex flex-row h-[10%]">
         <NavLink
-          className="h-[10%]  font-bold flex flex-row gap-5 items-center"
+          className="h-[10%] font-bold flex flex-row gap-5 items-center"
           to="/Lecturer/Request"
         >
           <span className="text-4xl">
@@ -234,23 +251,6 @@ export default function CreateRequestSlot({userId}) {
             {refresh === false && (
               <form className="w-[80%] mx-auto flex flex-col gap-5">
                 <div className="flex flex-row w-full items-center">
-                  <span className="text-xl font-medium w-[30%]">Title</span>
-                  <input
-                    className={`border ${
-                      errors.title
-                        ? "border-red-500 border-2"
-                        : "border-gray-900"
-                    } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                    type="text"
-                    value={formData.title} // Sử dụng giá trị từ formData
-                    onChange={handleInputChange}
-                    name="title"
-                  ></input>
-                </div>{" "}
-                {errors.title && (
-                  <div className="text-red-500 text-sm">{errors.title}</div>
-                )}
-                <div className="flex flex-row w-full items-center">
                   <span className="text-xl font-medium w-[30%]">Location</span>
                   <input
                     className={`border ${
@@ -259,10 +259,10 @@ export default function CreateRequestSlot({userId}) {
                         : "border-gray-900"
                     } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                     type="text"
-                    value={formData.location} // Sử dụng giá trị từ formData
+                    value={formData.location}
                     onChange={handleInputChange}
                     name="location"
-                  ></input>
+                  />
                 </div>
                 {errors.location && (
                   <div className="text-red-500 text-sm">{errors.location}</div>
@@ -275,11 +275,11 @@ export default function CreateRequestSlot({userId}) {
                         ? "border-red-500 border-2"
                         : "border-gray-900"
                     } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                    type="date" // Corrected type attribute
+                    type="date"
                     value={formData.date}
                     onChange={handleInputChange}
-                    name="date" // Corrected name attribute
-                  ></input>
+                    name="date"
+                  />
                 </div>
                 {errors.date && (
                   <div className="text-red-500 text-sm">{errors.date}</div>
@@ -294,11 +294,11 @@ export default function CreateRequestSlot({userId}) {
                         ? "border-red-500 border-2"
                         : "border-gray-900"
                     } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                    type="time" // Corrected type attribute
+                    type="time"
                     value={formData.startDatetime}
                     onChange={handleInputChange}
-                    name="startDatetime" // Corrected name attribute
-                  ></input>
+                    name="startDatetime"
+                  />
                 </div>
                 {errors.startDatetime && (
                   <div className="text-red-500 text-sm">
@@ -313,11 +313,11 @@ export default function CreateRequestSlot({userId}) {
                         ? "border-red-500 border-2"
                         : "border-gray-900"
                     } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                    type="time" // Corrected type attribute
+                    type="time"
                     value={formData.endDatetime}
                     onChange={handleInputChange}
-                    name="endDatetime" // Corrected name attribute
-                  ></input>
+                    name="endDatetime"
+                  />
                 </div>
                 {errors.endDatetime && (
                   <div className="text-red-500 text-sm">
@@ -333,10 +333,10 @@ export default function CreateRequestSlot({userId}) {
                         : "border-gray-900"
                     } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                     type="number"
-                    value={formData.limitBooking} // Sử dụng giá trị từ formData
+                    value={formData.limitBooking}
                     onChange={handleInputChange}
                     name="limitBooking"
-                  ></input>
+                  />
                 </div>
                 {errors.limitBooking && (
                   <div className="text-red-500 text-sm">
@@ -348,7 +348,7 @@ export default function CreateRequestSlot({userId}) {
                   <select
                     className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                     name="mode"
-                    value={formData.mode} // Sử dụng giá trị từ formData
+                    value={formData.mode}
                     onChange={handleInputChange}
                   >
                     <option value="Public">Public</option>
@@ -360,10 +360,10 @@ export default function CreateRequestSlot({userId}) {
                   <input
                     className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
                     type="text"
-                    value={formData.code} // Sử dụng giá trị từ formData
+                    value={formData.code}
                     onChange={handleInputChange}
                     name="code"
-                  ></input>
+                  />
                 </div>
                 <div className="flex flex-row w-full items-center justify-center gap-10">
                   <button
