@@ -18,7 +18,7 @@ function Header() {
     const response = await getAllNotification()
       .then((data) =>
         setNotificationList(
-          data.filter((mess) => mess.slot.lecturerId === userId)
+          data.filter((mess) => mess.slot.lecturerId === parseInt(userId))
         )
       )
       .catch(console.log("error"));
@@ -56,8 +56,8 @@ function Header() {
       <div className="absolute right-0 bottom-0 flex flex-col bg-white">
         <div>Notifications</div>
         <div>
-          {notificationsList &&
-            notificationsList.map((infor) => <div>hello</div>)}
+          {/* {notificationsList &&
+            notificationsList.map((infor,index) => <div key={index}>hello</div>)} */}
         </div>
       </div>
     </div>

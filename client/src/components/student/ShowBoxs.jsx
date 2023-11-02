@@ -130,7 +130,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
 
     if (formData.description && !formData.code) {
       const submitData = {
-        studentId: userId,
+        studentId: parseInt(userId),
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         description: formData.description,
