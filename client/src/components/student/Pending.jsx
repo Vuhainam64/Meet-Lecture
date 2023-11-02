@@ -21,7 +21,7 @@ export default function Pending({userId}) {
       parseInt(studentId)
     )
       .then((data) =>
-        setBookedList(data.filter(booked=>booked.studentId===parseInt(studentId)))
+        setBookedList(data.filter(booked=>booked.studentId===parseInt(studentId)&&booked.status!=="Denied"))
       )
       .catch((error) => console.log(error));
   }
@@ -48,9 +48,7 @@ export default function Pending({userId}) {
   useEffect(() => {
     if (refresh===true||userId) {
       fetchData(userId);
-      
       console.log(bookedList);
-    
       setRefresh(false)
     }
   }, [refresh,userId]);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ShowBoxs } from "./index";
-import { getAllBookingByLecturerIDORStudentID, searchSlotById, searchStudentById, searchSubjectById } from "../../api";
+import { getAllBookingByLecturerIDORStudentID, searchSlotById, searchStudentById, searchSubjectById, searchTeacherById } from "../../api";
 
 export default function History({userId}) {
   const [bookedList, setBookedList] = useState([]);
@@ -22,11 +22,11 @@ export default function History({userId}) {
     setSlotArray([]); // Clear the slot array first
     const updatedRequestedList = await Promise.all(
       bookedList.map(async (infor) => {
-        const studentInfor = await searchStudentById(infor.studentId);
+        const lecturerInfor = await searchTeacherById(infor.lecturerId);
         const subjectInfor = await searchSubjectById(infor.subjectId);
         const slotInfor = await searchSlotById(infor.slotId);
-        // Update the infor object with the response object in the studentId property
-        infor.studentInfor = studentInfor;
+        // Update the infor object with the response object in the lecturerId property
+        infor.lecturerInfor = lecturerInfor;
         // Update the infor object with the response object in the subjectId property
         infor.subjectInfor = subjectInfor;
         // Update the infor object with the response object in the slotId property
@@ -36,7 +36,7 @@ export default function History({userId}) {
     );
   
     const result=updatedRequestedList.filter(booked=>booked?.slotInfor?.bookingId.includes(booked.id)||booked.status==="Denied")
-    const slots = result.map(item => ({...item.slotInfor, bookedId: item.id,denided:item.reason,subjectId:item.subjectId}));
+    const slots = result.map(item => ({...item.slotInfor, bookedId: item.id,denided:item.reason,subjectId:item.subjectId,lecturerInfor:item.lecturerInfor}));
     // Set the updatedRequestedList and slotArray after Promise.all is completed
     console.log('updated');
     console.log(updatedRequestedList);

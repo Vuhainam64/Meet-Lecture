@@ -55,7 +55,6 @@ export default function FeedbackLecturer({ userId ,chosePage}) {
             showList.map((infor) => (
               <div className="w-full h-fit flex flex-col   p-5 border-gray-400 border-2 rounded-md min-h-[25%] justify-between gap-3">
                 <div className="w-full flex flex-row gap-10">
-                  <div className="text-lg">Title: {infor?.slot.title}</div>
                   <div className="text-lg">
                     Course: {infor?.subject.subjectCode}
                   </div>

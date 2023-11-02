@@ -15,7 +15,6 @@ export default function CreateSlotLecturer({userId}) {
     location: "",
     mode: "Public",
     startDatetime: "",
-    title: "",
   };
   const [formData, setFormData] = useState(zeroFormData);
   const [formId, setFormId] = useState('');
@@ -26,7 +25,6 @@ export default function CreateSlotLecturer({userId}) {
   const copyInforDetailToFormData = () => {
     setFormData({
       lecturerId: parseInt(inforDetail.lecturerId),
-      title: inforDetail.title,
       location: inforDetail.location,
       code: inforDetail.code,
       limitBooking: parseInt(inforDetail.limitBooking),
@@ -96,9 +94,6 @@ export default function CreateSlotLecturer({userId}) {
     // Check if the location is not empty
     if (!formData.location) {
       newErrors.location = "Location is required";
-    }
-    if (!formData.title) {
-      newErrors.title = "Title is required";
     }
 
     // Check if date is not empty
@@ -209,21 +204,6 @@ export default function CreateSlotLecturer({userId}) {
               </div>
             )}
             <form className="w-[80%] mx-auto flex flex-col gap-5">
-              <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Title</span>
-                <input
-                  className={`border ${
-                    errors.title ? "border-red-500 border-2" : "border-gray-900"
-                  } rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="text"
-                  value={formData.title} // Sử dụng giá trị từ formData
-                  onChange={handleInputChange}
-                  name="title"
-                ></input>
-              </div>{" "}
-              {errors.title && (
-                <div className="text-red-500 text-sm">{errors.title}</div>
-              )}
               <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Location</span>
                 <input

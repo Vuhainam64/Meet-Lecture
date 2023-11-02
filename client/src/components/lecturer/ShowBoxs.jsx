@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { deleteSlotById } from "../../api";
 import Popup from "reactjs-popup";
-export default function ShowBoxs({ childArray,setRefresh }) {
+export default function ShowBoxs({ childArray, setRefresh }) {
   const [showInformations, setShowInformations] = useState(childArray);
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteHolder, setDeleteHolder] = useState("");
@@ -53,15 +53,18 @@ export default function ShowBoxs({ childArray,setRefresh }) {
       )}
       {showInformations &&
         showInformations.map((infor) => (
-          <div key={infor.id} className="relative w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]">
+          <div
+            key={infor.id}
+            className="relative w-[30%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%]"
+          >
             {infor.code && (
               <div className="absolute top-0 right-0 text-3xl p-2">
                 <LuLock />
               </div>
             )}
-            {infor.title && (
+            {infor?.lecturerInfor?.fullname && (
               <span className="font-bold text-xl w-full flex justify-center">
-                {infor.title}
+                {infor?.lecturerInfor?.fullname}
               </span>
             )}
             {infor.Course && (
