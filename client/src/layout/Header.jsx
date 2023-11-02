@@ -6,9 +6,31 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { signOutAction } from "../ultils/helpers";
 import { buttonClick } from "../animations";
+import { getAllNotification } from "../api";
+import { useEffect, useState } from "react";
 
 function Header() {
+  const [notificationsList, setNotificationList] = useState();
+  const [refresh, setRefresh] = useState(true);
   const user = useSelector((state) => state.user?.user);
+  const userId = user?.id;
+  const fetchData = async () => {
+    const response = await getAllNotification()
+      .then((data) =>
+        setNotificationList(
+          data.filter((mess) => mess.slot.lecturerId === userId)
+        )
+      )
+      .catch(console.log("error"));
+  };
+  useEffect(() => {
+    console.log("hello");
+    if (refresh === true) {
+      fetchData();
+      setRefresh(false);
+    }
+  }, [refresh]);
+  console.log(notificationsList);
   return (
     <div className="flex w-full bg-orange-400 h-[10%] items-center relative">
       <div className="mx-10 uppercase text-white w-full">meet lecturer</div>
@@ -31,6 +53,13 @@ function Header() {
         </div>
       </div>
       {/* )} */}
+      <div className="absolute right-0 bottom-0 flex flex-col bg-white">
+        <div>Notifications</div>
+        <div>
+          {notificationsList &&
+            notificationsList.map((infor) => <div>hello</div>)}
+        </div>
+      </div>
     </div>
   );
 }

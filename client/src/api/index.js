@@ -73,6 +73,14 @@ export const getAllSubject = async () => {
         return null;
     }
 };
+export const getAllNotification = async () => {
+    try {
+        const res = await axios.get(`${baseURL}/Notification`);
+        return res.data.data;
+    } catch (err) {
+        return null;
+    }
+};
 //search
 export const searchTeacherById = async (id) => {
     try {
