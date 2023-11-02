@@ -50,7 +50,10 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
   async function makePostRequest(form) {
     try {
       const response = await createBooking(form);
-    } catch (error) {}
+      setCodeError(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
   async function makePostRequestByCode(form) {
     try {
@@ -151,7 +154,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
     } else if (formData.code) {
       console.log("code");
       const submitData = {
-        studentId: userId,
+        studentId: parseInt(userId),
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         code: formData.code,
@@ -281,7 +284,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
             ${
               (type === "Pending"
                 ? infor.status === "Not Book" && "Cancel"
-                : infor.status) === ("Cancel" && "Denided")
+                : infor.status) === "Cancel" 
                 ? "bg-red-500"
                 : infor.status === "Booked"
                 ? "bg-green-500"
@@ -289,7 +292,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
                 ? "bg-blue-500"
                 : infor.status === "Feedback"
                 ? "bg-blue-700"
-                : "bg-black"
+                :  infor.status ===  "Denided" ?"bg-red-500":"bg-black"
             }`}
                 value={
                   type === "Pending"
@@ -370,11 +373,15 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
                   </form>
                 ) : (
                   <form className="flex flex-col gap-3 justify-end items-end relative w-full">
-                    {added === true && (
-                      <div className="w-full text-left font-semibold text-green-500">
-                        Booked Succesfully
-                      </div>
-                    )}
+                    <div
+                      className={`w-full text-left font-semibold ${
+                        codeError === "Booked succesfully!!!"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {codeError}
+                    </div>
                     <div className="flex flex-col gap-3 justify-end items-start w-full">
                       <div className="flex flex-row justify-between items-center w-full">
                         <span>Course:</span>
@@ -423,16 +430,19 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
                 )}
               </div>
             )}
-            {denided === infor.id&& (
+            {denided === infor.id && (
               <div
                 className={`flex flex-col items-end absolute -bottom-[4rem] w-full border-2 left-0 min-h-[5rem] border-black bg-white z-50 opacity-80 px-5 py-1 pb-5`}
               >
-                <button className="text-2xl w-fit" onClick={()=>openDenied("")}>
+                <button
+                  className="text-2xl w-fit"
+                  onClick={() => openDenied("")}
+                >
                   &times;
                 </button>
-                  <div className="flex flex-col gap-3 justify-endrelative w-full ">
-                     <span className=""> {infor.denided}</span>
-                  </div>
+                <div className="flex flex-col gap-3 justify-endrelative w-full ">
+                  <span className=""> {infor.denided}</span>
+                </div>
               </div>
             )}
           </div>

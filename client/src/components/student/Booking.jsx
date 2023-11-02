@@ -4,7 +4,7 @@ import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
 import { getAllSlotByLecturerID } from "../../api";
 
-export default function Booking() {
+export default function Booking({userId}) {
   const { lecturerId } = useParams();
   const [bookingRooms, setBookingRooms] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -42,7 +42,7 @@ export default function Booking() {
         <span className="text-2xl underline">Home</span>
       </Link>
       <div className="w-[90%] mx-[5%] h-full bg-white">
-        <ShowBoxs childArray={bookingRooms} setRefresh={setRefresh}></ShowBoxs>
+        <ShowBoxs childArray={bookingRooms} setRefresh={setRefresh} userId={userId}></ShowBoxs>
       </div>
     </div>
   );

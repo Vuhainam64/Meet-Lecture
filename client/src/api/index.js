@@ -184,12 +184,14 @@ export const createBooking= async (form) => {
         // Check if the response status is 200 OK
         if (res.status === 200) {
             console.log('Slot create successfully.');
+            return ("Booked succesfully!!!")
         } else {
-            console.log(`Slot status ${res.status} from the server.`);
+    
+            return ("Wrong code or slot!!!");
         }
     } catch (err) {
         // Log the detailed error message
-        console.error('Error create slot:', err);
+        return (err.response.data);
     }
 }
 export const createSlot= async (form) => {
