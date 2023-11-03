@@ -183,14 +183,7 @@ export default function ShowBoxs({
           </div>
         ))}
       {Object.keys(requestInfor).length !== 0 ? (
-        <Link
-          to={`/Lecturer/CreateByRequest/${requestInfor.id}`}
-          className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
-        >
-          <button>
-            <LuPlusCircle />
-          </button>
-        </Link>
+        <div></div>
       ) : (
         <Link
           to={`/Lecturer/Create`}
