@@ -131,7 +131,7 @@ export default function RequestLecturer({ userId,chosePage }) {
           </button>
           <div className="header font-bold text-xl">
             {" "}
-            Are you sure want to delete this course!!!
+            Are you sure want to deny this request!!!
           </div>
           <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
             <button
