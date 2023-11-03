@@ -442,7 +442,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
                   &times;
                 </button>
                 <div className="flex flex-col gap-3 justify-endrelative w-full ">
-                  <span className=""> {infor.denided}</span>
+                  <span className=""> Reason: {infor.denided}</span>
                 </div>
               </div>
             )}
