@@ -123,14 +123,6 @@ export default function Requested({ userId }) {
                     <div className="text-lg">
                       Course: {infor.subjectInfor?.subjectCode}
                     </div>
-                    <div className="text-lg">
-                      Date: {moment(infor.startDatetime).format("DD/MM/YYYY")}
-                    </div>
-                    <div className="text-lg">
-                      Time:
-                      {moment(infor.startDatetime).format("HH:mm")}-
-                      {moment(infor.endDatetime).format("HH:mm")}
-                    </div>
                   </div>
                   <div className="w-full">
                     <div className="text-lg">
