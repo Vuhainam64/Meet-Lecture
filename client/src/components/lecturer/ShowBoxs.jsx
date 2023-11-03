@@ -3,7 +3,7 @@ import { LuPencilLine, LuTrash2, LuPlusCircle, LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { createBooking, deleteRequestById, deleteSlotById } from "../../api";
+import { createBooking, deleteRequestById, deleteSlotById, updateRequestById } from "../../api";
 import Popup from "reactjs-popup";
 export default function ShowBoxs({
   childArray,
@@ -73,7 +73,7 @@ export default function ShowBoxs({
         setRefresh(true);
         closeModal();
         if (response === "Booked succesfully!!!") {
-          const respone2 = await deleteRequestById(parseInt(requestInfor.id));
+          const respone2 = await updateRequestById({...requestInfor,status:"success"},parseInt(requestInfor.id));
           const countdownTimer = setInterval(() => {
             setCountdown((prevCountdown) => prevCountdown - 1);
           }, 1000);
