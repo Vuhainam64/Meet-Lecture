@@ -182,19 +182,14 @@ export default function ShowBoxs({
             </div>
           </div>
         ))}
-      {Object.keys(requestInfor).length !== 0 ? (
-        <div></div>
-      ) : (
-        <Link
-          to={`/Lecturer/Create`}
-          className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
-        >
-          <button>
-            <LuPlusCircle />
-          </button>
-        </Link>
-      )}
-
+      <Link
+        to={`/Lecturer/Create`}
+        className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
+      >
+        <button>
+          <LuPlusCircle />
+        </button>
+      </Link>
       <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
         <div className="modal">
           <button className="close" onClick={closeModal}>
