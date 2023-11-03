@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 function Header() {
   const [notificationsList, setNotificationList] = useState();
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const [refresh, setRefresh] = useState(true);
   const user = useSelector((state) => state.user?.user);
   const userId = user?.id;
@@ -41,7 +42,11 @@ function Header() {
         <Link to={`/${user.role}/Schedule`}>
           <AiOutlineCalendar className="text-4xl" />
         </Link>
-        <div>
+        <div
+          onClick={() =>
+            setNotificationOpen((notificationOpen) => !notificationOpen)
+          }
+        >
           <IoMdNotificationsOutline className="text-4xl " />
         </div>
         <div
@@ -52,14 +57,17 @@ function Header() {
           <MdLogout className="text-4xl" />
         </div>
       </div>
+
       {/* )} */}
-      <div className="absolute right-0 bottom-0 flex flex-col bg-white">
-        <div>Notifications</div>
-        <div>
-          {/* {notificationsList &&
-            notificationsList.map((infor,index) => <div key={index}>hello</div>)} */}
+      {notificationOpen && (
+        <div className="absolute right-0 bottom-0 flex flex-col bg-white">
+          <div>Notifications</div>
+          <div>
+             {notificationsList &&
+            notificationsList.map((infor,index) => <div key={index}>hello</div>)} 
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
