@@ -27,7 +27,7 @@ function Home() {
         email: userName,
         password: userPassword,
       });
-      console.log("result.id: ", result.id);
+      
       if (result) {
         dispatch(
           SET_USER({

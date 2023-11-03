@@ -28,7 +28,10 @@ export default function Requested({ userId }) {
   async function handleCancelYes() {
     try {
       console.log(formData);
-      const response = await updateRequestById(formData,parseInt(deleteHolder));
+      const response = await updateRequestById(
+        formData,
+        parseInt(deleteHolder)
+      );
       setRefresh(true);
       closeModal();
     } catch (error) {
@@ -58,7 +61,8 @@ export default function Requested({ userId }) {
         setRequestedList(
           data.filter(
             (request) =>
-              request.studentId === parseInt(userId) && request.status !== "Cancel"
+              request.studentId === parseInt(userId) &&
+              request.status !== "Cancel"
           )
         )
       )
@@ -78,7 +82,15 @@ export default function Requested({ userId }) {
         })
       );
       // Updated array\
-      setShowList(updatedRequestedList);
+      setShowList(
+        updatedRequestedList.sort((a, b) => {
+          const dateA = new Date(a.createdAt);
+          const dateB = new Date(b.createdAt);
+
+          // Compare dateB with dateA to sort from newest to oldest
+          return dateB - dateA;
+        })
+      );
     }
   }
 
@@ -99,7 +111,7 @@ export default function Requested({ userId }) {
       setAddObjectStatus(false);
     }
   }, [addObjectStatus]);
-  console.log('request');
+  console.log("request");
   console.log(requestedList);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
