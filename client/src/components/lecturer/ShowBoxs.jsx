@@ -73,7 +73,7 @@ export default function ShowBoxs({
         setRefresh(true);
         closeModal();
         if (response === "Booked succesfully!!!") {
-          const respone2 = await updateRequestById({...requestInfor,status:"success"},parseInt(requestInfor.id));
+          const respone2 = await updateRequestById({...requestInfor,status:"Success"},parseInt(requestInfor.id));
           const countdownTimer = setInterval(() => {
             setCountdown((prevCountdown) => prevCountdown - 1);
           }, 1000);
