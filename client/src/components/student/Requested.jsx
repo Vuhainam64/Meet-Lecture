@@ -62,7 +62,7 @@ export default function Requested({ userId }) {
           data.filter(
             (request) =>
               request.studentId === parseInt(userId) &&
-              request.status !== "Cancel"
+              request.status !== "Cancel" && request.status !== "Success" 
           )
         )
       )
