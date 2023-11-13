@@ -10,32 +10,24 @@ import { getAllNotification } from "../api";
 import { useEffect, useState } from "react";
 
 function Header({ notifications, clickToRead }) {
-  const [notificationsList, setNotificationList] = useState(notifications);
+  const [notificationsList, setNotificationList] = useState([]);
   const [notificationOpen, setNotificationOpen] = useState(false);
-  const [refresh, setRefresh] = useState(true);
   const user = useSelector((state) => state.user?.user);
   const userId = user?.id;
-  const fetchData = async () => {
-    const response = await getAllNotification()
-      .then((data) =>
-        setNotificationList(
-          data.filter((mess) => mess.slot.lecturerId === parseInt(userId))
-        )
-      )
-      .catch(console.log("error"));
-  };
-  useEffect(() => {
-    console.log("hello");
-    if (refresh === true) {
-      fetchData();
-      setRefresh(false);
-    }
-  }, [refresh]);
   const splitString = (value) => {
     const result = value.split("Location");
     return result;
   };
   console.log(notificationsList);
+  useEffect(() => {
+    if (notifications) {
+      if (notificationsList.length <= 0) {
+        setNotificationList(notifications);
+      }
+    }
+  }, [notificationsList]);
+
+
   return (
     <div className="flex w-full bg-orange-400 h-[10%] items-center relative">
       <div className="mx-10 uppercase text-white w-full">meet lecturer</div>
@@ -46,13 +38,13 @@ function Header({ notifications, clickToRead }) {
         <Link to={`/${user.role}/Schedule`}>
           <AiOutlineCalendar className="text-4xl" />
         </Link>
-        <div
+        <button
           onClick={() =>
             setNotificationOpen((notificationOpen) => !notificationOpen)
           }
         >
           <IoMdNotificationsOutline className="text-4xl " />
-        </div>
+        </button>
         <div
           {...buttonClick}
           onClick={signOutAction}
@@ -63,23 +55,43 @@ function Header({ notifications, clickToRead }) {
       </div>
 
       {/* )} */}
-      {notificationOpen && (
-        <div className="absolute right-0 -bottom-[360%] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll ">
-          <div className="w-full pl-5 p-3 text-xl font-semibold">
-            Notifications
+      {notificationOpen === true ? (
+        notificationsList && notificationsList.length > 0 ? (
+          <div className="absolute right-0 -bottom-[360%] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll z-50">
+            <div className="w-full pl-5 p-3 text-xl font-semibold">
+              Notifications  
+            </div>
+            <div className="wrap whitespace-pre-wrap bg-gray flex flex-col px-5 gap-3 bg-gray-300 pb-5">
+              {notificationsList &&
+                notificationsList.map((infor, index) => (
+                  <div
+                    key={index}
+                    className="px-3 bg-amber-500 py-2 flex flex-col"
+                  >
+                    <span className="font-medium">
+                      {splitString(infor.title)[0]}
+                    </span>
+                    <span>Slot {splitString(infor.title)[1]}</span>
+                    {/* <button className="text-xs text-left w-fit underline text-blue-600">Make as readed</button> */}
+                  </div>
+                ))}
+            {/* <button className="text-left w-fit border border-black px-3 bg-white">Read All</button> */}
+            </div>
           </div>
-          <div className="wrap whitespace-pre-wrap bg-gray flex flex-col px-5 gap-3 bg-gray-300 pb-5">
-            {notificationsList &&
-              notificationsList.map((infor, index) => (
-                <div key={index} className="px-3 bg-amber-500 py-2">
-                  <span>{splitString(infor.title)[0]}</span>
-                  <span>
-                    Location {splitString(infor.title)[1]} 
-                  </span>
-                </div>
-              ))}
+        ) : (
+          <div className="absolute right-0 -bottom-[168%] flex-col bg-gray-300 w-[24rem] h-[7rem] flex overflow-y-scroll z-50">
+            <div className="w-full pl-5 p-3 text-xl font-semibold">
+              Notifications
+            </div>
+            <div className="wrap whitespace-pre-wrap bg-gray flex flex-col px-5 gap-3 bg-gray-300 pb-5">
+              <div className="px-3 bg-amber-500 py-2">
+                <span>There is no notification here!!!</span>
+              </div>
+            </div>
           </div>
-        </div>
+        )
+      ) : (
+        <></>
       )}
     </div>
   );

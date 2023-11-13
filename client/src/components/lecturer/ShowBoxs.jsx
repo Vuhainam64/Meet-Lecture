@@ -45,18 +45,6 @@ export default function ShowBoxs({
   console.log(showInformations);
   const navigate = useNavigate();
 
-  function handleClick(e, infor) {
-    if (requestInfor) {
-      const key = e.target.value;
-      console.log(key);
-      if (infor.limitBooking === infor.bookingId.length) {
-        setNewError({ id: infor.id, respone: "This slot is full" });
-      } else {
-        setClickSlot(true);
-        setSlotHolder(infor);
-      }
-    }
-  }
   async function handleChooseYes() {
     if (requestInfor) {
       console.log(slotHolder);
@@ -169,7 +157,6 @@ export default function ShowBoxs({
                 : "bg-black"
             }`}
                 value={infor.mode}
-                onClick={(e) => handleClick(e, infor)}
               >
                 {infor.mode}
               </button>

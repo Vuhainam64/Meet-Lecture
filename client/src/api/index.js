@@ -382,4 +382,18 @@ export const updateRequestById= async (form,id) => {
         console.error('Error update request:', err);
     }
 }
+export const updateNotificationById= async (form,id) => {
+    try {
+        const res = await axios.put(`${baseURL}/Notification/${id}`,form);
+        // Check if the response status is 200 OK
+        if (res.status === 200) {
+            console.log('Notification update successfully.');
+        } else {
+            console.log(`Notification status ${res.status} from the server.`);
+        }
+    } catch (err) {
+        // Log the detailed error message
+        console.error('Error update Notification:', err);
+    }
+}
 

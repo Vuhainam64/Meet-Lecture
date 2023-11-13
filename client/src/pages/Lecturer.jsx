@@ -13,6 +13,8 @@ export default function Lecturer() {
   const user = useSelector((state) => state.user?.user);
   const userId = user?.id;
   console.log(userId);
+
+  
   return (
     <div className="bg-white h-full">
       <Header />
