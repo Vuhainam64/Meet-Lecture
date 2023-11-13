@@ -27,11 +27,11 @@ function Home() {
         email: userName,
         password: userPassword,
       });
-      
+
       if (result) {
         dispatch(
           SET_USER({
-            id: result.id.toString(),
+            id: result.id,
             username: result.username,
             password: result.password,
             fullname: result.fullname,
@@ -46,7 +46,7 @@ function Home() {
       if (result === undefined) {
         setError("Your password or email is wrong. Try again");
       } else {
-        console.log(result);
+       
       }
     }
   }

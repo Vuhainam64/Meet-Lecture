@@ -9,8 +9,8 @@ import { buttonClick } from "../animations";
 import { getAllNotification } from "../api";
 import { useEffect, useState } from "react";
 
-function Header() {
-  const [notificationsList, setNotificationList] = useState();
+function Header({ notifications, clickToRead }) {
+  const [notificationsList, setNotificationList] = useState(notifications);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [refresh, setRefresh] = useState(true);
   const user = useSelector((state) => state.user?.user);
@@ -31,6 +31,10 @@ function Header() {
       setRefresh(false);
     }
   }, [refresh]);
+  const splitString = (value) => {
+    const result = value.split("Location");
+    return result;
+  };
   console.log(notificationsList);
   return (
     <div className="flex w-full bg-orange-400 h-[10%] items-center relative">
@@ -60,11 +64,20 @@ function Header() {
 
       {/* )} */}
       {notificationOpen && (
-        <div className="absolute right-0 bottom-0 flex flex-col bg-white">
-          <div>Notifications</div>
-          <div>
-             {notificationsList &&
-            notificationsList.map((infor,index) => <div key={index}>hello</div>)} 
+        <div className="absolute right-0 -bottom-[360%] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll ">
+          <div className="w-full pl-5 p-3 text-xl font-semibold">
+            Notifications
+          </div>
+          <div className="wrap whitespace-pre-wrap bg-gray flex flex-col px-5 gap-3 bg-gray-300 pb-5">
+            {notificationsList &&
+              notificationsList.map((infor, index) => (
+                <div key={index} className="px-3 bg-amber-500 py-2">
+                  <span>{splitString(infor.title)[0]}</span>
+                  <span>
+                    Location {splitString(infor.title)[1]} 
+                  </span>
+                </div>
+              ))}
           </div>
         </div>
       )}
