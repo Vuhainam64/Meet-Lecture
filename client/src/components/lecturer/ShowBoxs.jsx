@@ -3,7 +3,12 @@ import { LuPencilLine, LuTrash2, LuPlusCircle, LuLock } from "react-icons/lu";
 
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { createBooking, deleteRequestById, deleteSlotById, updateRequestById } from "../../api";
+import {
+  createBooking,
+  deleteRequestById,
+  deleteSlotById,
+  updateRequestById,
+} from "../../api";
 import Popup from "reactjs-popup";
 export default function ShowBoxs({
   childArray,
@@ -45,6 +50,18 @@ export default function ShowBoxs({
   console.log(showInformations);
   const navigate = useNavigate();
 
+  function handleClick(e, infor) {
+    if (Object.keys(requestInfor).length > 0) {
+      const key = e.target.value;
+      console.log(key);
+      if (infor.limitBooking === infor.bookingId.length) {
+        setNewError({ id: infor.id, respone: "This slot is full" });
+      } else {
+        setClickSlot(true);
+        setSlotHolder(infor);
+      }
+    }
+  }
   async function handleChooseYes() {
     if (requestInfor) {
       console.log(slotHolder);
@@ -61,7 +78,10 @@ export default function ShowBoxs({
         setRefresh(true);
         closeModal();
         if (response === "Booked succesfully!!!") {
-          const respone2 = await updateRequestById({...requestInfor,status:"Success"},parseInt(requestInfor.id));
+          const respone2 = await updateRequestById(
+            { ...requestInfor, status: "Success" },
+            parseInt(requestInfor.id)
+          );
           const countdownTimer = setInterval(() => {
             setCountdown((prevCountdown) => prevCountdown - 1);
           }, 1000);
@@ -77,7 +97,8 @@ export default function ShowBoxs({
       }
     }
   }
-
+  console.log("request ne");
+  console.log(requestInfor);
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative">
       {showInformations && showInformations.length === 0 && (
@@ -157,6 +178,7 @@ export default function ShowBoxs({
                 : "bg-black"
             }`}
                 value={infor.mode}
+                onClick={(e) => handleClick(e, infor)}
               >
                 {infor.mode}
               </button>

@@ -35,7 +35,7 @@ export default function History({ userId }) {
     const updatedRequestedList = await Promise.all(
       bookedList.map(async (infor) => {
         const lecturerInfor = await searchTeacherById(infor.lecturerId);
-        const subjectInfor = await searchSubjectById(infor.subjectId);
+        const subjectInfor = await searchSubjectById(infor.subjectId); 
         const slotInfor = await searchSlotById(infor.slotId);
         // Update the infor object with the response object in the lecturerId property
         infor.lecturerInfor = lecturerInfor;
@@ -75,7 +75,7 @@ export default function History({ userId }) {
 
         // Compare dateB with dateA to sort from newest to oldest
         return dateB - dateA;
-      })
+      }).filter(slot=>slot.status!=='Not Book'&&slot.status!=='Unactive')
     );
   }
   useEffect(() => {

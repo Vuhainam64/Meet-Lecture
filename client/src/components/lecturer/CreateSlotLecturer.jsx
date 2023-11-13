@@ -18,11 +18,12 @@ export default function CreateSlotLecturer({userId}) {
   const [formData, setFormData] = useState(zeroFormData);
 
   const [errors, setErrors] = useState({});
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState('');
 
   async function makePostRequest(form) {
     try {
       const response = await createSlot(form);
+      setAdded(response)
     } catch (error) {}
   }
 
@@ -77,7 +78,7 @@ export default function CreateSlotLecturer({userId}) {
       const currentDate = new Date();
   
       // Compare the selected date with the current date
-      if (selectedDate < currentDate) {
+      if (selectedDate < currentDate.getDate) {
         newErrors.date = "Date must be equal to or greater than today";
       }
     }
@@ -151,8 +152,8 @@ export default function CreateSlotLecturer({userId}) {
               Create Booking Slot
             </span>
             {added && (
-              <div className="text-xl text-green-500 font-semibold">
-                Create successfully!
+              <div className={`text-xl ${added==='Slot create successfully.'?'text-green-500':'text-red-500'} font-semibold`}>
+                {added}
               </div>
             )}
             <form className="w-[80%] mx-auto flex flex-col gap-5">

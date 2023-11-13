@@ -200,13 +200,14 @@ export const createSlot= async (form) => {
         const res = await axios.post(`${baseURL}/Slot`,form);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-            console.log('Slot create successfully.');
+          return('Slot create successfully.');
         } else {
             console.log(`Slot status ${res.status} from the server.`);
         }
     } catch (err) {
         // Log the detailed error message
-        console.error('Error create slot:', err);
+        console.error('Error create request:', err);
+        return (err.response.data);
     }
 }
 export const createRequest= async (form) => {

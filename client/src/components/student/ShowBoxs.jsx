@@ -180,7 +180,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
       setShowInformations(
         childArray.map((slot) => ({
           ...slot,
-          status:slot.denided && slot.denided.length > 0 ? "Denided":slot.status==="Finish" ?(slot.status="Feedback"):(slot.status="Booked")
+          status:slot.denided && slot.denided.length > 0 ? "Denided":slot.status==="Finish" ?(slot.status="Feedback"):(slot.status)
         }))
       );
     } else {
