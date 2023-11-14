@@ -187,7 +187,6 @@ export const createBooking= async (form) => {
             console.log('Slot create successfully.');
             return ("Booked succesfully!!!")
         } else {
-    
             return ("Wrong code or slot!!!");
         }
     } catch (err) {

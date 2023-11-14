@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { TbArrowBigLeftFilled } from "react-icons/tb";
 import { ShowBoxs } from "./index";
 import { useEffect, useState } from "react";
-import { getAllSlotByLecturerID, searchTeacherById } from "../../api";
+import { getAllBookingByLecturerIDORStudentID, getAllSlotByLecturerID, searchBookingById, searchTeacherById } from "../../api";
 
 export default function Booking({userId}) {
   const { lecturerId } = useParams();
@@ -27,6 +27,9 @@ export default function Booking({userId}) {
     const updatedRequestedList = await Promise.all(
       bookingRooms.map(async (infor) => {
         const lecturerInfor = await searchTeacherById(infor.lecturerId);
+        const bookInfor=await getAllBookingByLecturerIDORStudentID(infor.lecturerId);
+      const check=bookInfor.filter(booked=>booked.slotId===infor.id)
+        if(Object.keys(check).length > 0) infor.status="Booked";
         // Update the infor object with the response object in the studentId property
         infor.lecturerInfor = lecturerInfor;
         // Update the infor object with the response object in the subjectId property
