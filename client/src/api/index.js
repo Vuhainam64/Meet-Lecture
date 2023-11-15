@@ -228,7 +228,7 @@ export const createFeedback= async (form) => {
         const res = await axios.post(`${baseURL}/Feedback`,form);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-            console.log('Feedback create successfully.');
+          return('Feedback create successfully.');
         } else {
             console.log(`Feedback status ${res.status} from the server.`);
         }

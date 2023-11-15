@@ -19,7 +19,7 @@ export default function CreateSlotLecturer() {
   const [courseName, setCourseName] = useState("");
   const [inforDetail, setInforDetail] = useState(JSON.parse(data.infor));
   const [errors, setErrors] = useState({});
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = useState("");
 
   console.log(inforDetail);
 
@@ -31,6 +31,7 @@ export default function CreateSlotLecturer() {
   const makePostRequest = async (form) => {
     try {
       const response = await createFeedback(form);
+      setAdded(response);
     } catch {
       console.log("Error");
     }
@@ -64,17 +65,16 @@ export default function CreateSlotLecturer() {
 
       await makePostRequest({
         bookingId: inforDetail.bookedId,
-        comment: formData.comment
+        comment: formData.comment,
       });
       setFormData(formData);
-      setAdded(true);
     }
   }
 
   const cancelAll = () => {
     setFormData(zeroFormData);
     setErrors([]);
-    setAdded(false);
+    setAdded("");
   };
   const validateForm = () => {
     const newErrors = {};
@@ -102,11 +102,9 @@ export default function CreateSlotLecturer() {
         <div className="w-full flex justify-center items-center">
           <div className="w-[50%] h-fit mt-[5%] flex flex-col justify-center gap-3 items-start px-10 py-3 border-orange-400 border-4 rounded-md min-h-[20%] ">
             <span className="font-semibold text-2xl mb-5">FEEDBACK FORM</span>
-            {added && (
-              <div className="text-xl text-green-500 font-semibold">
-                Send feedback successfully!
-              </div>
-            )}
+
+            <div className={`text-xl ${added==='Feedback create successfully.'?'text-green-500':'text-red-500'} font-semibold`}>{added}</div>
+
             <form className="w-[80%] mx-auto flex flex-col gap-5">
               <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Lecturer</span>
@@ -157,6 +155,7 @@ export default function CreateSlotLecturer() {
                   value={moment(inforDetail.startDatetime).format("DD-MM-YYYY")}
                 ></input>
               </div>
+              {errors&&(<span className="text-red-500 font-semibold">{errors.comment}</span>)}
               <div className="flex flex-row w-full">
                 <span className="text-xl font-medium w-[30%]">Comment</span>
                 <textarea
