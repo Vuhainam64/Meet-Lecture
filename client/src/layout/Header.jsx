@@ -19,48 +19,21 @@ function Header({ notifications }) {
     const result = value.split("Location");
     return result;
   };
-  console.log(notificationsList);
-  useEffect(() => {
-    // Fetch notifications initially
-    if (user.role === "Lecturer") {
-      const fetchNotifications = async () => {
-        try {
-          const newNotifications = await getAllNotification();
-          setNotificationList(
-            newNotifications
-              .sort((a, b) => {
-                const dateA = new Date(a.createdAt);
-                const dateB = new Date(b.createdAt);
-                // Compare dateB with dateA to sort from newest to oldest
-                return dateA - dateB;
-              })
-              .filter((notifi) => notifi.booking.studentId === userId)
-          );
-        } catch (error) {
-          console.error("Error fetching notifications:", error);
-        }
-      };
-
-      // Set up interval to fetch notifications every 5 seconds
-      const intervalId = setInterval(fetchNotifications, 3000);
-
-      // Clean up interval on component unmount
-      return () => clearInterval(intervalId);
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }
-  }, []);
-
   useEffect(() => {
     // Update notificationsList only if notifications prop is provided)
     if (user.role === "Lecturer") {
       if (notifications) {
-        if (notificationsList.length <= 0) {
-          setNotificationList(notifications);
-        }
+        setNotificationList(
+          notifications.sort((a, b) => {
+            const dateA = new Date(a.createdAt);
+            const dateB = new Date(b.createdAt);
+            // Compare dateB with dateA to sort from newest to oldest
+            return dateB - dateA;
+          })
+        );
       }
     }
-  }, [notifications, notificationsList]);
+  }, [notifications]);
 
   return (
     <div className="flex w-full bg-orange-400 h-[4rem] items-center relative">
