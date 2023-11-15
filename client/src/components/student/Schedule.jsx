@@ -125,7 +125,7 @@ export default function Schedule({ userId, chosePage }) {
                       {info.lecturerInfor&&info.lecturerInfor.fullname}
                     </td>
                     <td className="text-center px-5 text-lg p-2 border-black border-r-2">
-                      {info.subjectInfor&&info.subjectInfor.name}
+                      {info.subjectInfor&&info.subjectInfor.subjectCode}
                     </td>
                     <td className="text-center px-5 text-lg p-2 border-black border-r-2">
                     {info.slotInfor&&info.slotInfor.location}
