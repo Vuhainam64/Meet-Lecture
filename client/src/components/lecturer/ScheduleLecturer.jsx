@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { getAllSlotByLecturerID } from "../../api";
+import {
+  getAllSlotByLecturerID,
+  searchBookingById,
+  searchSubjectById,
+} from "../../api";
 import moment from "moment";
 
 export default function ScheduleLecturer({ userId, chosePage }) {
   const [bookingRooms, setBookingRooms] = useState([]);
+  const [showList, setShowList] = useState([]);
+
   const [refresh, setRefresh] = useState(false);
   async function fetchData() {
     const response = await getAllSlotByLecturerID(parseInt(userId))
@@ -16,6 +22,20 @@ export default function ScheduleLecturer({ userId, chosePage }) {
       )
       .catch((error) => console.log(error));
   }
+  async function addObject() {
+    const updatedRequestedList = await Promise.all(
+      bookingRooms.map(async (infor) => {
+        const subjectInfor = await searchSubjectById(parseInt(infor.subjectId[0]));
+        infor.subjectInfor = subjectInfor;
+        return infor; // Return the updated infor object
+      })
+    );
+    // Updated array
+    console.log('update');
+    console.log(updatedRequestedList);
+    setShowList(updatedRequestedList);
+  }
+
   useEffect(() => {
     chosePage("");
     if (userId || refresh === true) fetchData();
@@ -23,6 +43,12 @@ export default function ScheduleLecturer({ userId, chosePage }) {
     console.log(bookingRooms);
     setRefresh(false);
   }, [userId, refresh]);
+
+  useEffect(() => {
+    if (bookingRooms.length > 0) {
+     addObject();
+    }
+  }, [bookingRooms]);
 
   const compareDateAndTime = (a, b) => {
     const dateA = moment(a.startDatetime);
@@ -33,6 +59,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
   };
 
   const sortedBookingRooms = [...bookingRooms].sort(compareDateAndTime);
+  console.log(sortedBookingRooms);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -48,6 +75,9 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                 </th>
                 <th className="text-xl font-medium border-b-2 border-black border-r-2">
                   Location
+                </th>
+                <th className="text-xl font-medium border-b-2 border-black  border-r-2">
+                  Course
                 </th>
                 <th className="text-xl font-medium border-b-2 border-black  border-r-2">
                   Time
@@ -66,6 +96,9 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
                       {info.location}
+                    </td>
+                    <td className="text-center px-16 text-lg p-2 border-black border-r-2">
+                      {info?.subjectInfor?.subjectCode}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black  border-r-2">
                       {moment(info.startDatetime).format("DD/MM/YYYY") +

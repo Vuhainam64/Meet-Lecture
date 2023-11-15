@@ -10,7 +10,6 @@ import {
 
 export default function History({ userId }) {
   const [bookedList, setBookedList] = useState([]);
-  const [showList, setShowList] = useState([]);
   const [slotArray, setSlotArray] = useState([]);
   const [refresh, setRefresh] = useState(true);
   console.log(userId);
@@ -66,8 +65,6 @@ export default function History({ userId }) {
     console.log(result);
     console.log("slot");
     console.log(slots);
-
-    setShowList(updatedRequestedList);
     setSlotArray(
       slots.sort((a, b) => {
         const dateA = new Date(a.createdAt);

@@ -66,6 +66,7 @@ export default function ShowBoxs({
     if (requestInfor) {
       console.log(slotHolder);
       console.log(requestInfor);
+      console.log('create booking ne');
       try {
         const response = await createBooking({
           studentId: parseInt(requestInfor.studentId),
@@ -74,24 +75,17 @@ export default function ShowBoxs({
           description: requestInfor.description,
           status: "Success",
         });
-        setNewError({ id: parseInt(slotHolder.id), respone: response });
-        setRefresh(true);
-        closeModal();
+        console.log('tra respone');
+        console.log(response);
         if (response === "Booked succesfully!!!") {
           const respone2 = await updateRequestById(
             { ...requestInfor, status: "Success" },
             parseInt(requestInfor.id)
           );
-          const countdownTimer = setInterval(() => {
-            setCountdown((prevCountdown) => prevCountdown - 1);
-          }, 1000);
-
-          // After 5 seconds (or your desired time), navigate to the new route
-          setTimeout(() => {
-            clearInterval(countdownTimer); // Clear the countdown timer
-            navigate("/Request"); // Navigate to the new route
-          }, 5000); // 5 seconds (5000 milliseconds)
         }
+        setNewError({ id: parseInt(slotHolder.id), respone: response });
+        setRefresh(true);
+        closeModal();
       } catch (error) {
         console.error("Error:", error);
       }

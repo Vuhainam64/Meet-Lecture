@@ -53,7 +53,13 @@ export default function RequestLecturer({ userId,chosePage }) {
         })
       );
       // Updated array\
-      setShowList(updatedRequestedList);
+      setShowList(updatedRequestedList.sort((a,b)=>{
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+
+        // Compare dateB with dateA to sort from newest to oldest
+        return dateB - dateA;
+      }));
     }
   }
 
