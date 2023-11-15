@@ -177,7 +177,7 @@ export default function CreateSlotLecturer() {
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
                 onClick={handleUpdate}
               >
-                Conform
+                Confirm
               </button>
             </div>
           </div>

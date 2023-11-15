@@ -199,7 +199,7 @@ export default function PendingLecturer({ userId,chosePage }) {
                   </td>
                   {deny === true && (
                     <div
-                      className={`flex flex-col items-end absolute w-fit border-2 right-[7rem] bottom-[12rem] min-h-[5rem] border-black bg-white z-50 opacity-80 px-5 py-1 pb-5`}
+                      className={`flex flex-col items-end absolute w-fit border-2 right-[7rem] min-h-[5rem] border-black bg-white z-50 opacity-80 px-5 py-1 pb-5`}
                     >
                       <button
                         className="text-2xl w-fit"
