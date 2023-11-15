@@ -50,10 +50,12 @@ export default function Schedule({ userId, chosePage }) {
 
     const result = updatedRequestedList.filter(
       (booked) =>
-        booked?.slotInfor?.bookingId.includes(booked.id) ||
-        booked.status === "Denied"
+        (booked?.slotInfor?.bookingId.includes(booked.id) ||
+          booked.status === "Denied") &&
+        booked.slotInfor.status !== "Unactive" &&
+        booked.slotInfor.status !== "Finish"
     );
-  
+
     // Set the updatedRequestedList and slotArray after Promise.all is completed
     console.log("updated");
     console.log(updatedRequestedList);
@@ -61,7 +63,15 @@ export default function Schedule({ userId, chosePage }) {
     console.log(result);
 
     setShowList(updatedRequestedList);
-    setSlotArray(result);
+    setSlotArray(
+      result.sort((a, b) => {
+        const dateA = moment(a.slotInfor.startDatetime);
+        const dateB = moment(b.slotInfor.startDatetime);
+        if (dateA.isBefore(dateB)) return -1;
+        if (dateA.isAfter(dateB)) return 1;
+        return 0;
+      })
+    );
   }
   useEffect(() => {
     chosePage("");
@@ -78,15 +88,6 @@ export default function Schedule({ userId, chosePage }) {
     addObject();
   }, [bookedList]);
 
-  const compareDateAndTime = (a, b) => {
-    const dateA = moment(a.startDatetime);
-    const dateB = moment(b.startDatetime);
-    if (dateA.isBefore(dateB)) return -1;
-    if (dateA.isAfter(dateB)) return 1;
-    return 0;
-  };
-
-  const sortedBookingRooms = [...slotArray].sort(compareDateAndTime);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
       <div className="w-[90%] mx-auto flex flex-col gap-10 py-10 pb-20">
@@ -115,27 +116,33 @@ export default function Schedule({ userId, chosePage }) {
               </tr>
             </thead>
             <tbody>
-              {sortedBookingRooms &&
-                sortedBookingRooms.map((info, index) => (
+              {slotArray &&
+                slotArray.map((info, index) => (
                   <tr className="" key={index}>
                     <td className="text-center px-5 text-lg p-2 border-black border-r-2">
                       {index + 1}
                     </td>
                     <td className="text-center px-5 text-lg p-2 border-black border-r-2">
-                      {info.lecturerInfor&&info.lecturerInfor.fullname}
+                      {info.lecturerInfor && info.lecturerInfor.fullname}
                     </td>
                     <td className="text-center px-5 text-lg p-2 border-black border-r-2">
-                      {info.subjectInfor&&info.subjectInfor.subjectCode}
+                      {info.subjectInfor && info.subjectInfor.subjectCode}
                     </td>
                     <td className="text-center px-5 text-lg p-2 border-black border-r-2">
-                    {info.slotInfor&&info.slotInfor.location}
+                      {info.slotInfor && info.slotInfor.location}
                     </td>
                     <td className="text-center px-5 text-lg p-2 border-black  border-r-2">
-                      {moment(info.slotInfor&&info.slotInfor.startDatetime).format("DD/MM/YYYY") +
+                      {moment(
+                        info.slotInfor && info.slotInfor.startDatetime
+                      ).format("DD/MM/YYYY") +
                         " , " +
-                        moment(info.slotInfor&&info.slotInfor.startDatetime).format("HH:mm") +
+                        moment(
+                          info.slotInfor && info.slotInfor.startDatetime
+                        ).format("HH:mm") +
                         "-" +
-                        moment(info.slotInfor&&info.slotInfor.endDatetime).format("HH:mm")}
+                        moment(
+                          info.slotInfor && info.slotInfor.endDatetime
+                        ).format("HH:mm")}
                     </td>
                   </tr>
                 ))}
