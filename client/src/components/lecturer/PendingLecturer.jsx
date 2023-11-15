@@ -245,7 +245,7 @@ export default function PendingLecturer({ userId,chosePage }) {
           </button>
           <div className="header font-bold text-xl">
             {" "}
-            Are you sure want to delete this course!!!
+            Are you sure want to accept this booking!!!
           </div>
           <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
             <button
