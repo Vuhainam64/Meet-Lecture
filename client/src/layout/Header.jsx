@@ -20,12 +20,33 @@ function Header({ notifications, clickToRead }) {
   };
   console.log(notificationsList);
   useEffect(() => {
+    // Fetch notifications initially
+    const fetchNotifications = async () => {
+      try {
+        const newNotifications = await getAllNotification();
+        setNotificationList(newNotifications);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    // Set up interval to fetch notifications every 5 seconds
+    const intervalId = setInterval(fetchNotifications, 3000);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // Update notificationsList only if notifications prop is provided
     if (notifications) {
       if (notificationsList.length <= 0) {
         setNotificationList(notifications);
       }
     }
-  }, [notificationsList]);
+  }, [notifications, notificationsList]);
 
 
   return (
