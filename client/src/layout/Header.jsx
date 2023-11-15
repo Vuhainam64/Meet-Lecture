@@ -22,38 +22,42 @@ function Header({ notifications }) {
   console.log(notificationsList);
   useEffect(() => {
     // Fetch notifications initially
-    const fetchNotifications = async () => {
-      try {
-        const newNotifications = await getAllNotification();
-        setNotificationList(
-          newNotifications
-            .sort((a, b) => {
-              const dateA = new Date(a.createdAt);
-              const dateB = new Date(b.createdAt);
-              // Compare dateB with dateA to sort from newest to oldest
-              return dateB - dateA;
-            })
-            .filter((notifi) => notifi.booking.studentId === userId)
-        );
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    };
+    if (user.role === "Lecturer") {
+      const fetchNotifications = async () => {
+        try {
+          const newNotifications = await getAllNotification();
+          setNotificationList(
+            newNotifications
+              .sort((a, b) => {
+                const dateA = new Date(a.createdAt);
+                const dateB = new Date(b.createdAt);
+                // Compare dateB with dateA to sort from newest to oldest
+                return dateB - dateA;
+              })
+              .filter((notifi) => notifi.booking.studentId === userId)
+          );
+        } catch (error) {
+          console.error("Error fetching notifications:", error);
+        }
+      };
 
-    // Set up interval to fetch notifications every 5 seconds
-    const intervalId = setInterval(fetchNotifications, 3000);
+      // Set up interval to fetch notifications every 5 seconds
+      const intervalId = setInterval(fetchNotifications, 3000);
 
-    // Clean up interval on component unmount
-    return () => clearInterval(intervalId);
+      // Clean up interval on component unmount
+      return () => clearInterval(intervalId);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
   }, []);
 
   useEffect(() => {
-    // Update notificationsList only if notifications prop is provided
-    if (notifications) {
-      if (notificationsList.length <= 0) {
-        setNotificationList(notifications);
+    // Update notificationsList only if notifications prop is provided)
+    if (user.role === "Lecturer") {
+      if (notifications) {
+        if (notificationsList.length <= 0) {
+          setNotificationList(notifications);
+        }
       }
     }
   }, [notifications, notificationsList]);

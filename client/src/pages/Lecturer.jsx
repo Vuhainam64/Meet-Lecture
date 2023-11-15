@@ -7,17 +7,34 @@ import {
 } from "../components/lecturer";
 import Body from "../components/lecturer/Body";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getAllNotification } from "../api";
 
 export default function Lecturer() {
-  
+  const [notifications, setNotifications] = useState([]);
   const user = useSelector((state) => state.user?.user);
   const userId = user?.id;
   console.log(userId);
 
-  
+  async function fetchData() {
+    const response = await getAllNotification()
+      .then((data) =>
+        setNotifications(
+          data.filter(
+            (noti) =>
+              noti?.booking?.lecturerId === user?.id && noti?.isRead === false
+          )
+        )
+      )
+      .catch((error) => console.log(error));
+    console.log(notifications);
+  }
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div className="bg-white h-full">
-      <Header />
+      <Header notifications={notifications} />
       <Routes>
         <Route path="*" element={<Body userId={userId} />} />
         <Route
