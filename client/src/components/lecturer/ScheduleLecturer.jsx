@@ -54,6 +54,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
     }
   }, [bookingRooms]);
 
+  //sort 
   const compareDateAndTime = (a, b) => {
     const dateA = moment(a.startDatetime);
     const dateB = moment(b.startDatetime);
@@ -62,7 +63,9 @@ export default function ScheduleLecturer({ userId, chosePage }) {
     return 0;
   };
 
+  //này là đã sorted
   const sortedBookingRooms = [...bookingRooms].sort(compareDateAndTime);
+  
   console.log(sortedBookingRooms);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">

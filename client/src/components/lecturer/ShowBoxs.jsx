@@ -23,12 +23,14 @@ export default function ShowBoxs({
   const [slotHolder, setSlotHolder] = useState("");
   const [countdown, setCountdown] = useState(5);
   const [error, setNewError] = useState({});
+ 
   const closeModal = () => {
     setOpenDelete(false);
     setDeleteHolder(0);
     setSlotHolder({});
     setClickSlot(false);
   };
+
   async function handleDeleteYes() {
     try {
       const response = await deleteSlotById(parseInt(deleteHolder));
@@ -47,8 +49,9 @@ export default function ShowBoxs({
   useEffect(() => {
     setShowInformations(childArray);
   }, [childArray]);
+
   console.log(showInformations);
-  const navigate = useNavigate();
+
 
   function handleClick(e, infor) {
     if (Object.keys(requestInfor).length > 0) {
@@ -62,6 +65,7 @@ export default function ShowBoxs({
       }
     }
   }
+  
   async function handleChooseYes() {
     if (requestInfor) {
       console.log(slotHolder);

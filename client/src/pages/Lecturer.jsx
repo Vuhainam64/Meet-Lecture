@@ -26,15 +26,15 @@ export default function Lecturer() {
           )
         )
       )
-      .catch((error) => console.log(error));    
+      .catch((error) => console.log(error));
   }
   useEffect(() => {
-     // Set up interval to fetch notifications every 5 seconds
-     const intervalId = setInterval(fetchData, 3000);
+    // Set up interval to fetch notifications every 5 seconds
+    const intervalId = setInterval(fetchData, 3000);
     console.log(notifications);
 
-     // Clean up interval on component unmount
-     return () => clearInterval(intervalId);
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   return (

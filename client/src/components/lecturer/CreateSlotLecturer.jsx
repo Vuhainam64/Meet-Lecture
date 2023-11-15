@@ -18,6 +18,7 @@ export default function CreateSlotLecturer({userId}) {
   const [formData, setFormData] = useState(zeroFormData);
 
   const [errors, setErrors] = useState({});
+  //thoong bao
   const [added, setAdded] = useState('');
 
   async function makePostRequest(form) {
@@ -53,14 +54,14 @@ export default function CreateSlotLecturer({userId}) {
         endDatetime: `1111-11-11T${formData.endDatetime}`,
       });
       setFormData(zeroFormData);
-      setAdded(true);
+      // setAdded(true);
     }
   };
 
   const cancelAll = () => {
     setFormData(zeroFormData);
     setErrors([]);
-    setAdded(false);
+    // setAdded(false);
   };
   const validateForm = () => {
     const newErrors = {};

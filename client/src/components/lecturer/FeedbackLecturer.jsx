@@ -28,7 +28,7 @@ export default function FeedbackLecturer({ userId ,chosePage}) {
         return infor; // Return the updated infor object
       })
     );
-    // Updated array\
+    // Updated array
     setShowList(updatedRequestedList.sort((a,b)=>{
       const newDateA=new Date(a.createdAt);
       const newDateB=new Date(b.createdAt);
@@ -42,11 +42,11 @@ export default function FeedbackLecturer({ userId ,chosePage}) {
       fetchData();
       console.log(requestedList);
     }
-  }, [userId, requestedList <= 0]);
+  }, [userId, requestedList.length <= 0]);
   useEffect(() => {
     addObject();
     console.log(showList);
-  }, [requestedList <= 0]);
+  }, [requestedList.length <= 0]);
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">

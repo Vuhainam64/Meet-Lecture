@@ -31,6 +31,7 @@ export default function PendingLecturer({ userId,chosePage }) {
     setReason("");
     setErrors("");
   };
+
   async function fetchData() {
     const response = await getAllBookingByLecturerIDORStudentID(parseInt(userId))
       .then((data) =>
@@ -45,6 +46,7 @@ export default function PendingLecturer({ userId,chosePage }) {
       setRefresh(true);
     } catch {}
   }
+
   async function handleAccpet(id) {
     const data = bookedList.find((book) => book.id === id);
     setFormData({
@@ -59,6 +61,7 @@ export default function PendingLecturer({ userId,chosePage }) {
     setPopup(true);
     console.log(data.id);
   }
+
   async function handleDeny(id) {
     const data = bookedList.find((book) => book.id === id);
     setFormData({
@@ -84,6 +87,7 @@ export default function PendingLecturer({ userId,chosePage }) {
 
   async function submitDeny(e) {
     e.preventDefault();
+    //e này là để dùng ngăn chặn các event khác làm refresh lại trang.
     console.log(formData);
     if (reason !== "") {
       await makePutData({ ...formData, reason }, formId);

@@ -39,6 +39,7 @@ export default function HomeLecturer({ userId,chosePage }) {
     // Updated array
     setShowList(updatedRequestedList);
   }
+
   async function searchRequest(id) {
     const response = await searchRequestById(parseInt(id))
       .then((data) => setRequestInfor(data))
@@ -52,6 +53,7 @@ export default function HomeLecturer({ userId,chosePage }) {
     console.log(bookingRooms);
     setRefresh(false);
   }, [userId, refresh]);
+
   useEffect(() => {
     if (bookingRooms.length > 0) {
       addObject();
@@ -60,12 +62,11 @@ export default function HomeLecturer({ userId,chosePage }) {
     console.log(showList);
   }, [bookingRooms]);
   return (
-    <div className="w-full h-ull flex flex-col justify-center items-start gap-5">
+    <div className="w-full h-full flex flex-col justify-center items-start gap-5">
       <div className="w-[90%] mx-[5%]">
         <ShowBoxs
           childArray={showList}
           setRefresh={setRefresh}
-          role="Lecturer"
           requestInfor={requestInfor}
           setRequestInfor={setRequestInfor}
         ></ShowBoxs>

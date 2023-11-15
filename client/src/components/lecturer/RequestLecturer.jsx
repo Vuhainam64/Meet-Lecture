@@ -52,7 +52,7 @@ export default function RequestLecturer({ userId,chosePage }) {
           return infor; // Return the updated infor object
         })
       );
-      // Updated array\
+      // Updated array
       setShowList(updatedRequestedList.sort((a,b)=>{
         const dateA = new Date(a.createdAt);
         const dateB = new Date(b.createdAt);

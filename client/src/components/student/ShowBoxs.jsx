@@ -198,6 +198,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
     console.log(key);
     if (key === "Feedback") {
       navigate(
+        //nhảy qua feedback  + dữ liệu infor
         "/student/Feedback/" + encodeURIComponent(JSON.stringify(infor))
       );
     }
