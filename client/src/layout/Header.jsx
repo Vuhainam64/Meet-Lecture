@@ -24,8 +24,7 @@ function Header({ notifications, clickToRead }) {
     const fetchNotifications = async () => {
       try {
         const newNotifications = await getAllNotification();
-        setNotificationList(newNotifications
-          // .filter(notifi=>notifi.booking.studen) 
+        setNotificationList(newNotifications .filter(notifi=>notifi.booking.studentId===userId) 
           );
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -52,7 +51,7 @@ function Header({ notifications, clickToRead }) {
 
 
   return (
-    <div className="flex w-full bg-orange-400 h-[10%] items-center relative">
+    <div className="flex w-full bg-orange-400 h-[4rem] items-center relative">
       <div className="mx-10 uppercase text-white w-full">meet lecturer</div>
       {/* {user && ( */}
       <div className="absolute bottom-0 right-0 text-white flex items-center space-x-2 gap-5 pr-5 pb-3">
@@ -80,7 +79,7 @@ function Header({ notifications, clickToRead }) {
       {/* )} */}
       {notificationOpen === true ? (
         notificationsList && notificationsList.length > 0 ? (
-          <div className="absolute right-0 -bottom-[360%] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll z-50">
+          <div className="absolute right-0 -bottom-[15rem] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll z-50">
             <div className="w-full pl-5 p-3 text-xl font-semibold">
               Notifications  
             </div>
