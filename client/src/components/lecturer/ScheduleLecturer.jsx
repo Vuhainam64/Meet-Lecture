@@ -25,8 +25,12 @@ export default function ScheduleLecturer({ userId, chosePage }) {
   async function addObject() {
     const updatedRequestedList = await Promise.all(
       bookingRooms.map(async (infor) => {
-        const subjectInfor = await searchSubjectById(parseInt(infor.subjectId[0]));
-        infor.subjectInfor = subjectInfor;
+        let subjectCode=[];
+        infor.subjectId.map(async(subject)=>{
+          const subjectInfor = await searchSubjectById(parseInt(subject));
+          subjectCode.push(subjectInfor.subjectCode);
+        })
+        infor.subjectCode=subjectCode;
         return infor; // Return the updated infor object
       })
     );
@@ -98,7 +102,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                       {info.location}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
-                      {info?.subjectInfor?.subjectCode}
+                      {info?.subjectCode&& info.subjectCode.join(', ')}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black  border-r-2">
                       {moment(info.startDatetime).format("DD/MM/YYYY") +
