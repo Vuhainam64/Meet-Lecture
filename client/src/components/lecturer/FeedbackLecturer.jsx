@@ -29,7 +29,11 @@ export default function FeedbackLecturer({ userId ,chosePage}) {
       })
     );
     // Updated array\
-    setShowList(updatedRequestedList);
+    setShowList(updatedRequestedList.sort((a,b)=>{
+      const newDateA=new Date(a.createdAt);
+      const newDateB=new Date(b.createdAt);
+      return newDateB-newDateA
+    }));
   }
 
   useEffect(() => {
@@ -62,7 +66,7 @@ export default function FeedbackLecturer({ userId ,chosePage}) {
                     Location: {infor?.slot.location}
                   </div>
                   <div className="text-lg">
-                    Date: {moment(infor.createdAt).format("DD/MM/YY")}
+                    Date: {moment(infor.slot?.startDatetime).format("DD/MM/YY")}
                   </div>
                   <div className="text-lg">
                     Time: {moment(infor.slot?.startDatetime).format("HH:mm")}-
