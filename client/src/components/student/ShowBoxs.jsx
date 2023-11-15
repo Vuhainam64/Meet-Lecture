@@ -137,7 +137,6 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         description: formData.description,
-        status: "Pending",
       };
       console.log("SubmitData:", submitData);
       const newErrors = validateForm();
@@ -218,6 +217,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
     setFormData({});
     setCodeError("");
   }
+  
 
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative bg-white">
