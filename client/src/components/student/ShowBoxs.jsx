@@ -456,7 +456,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
           </button>
           <div className="header font-bold text-xl">
             {" "}
-            Are you sure want to delete this course!!!
+            Are you sure want to do this!!!
           </div>
           <div className="flex flex-row justify-center items-center h-[5rem] gap-20">
             <button
