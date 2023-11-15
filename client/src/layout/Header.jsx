@@ -21,7 +21,7 @@ function Header({ notifications }) {
   };
   useEffect(() => {
     // Update notificationsList only if notifications prop is provided)
-    if (user.role === "Lecturer") {
+
       if (notifications) {
         setNotificationList(
           notifications.sort((a, b) => {
@@ -31,7 +31,7 @@ function Header({ notifications }) {
             return dateB - dateA;
           })
         );
-      }
+      
     }
   }, [notifications]);
 

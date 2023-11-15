@@ -22,7 +22,7 @@ export default function Lecturer() {
         setNotifications(
           data.filter(
             (noti) =>
-              noti?.booking?.lecturerId === user?.id && noti?.isRead === false
+              noti?.sendToId === user?.id && noti?.isRead === false
           )
         )
       )
