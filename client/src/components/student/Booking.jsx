@@ -28,7 +28,7 @@ export default function Booking({userId}) {
       bookingRooms.map(async (infor) => {
         const lecturerInfor = await searchTeacherById(infor.lecturerId);
         const bookInfor=await getAllBookingByLecturerIDORStudentID(infor.lecturerId);
-      const check=bookInfor.filter(booked=>booked.slotId===infor.id)
+      const check=bookInfor.filter(booked=>booked.slotId===infor.id&&booked.studentId===userId)
         if(Object.keys(check).length > 0) infor.status="Booked";
         // Update the infor object with the response object in the studentId property
         infor.lecturerInfor = lecturerInfor;
