@@ -24,7 +24,9 @@ function Header({ notifications, clickToRead }) {
     const fetchNotifications = async () => {
       try {
         const newNotifications = await getAllNotification();
-        setNotificationList(newNotifications);
+        setNotificationList(newNotifications
+          // .filter(notifi=>notifi.booking.studen) 
+          );
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }

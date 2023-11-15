@@ -137,6 +137,7 @@ export default function ShowBoxs({ childArray, setRefresh, type, userId }) {
         slotId: parseInt(clickBook),
         subjectId: parseInt(searchCourseName(formData.subjectCode)),
         description: formData.description,
+        status: "",
       };
       console.log("SubmitData:", submitData);
       const newErrors = validateForm();
