@@ -9,11 +9,12 @@ import { buttonClick } from "../animations";
 import { getAllNotification } from "../api";
 import { useEffect, useState } from "react";
 
-function Header({ notifications, clickToRead }) {
+function Header({ notifications }) {
   const [notificationsList, setNotificationList] = useState([]);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const user = useSelector((state) => state.user?.user);
   const userId = user?.id;
+  //Split the content of the notification in api into 2 parts.
   const splitString = (value) => {
     const result = value.split("Location");
     return result;
@@ -24,8 +25,16 @@ function Header({ notifications, clickToRead }) {
     const fetchNotifications = async () => {
       try {
         const newNotifications = await getAllNotification();
-        setNotificationList(newNotifications .filter(notifi=>notifi.booking.studentId===userId) 
-          );
+        setNotificationList(
+          newNotifications
+            .sort((a, b) => {
+              const dateA = new Date(a.createdAt);
+              const dateB = new Date(b.createdAt);
+              // Compare dateB with dateA to sort from newest to oldest
+              return dateB - dateA;
+            })
+            .filter((notifi) => notifi.booking.studentId === userId)
+        );
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
@@ -48,7 +57,6 @@ function Header({ notifications, clickToRead }) {
       }
     }
   }, [notifications, notificationsList]);
-
 
   return (
     <div className="flex w-full bg-orange-400 h-[4rem] items-center relative">
@@ -81,7 +89,7 @@ function Header({ notifications, clickToRead }) {
         notificationsList && notificationsList.length > 0 ? (
           <div className="absolute right-0 -bottom-[15rem] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll z-50">
             <div className="w-full pl-5 p-3 text-xl font-semibold">
-              Notifications  
+              Notifications
             </div>
             <div className="wrap whitespace-pre-wrap bg-gray flex flex-col px-5 gap-3 bg-gray-300 pb-5">
               {notificationsList &&
@@ -97,7 +105,7 @@ function Header({ notifications, clickToRead }) {
                     {/* <button className="text-xs text-left w-fit underline text-blue-600">Make as readed</button> */}
                   </div>
                 ))}
-            {/* <button className="text-left w-fit border border-black px-3 bg-white">Read All</button> */}
+              {/* <button className="text-left w-fit border border-black px-3 bg-white">Read All</button> */}
             </div>
           </div>
         ) : (
