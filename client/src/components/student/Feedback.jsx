@@ -118,15 +118,6 @@ export default function CreateSlotLecturer() {
                 ></input>
               </div>
               <div className="flex flex-row w-full items-center">
-                <span className="text-xl font-medium w-[30%]">Title</span>
-                <input
-                  readOnly
-                  className={`border border-gray-900 rounded-sm py-1 pl-5 pr-3 placeholder:italic bg-gray-200 placeholder:text-gray-400 w-[15rem]`}
-                  type="text"
-                  value={inforDetail.title} // Sử dụng giá trị từ formData
-                ></input>
-              </div>
-              <div className="flex flex-row w-full items-center">
                 <span className="text-xl font-medium w-[30%]">Course</span>
                 <input
                   readOnly
@@ -187,7 +178,7 @@ export default function CreateSlotLecturer() {
                 className="text-white bg-green-500 px-3 py-2 rounded-xl border-black border-2"
                 onClick={handleUpdate}
               >
-                Update
+                Conform
               </button>
             </div>
           </div>
