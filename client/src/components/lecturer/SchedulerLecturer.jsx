@@ -197,6 +197,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
 
       const date = format(endDate, "yyyy-MM-dd'T'00:00", {
         timeZone: "UTC",
+      });
 
       //validate
       if (startDate < today) {
