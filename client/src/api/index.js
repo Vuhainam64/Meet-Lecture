@@ -202,6 +202,7 @@ export const createSlot= async (form) => {
           return('Slot create successfully.');
         } else {
             console.log(`Slot status ${res.status} from the server.`);
+  
         }
     } catch (err) {
         // Log the detailed error message

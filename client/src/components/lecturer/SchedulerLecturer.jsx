@@ -61,8 +61,9 @@ export default function SchedulerLecturer({ userId, chosePage }) {
   async function makePostRequest(form) {
     try {
       const response = await createSlot(form);
-      setAdded(response);
-    } catch (error) {}
+      return(response);
+    } catch (error) {
+    }
   }
   async function addObject() {
     const updatedRequestedList = await Promise.all(
@@ -246,6 +247,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         date,
         startDateTime,
         endDateTime,
+        repeat:newEvent.repeat?newEvent.repeat:'Never'
       };
 
       console.log("hello formdata ne", formData);
@@ -253,6 +255,8 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         // Assuming makePostRequest returns a Promise
          const result = await makePostRequest(formData);
         // Check the result or handle the response as needed
+        console.log(result);
+       alert(result)
       } catch (error) {
         console.error("Error making POST request:", error);
         return;
@@ -269,7 +273,8 @@ export default function SchedulerLecturer({ userId, chosePage }) {
       try {
         // Assuming you have a function to handle delete
 
-        await deleteSlotById(parseInt(deletedEvent.id)); // Implement this function
+        const result= await deleteSlotById(parseInt(deletedEvent.id)); // Implement this function
+        alert(result);
       } catch (error) {
         console.error("Error deleting event:", error);
         return;
@@ -286,13 +291,14 @@ export default function SchedulerLecturer({ userId, chosePage }) {
       <table className="custom-event-editor justify-center flex">
         <tbody>
           <tr className="">
-            <td className="pr-5 e-textlabel">Location</td>
+            <td className="pr-5 e-textlabel">Location </td>
             <td>
               <input
                 id="location"
                 name="location"
                 className="e-field e-input"
                 type="text"
+                placeholder="*NNVHSV||CAMPUS P000"
               ></input>
             </td>
           </tr>
@@ -334,7 +340,6 @@ export default function SchedulerLecturer({ userId, chosePage }) {
                 className="e-field e-input"
                 type="number"
                 value={props.limitBooking && props.limitBooking}
-                
               ></input>
             </td>
           </tr>
@@ -347,6 +352,14 @@ export default function SchedulerLecturer({ userId, chosePage }) {
                 className="e-field e-input"
                 type="text"
               ></input>
+            </td>
+          </tr>
+          <tr className="">
+            <td className="pr-5 e-textlabel">Repeat</td>
+            <td>
+                <DropDownListComponent id="repeat" dataSource={['Never','Daily','Weekly']} value={props.repeat||'Never'}>
+
+                </DropDownListComponent>
             </td>
           </tr>
         </tbody>
