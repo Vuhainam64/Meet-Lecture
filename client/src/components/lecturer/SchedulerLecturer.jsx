@@ -77,9 +77,10 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         infor.Status = infor.status;
         let BookedSucces = "";
         if (infor.bookingId.length <= 0) {
-          BookedSucces ="Booked: "+ 0 + "/" + infor.limitBooking;
+          BookedSucces = "Booked: " + 0 + "/" + infor.limitBooking;
         } else {
-          BookedSucces ="Booked: "+ infor.bookingId.length + "/" + infor.limitBooking;
+          BookedSucces =
+            "Booked: " + infor.bookingId.length + "/" + infor.limitBooking;
         }
         if (infor.status === "Finish") {
           infor.ResourceID = 2;
@@ -87,7 +88,8 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         } else if (infor.status === "Not Book") {
           infor.ResourceID = 1;
         }
-        infor.Description =BookedSucces+( infor.code &&( " - Code: " + infor.code));
+        infor.Description =
+          BookedSucces + (infor.code && " - Code: " + infor.code);
         // Update the infor object with the response object in the subjectId property
         // Update the infor object with the response object in the slotId property
         return infor; // Return the updated infor object
@@ -282,9 +284,11 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         // Assuming you have a function to handle delete
 
         const result = await deleteSlotById(parseInt(deletedEvent.id)); // Implement this function
+        console.log(result);
         alert(result);
       } catch (error) {
         console.error("Error deleting event:", error);
+        alert(error);
         return;
       }
 
