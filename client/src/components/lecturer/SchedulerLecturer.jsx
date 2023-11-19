@@ -31,16 +31,17 @@ import {
   TimePickerComponent,
 } from "@syncfusion/ej2-react-calendars";
 
-import {L10n} from '@syncfusion/ej2-base'
+import { L10n } from "@syncfusion/ej2-base";
+import { LuLock } from "react-icons/lu";
 L10n.load({
-  'en-US': {
-      'schedule': {
-        'saveButton':'Add',
-        'cancelButton':'Close',
-        'newEvent':'New Slot',
-        'addTitle' : 'New Location'
-      }
-  }
+  "en-US": {
+    schedule: {
+      saveButton: "Add",
+      cancelButton: "Close",
+      newEvent: "New Slot",
+      addTitle: "New Location",
+    },
+  },
 });
 export default function SchedulerLecturer({ userId, chosePage }) {
   const { requestId } = useParams();
@@ -49,6 +50,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
   const [requestInfor, setRequestInfor] = useState({});
   const [added, setAdded] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [repeat, setRepeat] = useState("Never");
   const scheduleObj = useRef(null);
   const recurrObject = useRef(null);
   async function fetchData() {
@@ -61,9 +63,8 @@ export default function SchedulerLecturer({ userId, chosePage }) {
   async function makePostRequest(form) {
     try {
       const response = await createSlot(form);
-      return(response);
-    } catch (error) {
-    }
+      return response;
+    } catch (error) {}
   }
   async function addObject() {
     const updatedRequestedList = await Promise.all(
@@ -74,11 +75,11 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         infor.EndTime = new Date(infor.endDatetime);
         infor.Subject = lecturerInfor.fullname;
         infor.Status = infor.status;
+        let BookedSucces = "";
         if (infor.bookingId.length <= 0) {
-          infor.BookedSucces = 0 + "/" + infor.limitBooking;
+          BookedSucces ="Booked: "+ 0 + "/" + infor.limitBooking;
         } else {
-          infor.BookedSucces =
-            infor.bookingId.length + "/" + infor.limitBooking;
+          BookedSucces ="Booked: "+ infor.bookingId.length + "/" + infor.limitBooking;
         }
         if (infor.status === "Finish") {
           infor.ResourceID = 2;
@@ -86,12 +87,14 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         } else if (infor.status === "Not Book") {
           infor.ResourceID = 1;
         }
+        infor.Description =BookedSucces+( infor.code &&( " - Code: " + infor.code));
         // Update the infor object with the response object in the subjectId property
         // Update the infor object with the response object in the slotId property
         return infor; // Return the updated infor object
       })
     );
     // Updated array
+    console.log(updatedRequestedList);
     setShowList(updatedRequestedList);
   }
 
@@ -132,13 +135,18 @@ export default function SchedulerLecturer({ userId, chosePage }) {
     id: "id",
     subject: { name: "Subject" },
     location: { name: "location" },
-    description: { name: "BookedSucces" },
+    description: { name: "Description" },
     startTime: { name: "StartTime" },
     endTime: { name: "EndTime" },
   };
   const eventTemplate = (props) => {
     return (
       <div>
+        {props.code && (
+          <div className="absolute right-0 text-black">
+            <LuLock />
+          </div>
+        )}
         <div className="subject font-bold">{props.Subject}</div>
         <div className="time font-medium">
           {props.location} {"("}
@@ -228,7 +236,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         );
         return;
       }
-      if((parseInt(newEvent.limitBooking))<=0){
+      if (parseInt(newEvent.limitBooking) <= 0) {
         args.cancel = true;
         alert(
           "Invalid limit booking numbers. Limit booking  must be larger than 0."
@@ -247,16 +255,16 @@ export default function SchedulerLecturer({ userId, chosePage }) {
         date,
         startDateTime,
         endDateTime,
-        repeat:newEvent.repeat?newEvent.repeat:'Never'
+        repeat: repeat,
       };
 
       console.log("hello formdata ne", formData);
       try {
-        // Assuming makePostRequest returns a Promise
-         const result = await makePostRequest(formData);
-        // Check the result or handle the response as needed
+        const result = await makePostRequest(formData);
+
         console.log(result);
-       alert(result)
+        setRepeat("Never");
+        alert(result);
       } catch (error) {
         console.error("Error making POST request:", error);
         return;
@@ -273,7 +281,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
       try {
         // Assuming you have a function to handle delete
 
-        const result= await deleteSlotById(parseInt(deletedEvent.id)); // Implement this function
+        const result = await deleteSlotById(parseInt(deletedEvent.id)); // Implement this function
         alert(result);
       } catch (error) {
         console.error("Error deleting event:", error);
@@ -357,9 +365,13 @@ export default function SchedulerLecturer({ userId, chosePage }) {
           <tr className="">
             <td className="pr-5 e-textlabel">Repeat</td>
             <td>
-                <DropDownListComponent id="repeat" dataSource={['Never','Daily','Weekly']} value={props.repeat||'Never'}>
-
-                </DropDownListComponent>
+              <DropDownListComponent
+                id="repeat"
+                name="repeat"
+                dataSource={["Never", "Daily", "Weekly"]}
+                value={repeat && repeat}
+                onChange={(e) => setRepeat(e.target.value)}
+              ></DropDownListComponent>
             </td>
           </tr>
         </tbody>
