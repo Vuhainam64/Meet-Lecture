@@ -27,7 +27,12 @@ export default function Booking({ userId }) {
             slot.status !== "Unactive" &&
             slot.status !== "Finish"
         );
-        setBookingRooms(filteredData);
+        const sortedData = filteredData.sort((a, b) => {
+          const startDateA = new Date(a.startDatetime);
+          const startDateB = new Date(b.startDatetime);
+          return startDateA - startDateB;
+        });
+        setBookingRooms(sortedData);
       } catch (error) {
         console.log(error);
       }

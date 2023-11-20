@@ -178,6 +178,18 @@ export default function SchedulerLecturer({ userId, chosePage }) {
   };
 
   const onActionBegin = async (args) => {
+    // {
+    //   "lecturerId": 5,
+    //   "location": "testDate",
+    //   "code": "",
+    //   "limitBooking": 7,
+    //   "mode": "Publish",
+    //   "date": "2023-11-18T01:00:00.000+07",
+    //   "startDateTime": "2023-11-18T01:00:00.000+07",
+    //   "endDateTime": "2023-11-18T02:30:00.000+07"
+    // }
+
+    // Check if the action is 'Add'
     if (args.requestType === "eventCreate") {
       const newEvent = args.data[0]; // The newly created event
       console.log("New Event Created:", newEvent);
@@ -283,34 +295,6 @@ export default function SchedulerLecturer({ userId, chosePage }) {
       // Do something after the delete operation if needed
       scheduleObj.current.refreshEvents();
       setRefresh(true);
-    } else if (args.requestType === "eventClick") {
-      // Check if the action is 'Event Click'
-      const clickedEvent = args.data[0]; // The clicked event
-      console.log("Clicked Event:", clickedEvent);
-
-      if (requestId&&parseInt(requestId)>0) {
-        try {
-          // Assuming you have a function to handle update
-          const updatedData = {
-            // Provide the updated data fields as needed
-            // For example:
-            location: clickedEvent.location,
-            limitBooking: clickedEvent.limitBooking,
-            // ... (add other fields as needed)
-          };
-         // const result = await updateRequestById(requestId, updatedData); // Implement this function
-          console.log('heello');
-         // alert(result);
-        } catch (error) {
-          console.error("Error updating event:", error);
-          alert(error);
-          return;
-        }
-
-        // Do something after the update operation if needed
-        scheduleObj.current.refreshEvents();
-        setRefresh(true);
-      }
     }
   };
 

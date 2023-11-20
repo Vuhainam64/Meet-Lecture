@@ -68,7 +68,7 @@ export default function Body({userId}) {
         <Routes>
 
           <Route path="/Scheduler" element={<SchedulerLecturer userId={userId} chosePage={chosePage}/>} />
-          <Route path="/*" element={<HomeLecturer userId={userId} chosePage={chosePage}/>} />
+          <Route path="/*" element={<SchedulerLecturer userId={userId} chosePage={chosePage}/>} />
           <Route path="/Home/:requestId" element={<HomeLecturer userId={userId} chosePage={chosePage} />} />
           <Route path="/Pending" element={<PendingLecturer  userId={userId} chosePage={chosePage}/>} />
           <Route path="/Request" element={<RequestLecturer userId={userId} chosePage={chosePage}/>} />
