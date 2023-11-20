@@ -298,7 +298,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
                 name="location"
                 className="e-field e-input"
                 type="text"
-                placeholder="*NNVH||CAMPUS P000"
+                placeholder="*NVH||CAMPUS P000"
               ></input>
             </td>
           </tr>
