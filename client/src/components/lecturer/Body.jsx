@@ -23,16 +23,6 @@ export default function Body({userId}) {
             Scheduler
           </button>
         </Link>
-        <Link to="Home">
-          <button
-            className={` w-40 h-14 ${
-              page === "Home" ? "bg-orange-300" : "bg-gray-300"
-            }`}
-            onClick={() => chosePage("Home")}
-          >
-            Home
-          </button>
-        </Link>
         <Link to="Pending">
           <button
             className={` w-40 h-14 ${
