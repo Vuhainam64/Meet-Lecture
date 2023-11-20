@@ -123,7 +123,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
   }, [bookingRooms]);
 
   const resourceDataSource = [
-    { Status: "Not Book", Id: 1, Color: "#6babfa" },
+    { Status: "Active", Id: 1, Color: "#6babfa" },
     { Status: "Finish", Id: 2, Color: "#000000" },
 
     // { Status: 'Status1',
@@ -158,7 +158,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
           )}`}
           {")"}
         </div>
-        <div className="status">{props.status}</div>
+        <div className="status">{props.status==='Not Book'?('Active'):(props.status)}</div>
         {/* Add other fields as needed */}
       </div>
     );
