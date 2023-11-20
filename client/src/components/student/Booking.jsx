@@ -112,7 +112,7 @@ export default function Booking({ userId }) {
         const startDate = new Date(item.startDatetime);
         return (
           startDate >= new Date(selectedDateRange[0]) &&
-          startDate <= new Date(selectedDateRange[1])
+          startDate <= new Date(selectedDateRange[1].setHours(23, 59, 59, 999))
         );
       });
 
