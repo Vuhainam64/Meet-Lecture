@@ -23,7 +23,7 @@ export default function ShowBoxs({
   const [slotHolder, setSlotHolder] = useState("");
   const [countdown, setCountdown] = useState(5);
   const [error, setNewError] = useState({});
- 
+
   const closeModal = () => {
     setOpenDelete(false);
     setDeleteHolder(0);
@@ -52,7 +52,6 @@ export default function ShowBoxs({
 
   console.log(showInformations);
 
-
   function handleClick(e, infor) {
     if (Object.keys(requestInfor).length > 0) {
       const key = e.target.value;
@@ -65,12 +64,12 @@ export default function ShowBoxs({
       }
     }
   }
-  
+
   async function handleChooseYes() {
     if (requestInfor) {
       console.log(slotHolder);
       console.log(requestInfor);
-      console.log('create booking ne');
+      console.log("create booking ne");
       try {
         const response = await createBooking({
           studentId: parseInt(requestInfor.studentId),
@@ -79,7 +78,7 @@ export default function ShowBoxs({
           description: requestInfor.description,
           status: "Success",
         });
-        console.log('tra respone');
+        console.log("tra respone");
         console.log(response);
         if (response === "Booked succesfully!!!") {
           const respone2 = await updateRequestById(
@@ -178,7 +177,7 @@ export default function ShowBoxs({
                 value={infor.mode}
                 onClick={(e) => handleClick(e, infor)}
               >
-                {infor.mode}
+                {infor.mode && infor.mode === "Public" ? "Assign" : infor.mode}
               </button>
               <button
                 className="text-3xl"
@@ -189,14 +188,6 @@ export default function ShowBoxs({
             </div>
           </div>
         ))}
-      <Link
-        to={`/Lecturer/Create`}
-        className="w-[30%] mt-[5%] justify-center px-10 py-3 min-h-[20%] items-center flex text-9xl text-gray-400"
-      >
-        <button>
-          <LuPlusCircle />
-        </button>
-      </Link>
       <Popup open={openDelete} closeOnDocumentClick onClose={closeModal}>
         <div className="modal">
           <button className="close" onClick={closeModal}>
