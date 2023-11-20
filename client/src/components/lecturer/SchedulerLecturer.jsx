@@ -397,7 +397,7 @@ export default function SchedulerLecturer({ userId, chosePage }) {
           dataSource={resourceDataSource}
         ></ResourceDirective>
       </ResourcesDirective>
-      <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+      <Inject services={[Day, Week, Month, Agenda]} />
     </ScheduleComponent>
   );
 }

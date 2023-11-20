@@ -98,6 +98,9 @@ export default function ShowBoxs({
   console.log(requestInfor);
   return (
     <div className="w-full pb-10 right-0 left-0 gap-[5%] flex flex-row flex-wrap h-full relative">
+      <div className="w-full font-bold text-2xl p-5">
+          CHOOSE SLOT TO ASSIGN!!!!
+        </div>
       {showInformations && showInformations.length === 0 && (
         <div className="w-full font-bold text-2xl">
           THERE ARE NO SLOT HERE!!!!
