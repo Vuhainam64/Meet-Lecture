@@ -179,12 +179,6 @@ export default function ShowBoxs({
               >
                 {infor.mode && infor.mode === "Public" ? "Assign" : infor.mode}
               </button>
-              <button
-                className="text-3xl"
-                onClick={() => handleDelete(infor.id)}
-              >
-                <LuTrash2 />
-              </button>
             </div>
           </div>
         ))}
