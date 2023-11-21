@@ -28,10 +28,10 @@ export default function AdminListLecturer({
     chosePage("Lecturer");
     setLecturerList(lecturers);
     setShowList(lecturers);
-    console.log("hello",lecturerList);
+    
     setCourseList(course);
   
-    console.log("hi",course);
+   ;
   }, [lecturers, course]);
 
   function searchHandleClick(e) {
@@ -55,7 +55,7 @@ export default function AdminListLecturer({
   async function handleDeleteYes() {
     if (deleteHolder) {
       try {
-        console.log(deleteHolder);
+       
         await deleteAccountById(deleteHolder);
         // If the deletion is successful, you can update the local state.
         setDeleteHolder(0);
@@ -69,12 +69,12 @@ export default function AdminListLecturer({
   }
   const returnNameCourse = (id) => {
     let result=[];
-    id.map(subId=>{
+    id?.map(subId=>{
       let subject=courseList.filter(sub=>sub.id===subId);
 
-      result.push(subject[0].subjectCode);
+      result.push(subject[0]?.subjectCode);
     })
-    console.log(result);
+
     return result;
   };
 

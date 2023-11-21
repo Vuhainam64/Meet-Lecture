@@ -13,15 +13,7 @@ export default function AdminCreate({ setRefresh, chosePage }) {
     subjectId: [],
   };
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    fullname: "",
-    email: "",
-    dob: "",
-    role: "Student",
-    subjectId: [],
-  });
+  const [formData, setFormData] = useState(zeroFormData);
   const [errors, setErrors] = useState({});
   const [added, setAdded] = useState("");
   async function makePostRequest(form) {

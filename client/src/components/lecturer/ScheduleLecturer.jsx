@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import {
   getAllSlotByLecturerID,
-  searchBookingById,
   searchSubjectById,
+  searchTeacherById,
 } from "../../api";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 export default function ScheduleLecturer({ userId, chosePage }) {
   const [bookingRooms, setBookingRooms] = useState([]);
-  const [showList, setShowList] = useState([]);
+  const user = useSelector((state) => state.user?.user);
+  const [subject, setSubject] = useState([]);
 
   const [refresh, setRefresh] = useState(false);
   async function fetchData() {
@@ -23,38 +25,23 @@ export default function ScheduleLecturer({ userId, chosePage }) {
       .catch((error) => console.log(error));
   }
   async function addObject() {
-    const updatedRequestedList = await Promise.all(
-      bookingRooms.map(async (infor) => {
-        let subjectCode=[];
-        infor.subjectId.map(async(subject)=>{
-          const subjectInfor = await searchSubjectById(parseInt(subject));
-          subjectCode.push(subjectInfor.subjectCode);
-        })
-        infor.subjectCode=subjectCode;
-        return infor; // Return the updated infor object
-      })
-    );
-    // Updated array
-    console.log('update');
-    console.log(updatedRequestedList);
-    setShowList(updatedRequestedList);
+    const lecturerInfor = await searchTeacherById(parseInt(user?.id));
+    lecturerInfor.subjectId.map(async (subject) => {
+      const subjectInfor = await searchSubjectById(parseInt(subject));
+      setSubject((prev) => [...prev, subjectInfor.subjectCode]);
+    });
   }
 
   useEffect(() => {
     chosePage("");
+    addObject();
     if (userId || refresh === true) fetchData();
     console.log("booking room");
     console.log(bookingRooms);
     setRefresh(false);
   }, [userId, refresh]);
 
-  useEffect(() => {
-    if (bookingRooms.length > 0) {
-     addObject();
-    }
-  }, [bookingRooms]);
-
-  //sort 
+  //sort
   const compareDateAndTime = (a, b) => {
     const dateA = moment(a.startDatetime);
     const dateB = moment(b.startDatetime);
@@ -65,7 +52,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
 
   //này là đã sorted
   const sortedBookingRooms = [...bookingRooms].sort(compareDateAndTime);
-  
+
   console.log(sortedBookingRooms);
   return (
     <div className="w-full h-full flex flex-col justify-center items-center gap-5 py-5">
@@ -73,6 +60,10 @@ export default function ScheduleLecturer({ userId, chosePage }) {
         <div>
           <span className="font-bold text-3xl underline">Schedule</span>
         </div>
+        <div>Main Subject:</div>{" "}
+        {subject.map((sub) => (
+          <span>{sub}</span>
+        ))}
         <div className="w-full flex justify-center items-center">
           <table className="w-fit">
             <thead>
@@ -82,9 +73,6 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                 </th>
                 <th className="text-xl font-medium border-b-2 border-black border-r-2">
                   Location
-                </th>
-                <th className="text-xl font-medium border-b-2 border-black  border-r-2">
-                  Course
                 </th>
                 <th className="text-xl font-medium border-b-2 border-black  border-r-2">
                   Time
@@ -103,9 +91,6 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
                       {info.location}
-                    </td>
-                    <td className="text-center px-16 text-lg p-2 border-black border-r-2">
-                      {info?.subjectCode&& info.subjectCode.join(', ')}
                     </td>
                     <td className="text-center px-16 text-lg p-2 border-black  border-r-2">
                       {moment(info.startDatetime).format("DD/MM/YYYY") +
