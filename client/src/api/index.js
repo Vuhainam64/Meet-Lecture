@@ -262,7 +262,7 @@ export const deleteSubjectById = async (id) => {
         const res = await axios.delete(`${baseURL}/Subject/${id}`);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-            console.log('subject deleted successfully.');
+            console.log('Deleted slot successfully..');
         } else {
             console.log(`Received status ${res.status} from the server.`);
         }
@@ -276,8 +276,8 @@ export const deleteSlotById = async (id) => {
         const res = await axios.delete(`${baseURL}/Slot/${id}`);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-            console.log('subject deleted successfully.');
-            return('subject deleted successfully.');
+            console.log('slot deleted successfully.');
+            return('slot deleted successfully.');
         } else {
             console.log(`Received status ${res.status} from the server.`);
             return (`Received status ${res.status} from the server.`);
@@ -366,7 +366,7 @@ export const updateSlotById= async (form,id) => {
         const res = await axios.put(`${baseURL}/Slot/${id}`,form);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-           return('Slot update successfully.');
+           return('Updated slot successfully.');
         } else {
             console.log(`Slot status ${res.status} from the server.`);
 

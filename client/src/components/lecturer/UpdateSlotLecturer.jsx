@@ -181,7 +181,7 @@ export default function CreateSlotLecturer({userId}) {
       <div className="flex flex-row h-[10%]">
         <NavLink
           className="h-[10%]  font-bold flex flex-row gap-5 items-center"
-          to="/Lecturer"
+          to={`/Lecturer/Home/${id}`}
         >
           <span className="text-4xl">
             <BsArrowLeft />

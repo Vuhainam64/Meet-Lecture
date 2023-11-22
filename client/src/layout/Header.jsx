@@ -50,7 +50,7 @@ function Header() {
   }, [notificationOpen]);
 
   return (
-    <div className="flex w-full bg-orange-400 h-[4rem] items-center relative">
+    <div className="flex w-full bg-orange-400 h-[6rem] items-center relative">
       <div className="mx-10 uppercase text-white w-full">meet lecturer</div>
 
       <div className="absolute bottom-0 right-0 text-white flex items-center space-x-2 gap-5 pr-5 pb-3">

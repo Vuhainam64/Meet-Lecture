@@ -20,7 +20,7 @@ export default function Body({userId}) {
             }`}
             onClick={() => chosePage("Scheduler")}
           >
-            Scheduler
+            Schedule
           </button>
         </Link>
         <Link to="Pending">
