@@ -51,7 +51,7 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
       };
       console.log("Submited", submited);
       // No validation errors, proceed with the submission
-      const result = await makePutRequest(submited, parseInt(formData.id));
+      const result = await makePutRequest(submited, parseInt(updateObject.id));
       setAdded(result);
       setRefresh(true);
     }
@@ -126,6 +126,7 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
         }
       });
     }
+    console.log(result);
     return result;
   };
 
@@ -251,7 +252,7 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
                 onChange={(e) => {
                   setFormData({
                     ...formData,
-                    ["subjectId"]: e.map((sub) => {
+                    "subjectId": e.map((sub) => {
                       return sub.id;
                     }),
                   });
@@ -266,7 +267,7 @@ export default function AdminUpdateAccount({ setRefresh, updateObject }) {
                 labelField="subjectCode"
                 valueField="id"
                 multi
-                values={formData?.subjectId && findSubject(formData?.subjectId)}
+                values={formData?.subjectId &&findSubject(formData?.subjectId)}
               ></Select>
             </div>
           ) : (
