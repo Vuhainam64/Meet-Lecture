@@ -16,6 +16,8 @@ export default function ScheduleLecturer({ userId, chosePage }) {
   const [subject, setSubject] = useState([]);
   const [showStudentTableLocation, setShowStudentTableLocation] = useState("");
   const [showStudent, setShowStudent] = useState([]);
+  const [sortedBookingRooms, setSortedBookingRooms] = useState([]);
+  const [subjectList, setSubjectList] = useState("");
 
   const [refresh, setRefresh] = useState(false);
   async function fetchData() {
@@ -29,7 +31,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
       )
       .catch((error) => console.log(error));
   }
-  async function addObject() {
+  async function addInfor() {
     let result = [];
     const lecturerInfor = await searchTeacherById(parseInt(user?.id));
     lecturerInfor.subjectId.map(async (subject) => {
@@ -40,14 +42,36 @@ export default function ScheduleLecturer({ userId, chosePage }) {
     setSubject(result);
   }
 
+  async function addObject() {
+    setSortedBookingRooms([]); // Clear the slot array first
+    const updatedRequestedList = await Promise.all(
+      bookingRooms.map(async (infor) => {
+        let resultSub = [];
+        if (infor.subjectId.length > 0) {
+          await Promise.all(
+            infor.subjectId.map(async (subId) => {
+              const subFinded = await searchSubjectById(parseInt(subId));
+              resultSub.push(subFinded.subjectCode);
+            })
+          );
+        }
+        infor.subString = resultSub.join(", ");
+        return infor; // Return the updated infor object
+      })
+    );
+    setSortedBookingRooms(updatedRequestedList.sort(compareDateAndTime));
+  }
   useEffect(() => {
     chosePage("");
     if (userId || refresh === true) fetchData();
-    addObject();
+    addInfor();
     console.log("booking room");
     console.log(bookingRooms);
     setRefresh(false);
   }, [userId, refresh]);
+  useEffect(() => {
+    if (bookingRooms.length > 0) addObject();
+  }, [bookingRooms]);
 
   //sort
   const compareDateAndTime = (a, b) => {
@@ -72,7 +96,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
     });
   };
   //này là đã sorted
-  const sortedBookingRooms = [...bookingRooms].sort(compareDateAndTime);
+  // const sortedBookingRooms = [...bookingRooms].sort(compareDateAndTime);
 
   console.log(sortedBookingRooms);
   return (
@@ -95,6 +119,9 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                 <th className="text-xl font-medium border-b-2 border-black border-r-2">
                   Location
                 </th>
+                <th className="text-xl font-medium border-b-2 border-black border-r-2">
+                  Course
+                </th>
                 <th className="text-xl font-medium border-b-2 border-black  border-r-2">
                   Time
                 </th>
@@ -113,6 +140,9 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
                       {info.location}
                     </td>
+                    <td className="text-center px-16 text-lg p-2 border-black border-r-2">
+                      {info?.subString}
+                    </td>
                     <td className="text-center px-16 text-lg p-2 border-black  border-r-2">
                       {moment(info.startDatetime).format("DD/MM/YYYY") +
                         " , " +
@@ -127,20 +157,26 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                       </button>
                     </td>
                     {showStudentTableLocation === info.id && (
-                      <div className="absolute flex flex-col bg-white rounded-md border-orange-500 border-2 p-5">
+                      <div className="absolute flex flex-col bg-white rounded-md border-orange-500 border-2 p-5 right-0">
                         <span className="text-center font-bold pb-3 mt-[-1rem]">
                           Student participated
                         </span>
-                        <button className="absolute right-3 top-0 text-2xl" onClick={()=>{setShowStudentTableLocation('');setShowStudent([])}}>
+                        <button
+                          className="absolute right-3 top-0 text-2xl"
+                          onClick={() => {
+                            setShowStudentTableLocation("");
+                            setShowStudent([]);
+                          }}
+                        >
                           &times;
                         </button>
                         <table>
                           <thead>
                             <tr>
-                              <th className="border-b-2 border-black border-r-2">
+                              <th className="border-b-2 border-black border-r-2 px-5">
                                 No.
                               </th>
-                              <th className="border-b-2 border-black ">
+                              <th className="border-b-2 border-black px-10">
                                 FullName
                               </th>
                             </tr>
