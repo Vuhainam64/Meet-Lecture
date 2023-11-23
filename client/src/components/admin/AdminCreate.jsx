@@ -97,7 +97,7 @@ export default function AdminCreate({ setRefresh, chosePage }) {
   };
   const getSubjects = async () => {
     try {
-      const result = await getAllSubject().then((data) => setSubjectList(data));
+      const result = await getAllSubject().then((data) => setSubjectList(data.filter((course) => course.status !== "Unactive")));
     } catch (e) {}
   };
   useEffect(() => {
