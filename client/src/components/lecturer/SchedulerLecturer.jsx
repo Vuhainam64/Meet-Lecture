@@ -88,6 +88,8 @@ export default function SchedulerLecturer({ userId, chosePage }) {
           infor.IsReadonly = true;
         } else if (infor.status === "Not Book") {
           infor.ResourceID = 1;
+        } else if(infor.status === "Full"){
+          infor.ResourceID = 3;
         }
         infor.Description =
           BookedSucces + (infor.code && " - Code: " + infor.code);
@@ -119,8 +121,9 @@ export default function SchedulerLecturer({ userId, chosePage }) {
   }, [bookingRooms]);
 
   const resourceDataSource = [
-    { Status: "Active", Id: 1, Color: "#6babfa" },
+    { Status: "Active", Id: 1, Color: "#ffa500" },
     { Status: "Finish", Id: 2, Color: "#000000" },
+    { Status: "Full", Id: 3, Color: "#6babfa" },
 
     // { Status: 'Status1',
     // Id: 3,

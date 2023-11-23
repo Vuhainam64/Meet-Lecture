@@ -85,7 +85,7 @@ function Header() {
       {/* )} */}
       {notificationOpen === true ? (
         notificationsList && notificationsList.length > 0 ? (
-          <div className="absolute right-0 -bottom-[15rem] flex-col bg-gray-300 w-[24rem] h-[15rem] flex overflow-y-scroll z-50">
+          <div className="absolute right-0 -bottom-[18rem] flex-col bg-gray-300 w-[24rem] h-[18rem] flex overflow-y-scroll z-50">
             <div className="w-full pl-5 p-3 text-xl font-semibold">
               Notifications
             </div>
