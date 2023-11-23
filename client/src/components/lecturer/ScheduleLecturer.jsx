@@ -133,7 +133,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
             <tbody>
               {sortedBookingRooms &&
                 sortedBookingRooms.map((info, index) => (
-                  <tr className="" key={index}>
+                  <tr className="relative" key={index}>
                     <td className="text-center px-16 text-lg p-2 border-black border-r-2">
                       {index + 1}
                     </td>
@@ -157,7 +157,7 @@ export default function ScheduleLecturer({ userId, chosePage }) {
                       </button>
                     </td>
                     {showStudentTableLocation === info.id && (
-                      <div className="absolute flex flex-col bg-white rounded-md border-orange-500 border-2 p-5 right-0">
+                      <div className="absolute flex flex-col bg-white rounded-md border-orange-500 border-2 p-5 z-[99] left-[80%]">
                         <span className="text-center font-bold pb-3 mt-[-1rem]">
                           Student participated
                         </span>
