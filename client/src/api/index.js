@@ -156,13 +156,14 @@ export const createCourse= async (form) => {
         const res = await axios.post(`${baseURL}/Subject`,form);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-            console.log('Subject create successfully.');
+           return('Subject create successfully.');
         } else {
             console.log(`Subject status ${res.status} from the server.`);
         }
     } catch (err) {
         // Log the detailed error message
         console.error('Error create course:', err);
+        return err.response.data
     }
 }
 export const createBookingByCode= async (form) => {
@@ -338,13 +339,14 @@ export const updateCourseById= async (form,id) => {
         const res = await axios.put(`${baseURL}/Subject/${id}`,form);
         // Check if the response status is 200 OK
         if (res.status === 200) {
-            console.log('Subject update successfully.');
+           return('Subject update successfully.');
         } else {
             console.log(`Subject status ${res.status} from the server.`);
         }
     } catch (err) {
         // Log the detailed error message
         console.error('Error update Subject:', err);
+        return err.response.data
     }
 }
 export const updateBookingById= async (form,id) => {
