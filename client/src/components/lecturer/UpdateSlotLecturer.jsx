@@ -6,6 +6,7 @@ import moment from "moment";
 
 export default function CreateSlotLecturer({userId}) {
   const { id } = useParams();
+  const {requestId}=useParams();
   const zeroFormData = {
     code: "",
     date: "",
@@ -190,7 +191,7 @@ export default function CreateSlotLecturer({userId}) {
       <div className="flex flex-row h-[10%]">
         <NavLink
           className="h-[10%]  font-bold flex flex-row gap-5 items-center"
-          to={`/Lecturer/Home/${id}`}
+          to={`/Lecturer/Home/${requestId}`}
         >
           <span className="text-4xl">
             <BsArrowLeft />

@@ -163,7 +163,7 @@ export default function ShowBoxs({
               ) : (
                 <></>
               )}
-              <Link to={`/Lecturer/Update/${infor.id}`}>
+              <Link to={`/Lecturer/Update/${infor.id}/${requestInfor.id}`}>
                 <button className="text-3xl">
                   <LuPencilLine />
                 </button>
